@@ -1,5 +1,7 @@
 # Usize
 Usize, tu talla correcta, tu ropa ideal.
 
-npm install react-native-easy-grid
-npm install @expo/vector-icons
+## Install libraries
+```
+npm install react-native-easy-grid @expo/vector-icons
+```
