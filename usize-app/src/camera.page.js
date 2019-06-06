@@ -1,83 +1,132 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Linking } from 'react-native';
 import { Camera, Permissions } from 'expo';
+//import RNFS from 'react-native-fs';
 
 import styles from './styles';
 import Toolbar from './toolbar.component';
 import Gallery from './gallery.component';
 
 export default class CameraPage extends React.Component {
-    camera = null;
+	camera = null;
 
-    state = {
-        captures: [],
-        capturing: null,
-        hasCameraPermission: null,
-        cameraType: Camera.Constants.Type.back,
-        flashMode: Camera.Constants.FlashMode.off,
-    };
+	state = {
+		captures: [],
+		capturing: null,
+		hasCameraPermission: null,
+		cameraType: Camera.Constants.Type.back,
+		flashMode: Camera.Constants.FlashMode.off,
+	};
 
-    setFlashMode = (flashMode) => this.setState({ flashMode });
-    setCameraType = (cameraType) => this.setState({ cameraType });
-    handleCaptureIn = () => this.setState({ capturing: true });
+	setFlashMode = (flashMode) => this.setState({ flashMode });
+	setCameraType = (cameraType) => this.setState({ cameraType });
+	handleCaptureIn = () => this.setState({ capturing: true });
 
-    handleCaptureOut = () => {
-        if (this.state.capturing)
-            this.camera.stopRecording();
-    };
+	handleCaptureOut = () => {
+		if (this.state.capturing)
+			this.camera.stopRecording();
+	};
 
-    handleShortCapture = async () => {
-        const photoData = await this.camera.takePictureAsync();
-        this.setState({ capturing: false, captures: [photoData, ...this.state.captures] })
-    };
+	handleShortCapture = async () => {
+		console.log("Hola1a");
+		const photoData = await this.camera.takePictureAsync();
+		this.setState({ capturing: false })
+		console.log(photoData.uri);
 
-    handleLongCapture = async () => {
-        const videoData = await this.camera.recordAsync();
-        this.setState({ capturing: false, captures: [videoData, ...this.state.captures] });
-    };
+		var uri = photoData.uri;
+		var serverURL = "http://192.168.0.5:3333/login"
 
-    async componentDidMount() {
-        const camera = await Permissions.askAsync(Permissions.CAMERA);
-        const audio = await Permissions.askAsync(Permissions.AUDIO_RECORDING);
-        const hasCameraPermission = (camera.status === 'granted' && audio.status === 'granted');
+		
+		var photo = {
+			uri: uri,
+			type: 'image/jpeg',
+			name: 'photo.jpg',
+		};
+		
+		var body = new FormData();
+		body.append('authToken', 'secret');
+		body.append('photo', photo);
+		body.append('title', 'A beautiful photo!');
+		
+		var xhr = new XMLHttpRequest();
+		xhr.open('POST', serverURL);
+		xhr.send(body);
 
-        this.setState({ hasCameraPermission });
-    };
+		var data = {
+			"username": "b",
+		}
 
-    render() {
-        const { hasCameraPermission, flashMode, cameraType, capturing, captures } = this.state;
+		/*
+		fetch(serverURL, {
+			method: "POST",
+			headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+			body: JSON.stringify(data)
+		})
+			.then(function (response) {
+				console.log(response)
+				return response.json();
+			})
+			.then(function (data) {
+				console.log(data)
+			});
 
-        if (hasCameraPermission === null) {
-            return <View />;
-        } else if (hasCameraPermission === false) {
-            return <Text>Access to camera has been denied.</Text>;
-        }
+		*/
+		console.log("Hola1b");
+	};
 
-        return (
-            <React.Fragment>
-                <View>
-                    <Camera
-                        type={cameraType}
-                        flashMode={flashMode}
-                        style={styles.preview}
-                        ref={camera => this.camera = camera}
-                    />
-                </View>
+	handleLongCapture = async () => {
+		console.log("Hola2a");
+		const videoData = await this.camera.recordAsync();
+		this.setState({ capturing: false, captures: [videoData, ...this.state.captures] });
+		console.log("Hola2b");
+		console.log("Hola2b");
+	};
 
-                {captures.length > 0 && <Gallery captures={captures}/>}
+	async componentDidMount() {
+		const camera = await Permissions.askAsync(Permissions.CAMERA);
+		const audio = await Permissions.askAsync(Permissions.AUDIO_RECORDING);
+		const hasCameraPermission = (camera.status === 'granted' && audio.status === 'granted');
 
-                <Toolbar 
-                    capturing={capturing}
-                    flashMode={flashMode}
-                    cameraType={cameraType}
-                    setFlashMode={this.setFlashMode}
-                    setCameraType={this.setCameraType}
-                    onCaptureIn={this.handleCaptureIn}
-                    onCaptureOut={this.handleCaptureOut}
-                    onLongCapture={this.handleLongCapture}
-                    onShortCapture={this.handleShortCapture}
-                />
-            </React.Fragment>
-        );
-    };
+		console.log("Hola3");
+		console.log(hasCameraPermission);
+
+		this.setState({ hasCameraPermission });
+	};
+
+	render() {
+		const { hasCameraPermission, flashMode, cameraType, capturing, captures } = this.state;
+
+		if (hasCameraPermission === null) {
+			return <View />;
+		} else if (hasCameraPermission === false) {
+			return <Text>Access to camera has been denied.</Text>;
+		}
+
+		return (
+			<React.Fragment>
+				<View>
+					<Camera
+						type={cameraType}
+						flashMode={flashMode}
+						style={styles.preview}
+						ref={camera => this.camera = camera}
+					/>
+				</View>
+
+				{captures.length > 0 && <Gallery captures={captures} />}
+
+				<Toolbar
+					capturing={capturing}
+					flashMode={flashMode}
+					cameraType={cameraType}
+					setFlashMode={this.setFlashMode}
+					setCameraType={this.setCameraType}
+					onCaptureIn={this.handleCaptureIn}
+					onCaptureOut={this.handleCaptureOut}
+					onLongCapture={this.handleLongCapture}
+					onShortCapture={this.handleShortCapture}
+				/>
+			</React.Fragment>
+		);
+	};
 };

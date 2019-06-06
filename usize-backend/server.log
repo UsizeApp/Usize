@@ -1,0 +1,22 @@
+C:\Users\Alex\Downloads\Compressed\flask-api-upload-image-master
+C:\Users\Alex\Downloads\Compressed\flask-api-upload-image-master
+C:\Users\Alex\Downloads\Compressed\flask-api-upload-image-master
+Exception on / [POST]
+Traceback (most recent call last):
+  File "C:\Program Files\Python37\lib\site-packages\flask\app.py", line 1982, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Program Files\Python37\lib\site-packages\flask\app.py", line 1615, in full_dispatch_request
+    return self.finalize_request(rv)
+  File "C:\Program Files\Python37\lib\site-packages\flask\app.py", line 1630, in finalize_request
+    response = self.make_response(rv)
+  File "C:\Program Files\Python37\lib\site-packages\flask\app.py", line 1740, in make_response
+    rv = self.response_class.force_type(rv, request.environ)
+  File "C:\Program Files\Python37\lib\site-packages\werkzeug\wrappers.py", line 885, in force_type
+    response = BaseResponse(*_run_wsgi_app(response, environ))
+  File "C:\Program Files\Python37\lib\site-packages\werkzeug\wrappers.py", line 57, in _run_wsgi_app
+    return _run_wsgi_app(*args)
+  File "C:\Program Files\Python37\lib\site-packages\werkzeug\test.py", line 884, in run_wsgi_app
+    app_rv = app(environ, start_response)
+  File "C:\Program Files\Python37\lib\site-packages\werkzeug\local.py", line 375, in <lambda>
+    __call__ = lambda x, *a, **kw: x._get_current_object()(*a, **kw)
+TypeError: 'Request' object is not callable
