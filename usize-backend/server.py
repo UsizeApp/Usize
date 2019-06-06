@@ -8,13 +8,13 @@ app = Flask(__name__)
 # Set the secret key to some random bytes. Keep this really secret!
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
-def handle_uploaded_file(f):
+def handle_uploaded_file(photo, height):
 	uploaded_photo = "input/photo.jpg"
-	f.save(uploaded_photo)
+	photo.save(uploaded_photo)
 	full_path = os.path.abspath(uploaded_photo)
 	object_type, probability = person_detector(full_path)
 	if object_type and probability and probability >= 0.7:
-		open_pose_image(full_path)
+		open_pose_image(full_path, height)
 	else:
 		raise
 
@@ -30,9 +30,12 @@ def login():
 		#print(request)
 		#print(request.data)
 		#print(request.form)
-		print(request.files)
+		#print(request.files)
 		#print(request.values)
-		handle_uploaded_file(request.files['photo'])
+		photo = request.files['photo']
+		height = int(request.form['height'])
+		#print(height)
+		handle_uploaded_file(photo, height)
 		#session['username'] = request.form['username']
 		return redirect(url_for('index'))
 	return '''

@@ -6,7 +6,7 @@ from scipy.spatial import distance as dist
 
 MODE = "COCO"
 
-def open_pose_image(file):
+def open_pose_image(file, height):
     if MODE is "COCO":
         protoFile = os.path.abspath("pose/coco/pose_deploy_linevec.prototxt")
         weightsFile = os.path.abspath("pose/coco/pose_iter_440000.caffemodel")
@@ -79,8 +79,8 @@ def open_pose_image(file):
     head = points[14]
     feet = points[10]
     height_in_pixels = dist.euclidean(head, feet)
-
-    body_height_cm = 174
+    
+    body_height_cm = height
     pixelsPerMetric = height_in_pixels / body_height_cm
 
     right_shoulder = points[5]
