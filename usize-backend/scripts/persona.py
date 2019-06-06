@@ -26,7 +26,7 @@ def person_detector(file):
     for eachObject in detections:
         object_type = eachObject["name"]
         probability = eachObject["percentage_probability"]
+        print(object_type , " : " , probability, ":", eachObject["box_points"])
         if object_type == "person":
             return object_type, probability
-        print(object_type , " : " , probability, ":", eachObject["box_points"])
     return None, None
