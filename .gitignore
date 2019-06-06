@@ -1,0 +1,14 @@
+usize-app/node_modules/**/*
+usize-app/.expo/*
+usize-app/npm-debug.*
+usize-app/*.jks
+usize-app/*.p12
+usize-app/*.key
+usize-app/*.mobileprovision
+usize-app/*.orig.*
+usize-app/web-build/
+usize-app/web-report/
+usize-backend/resnet50_coco_best_v2.0.1.h5
+usize-backend/pose/
+usize-backend/face/
+usize-backend/hand/
