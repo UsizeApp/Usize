@@ -8,6 +8,7 @@ usize-app/*.mobileprovision
 usize-app/*.orig.*
 usize-app/web-build/
 usize-app/web-report/
+usize-backend/server.log
 usize-backend/resources/resnet50_coco_best_v2.0.1.h5
 usize-backend/pose/coco/pose_iter_440000.caffemodel
 usize-backend/pose/mpi/pose_iter_160000.caffemodel

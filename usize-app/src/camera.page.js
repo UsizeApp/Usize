@@ -28,24 +28,23 @@ export default class CameraPage extends React.Component {
 	};
 
 	handleShortCapture = async () => {
-		console.log("Hola1a");
 		const photoData = await this.camera.takePictureAsync();
 		this.setState({ capturing: false })
-		console.log(photoData.uri);
 
 		var uri = photoData.uri;
-		var serverURL = "http://192.168.0.5:3333/login"
+		var serverURL = "http://192.168.0.12:3333/login"
 
-		
 		var photo = {
 			uri: uri,
 			type: 'image/jpeg',
 			name: 'photo.jpg',
 		};
-		
+		var height = 174
+
 		var body = new FormData();
 		body.append('authToken', 'secret');
 		body.append('photo', photo);
+		body.append('height', height);
 		body.append('title', 'A beautiful photo!');
 		
 		var xhr = new XMLHttpRequest();
@@ -71,15 +70,11 @@ export default class CameraPage extends React.Component {
 			});
 
 		*/
-		console.log("Hola1b");
 	};
 
 	handleLongCapture = async () => {
-		console.log("Hola2a");
 		const videoData = await this.camera.recordAsync();
 		this.setState({ capturing: false, captures: [videoData, ...this.state.captures] });
-		console.log("Hola2b");
-		console.log("Hola2b");
 	};
 
 	async componentDidMount() {
@@ -87,7 +82,6 @@ export default class CameraPage extends React.Component {
 		const audio = await Permissions.askAsync(Permissions.AUDIO_RECORDING);
 		const hasCameraPermission = (camera.status === 'granted' && audio.status === 'granted');
 
-		console.log("Hola3");
 		console.log(hasCameraPermission);
 
 		this.setState({ hasCameraPermission });
