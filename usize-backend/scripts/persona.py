@@ -19,14 +19,21 @@ def person_detector(file):
     detector.setModelTypeAsRetinaNet()
     detector.setModelPath(os.path.join(execution_path , "resources/resnet50_coco_best_v2.0.1.h5"))
     detector.loadModel()
-    custom = detector.CustomObjects(person=True)
+    detector.CustomObjects(person=True)
     filename, file_ext = os.path.splitext(file)
     output = filename+"_detection"+file_ext
     detections = detector.detectObjectsFromImage(input_image=file, output_image_path=output)
+    if len(detections) == 0:
+        print("Persona: 0 %")
+        return "Persona", 0
     for eachObject in detections:
         object_type = eachObject["name"]
+        if object_type == 'person':
+            object_type = 'Persona'
         probability = eachObject["percentage_probability"]
-        print(object_type , " : " , probability, ":", eachObject["box_points"])
+        print(object_type , " : " ,round(probability,2), "%")
         if object_type == "person":
             return object_type, probability
     return None, None
+
+person_detector("single.jpg")
