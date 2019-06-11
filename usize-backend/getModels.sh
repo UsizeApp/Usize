@@ -1,9 +1,13 @@
 # ------------------------- BODY, FACE AND HAND MODELS -------------------------
 # Downloading body pose (COCO and MPI), face and hand models
 OPENPOSE_URL="http://posefs1.perception.cs.cmu.edu/OpenPose/models/"
+RETINA_URL="https://github.com/OlafenwaMoses/ImageAI/releases/download/1.0/resnet50_coco_best_v2.0.1.h5"
 POSE_FOLDER="pose/"
 FACE_FOLDER="face/"
 HAND_FOLDER="hand/"
+RESOURCES_FOLDER="resources/"
+INPUT_FOLDER="input"
+OUTPUT_FOLDER="output"
 
 # ------------------------- POSE MODELS -------------------------
 # Body (COCO)
@@ -29,3 +33,10 @@ wget -c ${OPENPOSE_URL}${FACE_MODEL} -P ${FACE_FOLDER}
 # Hand
 HAND_MODEL=$HAND_FOLDER"pose_iter_102000.caffemodel"
 wget -c ${OPENPOSE_URL}${HAND_MODEL} -P ${HAND_FOLDER}
+
+# "------------------------RETINA NET MODEL-----------------------"
+wget -c ${RETINA_URL} -P ${RESOURCES_FOLDER}
+
+# "------------------------MISSING FOLDERS------------------------"
+mkdir ${INPUT_FOLDER}
+mkdir ${OUTPUT_FOLDER}

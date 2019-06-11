@@ -28,12 +28,8 @@ def person_detector(file):
         return "Persona", 0
     for eachObject in detections:
         object_type = eachObject["name"]
-        if object_type == 'person':
-            object_type = 'Persona'
         probability = eachObject["percentage_probability"]
         print(object_type , " : " ,round(probability,2), "%")
         if object_type == "person":
             return object_type, probability
     return None, None
-
-person_detector("single.jpg")
