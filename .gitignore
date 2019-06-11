@@ -9,7 +9,9 @@ usize-app/*.orig.*
 usize-app/web-build/
 usize-app/web-report/
 usize-backend/resources/resnet50_coco_best_v2.0.1.h5
-usize-backend/pose/
+usize-backend/pose/coco/pose_iter_440000.caffemodel
+usize-backend/pose/mpi/pose_iter_160000.caffemodel
+usize-backend/scripts/__pycache__
 usize-backend/face/
 usize-backend/hand/
 usize-backend/input/
