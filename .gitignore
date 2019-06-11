@@ -1,5 +1,6 @@
 usize-app/node_modules/**/*
 usize-app/.expo/*
+usize-app/.expo-shared/*
 usize-app/npm-debug.*
 usize-app/*.jks
 usize-app/*.p12
