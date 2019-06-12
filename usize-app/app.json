@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Usize",
-    "slug": "Usize",
+    "slug": "usize-app",
     "privacy": "public",
     "sdkVersion": "33.0.0",
     "platforms": [

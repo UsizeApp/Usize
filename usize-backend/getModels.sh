@@ -19,10 +19,13 @@ wget -c ${OPENPOSE_URL}${COCO_MODEL} -P ${COCO_FOLDER}
 #     wget ${OPENPOSE_URL}$COCO_MODEL -P $COCO_FOLDER
 # fi
 
-# Body (MPI)
-MPI_FOLDER=${POSE_FOLDER}"mpi/"
-MPI_MODEL=${MPI_FOLDER}"pose_iter_160000.caffemodel"
-wget -c ${OPENPOSE_URL}${MPI_MODEL} -P ${MPI_FOLDER}
+# Body (MPI) 
+# ----------------------
+#  NO LO ESTAMOS USANDO
+# ----------------------
+#MPI_FOLDER=${POSE_FOLDER}"mpi/"
+#MPI_MODEL=${MPI_FOLDER}"pose_iter_160000.caffemodel"
+#wget -c ${OPENPOSE_URL}${MPI_MODEL} -P ${MPI_FOLDER}
 
 # "------------------------- FACE MODELS -------------------------"
 # Face

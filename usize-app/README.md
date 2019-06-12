@@ -4,7 +4,7 @@ Usize, tu talla correcta, tu ropa ideal.
 ## Install libraries
 ```
 npm install -g expo-cli
-npm install react-native-easy-grid @expo/vector-icons
+npm install react-native-easy-grid @expo/vector-icons react-navigation formik yup
 ```
 
 ## Start server

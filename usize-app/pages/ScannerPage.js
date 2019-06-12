@@ -1,13 +1,11 @@
 import React from 'react';
 import { View, Text, Linking } from 'react-native';
-import { Camera, Permissions } from 'expo';
-//import RNFS from 'react-native-fs';
+import { Camera } from 'expo-camera'
+import * as Permissions from 'expo-permissions'
+import styles from '../styles/styles';
+import Scanner from '../components/Scanner'
 
-import styles from './styles';
-import Toolbar from './toolbar.component';
-import Gallery from './gallery.component';
-
-export default class CameraPage extends React.Component {
+export default class ScannerPage extends React.Component {
 	camera = null;
 
 	state = {
@@ -17,6 +15,11 @@ export default class CameraPage extends React.Component {
 		cameraType: Camera.Constants.Type.back,
 		flashMode: Camera.Constants.FlashMode.off,
 	};
+
+	onContinueHandler = () => {
+		const { navigation } = this.props
+		navigation.push('Measure')
+	}
 
 	setFlashMode = (flashMode) => this.setState({ flashMode });
 	setCameraType = (cameraType) => this.setState({ cameraType });
@@ -32,8 +35,7 @@ export default class CameraPage extends React.Component {
 		this.setState({ capturing: false })
 
 		var uri = photoData.uri;
-		var uploadURL = "http://192.168.0.12:3333/upload"
-		var responseURL = "http://192.168.0.12:3333/response"
+		var serverURL = "http://192.168.0.5:3333/login"
 
 		var photo = {
 			uri: uri,
@@ -41,53 +43,36 @@ export default class CameraPage extends React.Component {
 			name: 'photo.jpg',
 		};
 		var height = 174
-
 		var body = new FormData();
 		body.append('authToken', 'secret');
 		body.append('photo', photo);
 		body.append('height', height);
 		body.append('title', 'A beautiful photo!');
-		
+
 		var xhr = new XMLHttpRequest();
-		xhr.open('POST', uploadURL);
+		xhr.open('POST', serverURL);
 		xhr.send(body);
 
 		var data = {
 			"username": "b",
-		};
+		}
 
-//		fetch(serverURL, {
-//		   method: "POST",
-//		   headers: headers,
-//		   body:  JSON.stringify(data)
-//		})
-//		.then(function(response){ 
-//		 return response.json();   
-//		})
-//		.then(function(data){ 
-//		console.log(data)
-//		});
+		/*
+		fetch(serverURL, {
+			method: "POST",
+			headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+			body: JSON.stringify(data)
+		})
+			.then(function (response) {
+				console.log(response)
+				return response.json();
+			})
+			.then(function (data) {
+				console.log(data)
+			});
 
+		*/
 	};
-
-//	serverResponse(){
-//		return fetch("http://192.168.0.12:3333/response")
-//			.then((response) => response.json())
-//			.then((responseJson) => {
-//
-//				this.setState({
-//					isLoading: false,
-//					dataSource: responseJson,
-//				}, function(){
-//
-//				});
-//
-//			})
-//			.catch((error) =>{
-//				console.error(error);
-//			});
-//	}
-
 
 	handleLongCapture = async () => {
 		const videoData = await this.camera.recordAsync();
@@ -98,9 +83,6 @@ export default class CameraPage extends React.Component {
 		const camera = await Permissions.askAsync(Permissions.CAMERA);
 		const audio = await Permissions.askAsync(Permissions.AUDIO_RECORDING);
 		const hasCameraPermission = (camera.status === 'granted' && audio.status === 'granted');
-
-		console.log(hasCameraPermission);
-
 		this.setState({ hasCameraPermission });
 	};
 
@@ -125,17 +107,19 @@ export default class CameraPage extends React.Component {
 					/>
 				</View>
 
-				<Toolbar
-					capturing={capturing}
-					flashMode={flashMode}
-					cameraType={cameraType}
-					setFlashMode={this.setFlashMode}
-					setCameraType={this.setCameraType}
-					onCaptureIn={this.handleCaptureIn}
-					onCaptureOut={this.handleCaptureOut}
-					onLongCapture={this.handleLongCapture}
-					onShortCapture={this.handleShortCapture}
-				/>
+				{captures.length === 2 ? <Scanner.Continue onPress={this.onContinueHandler}/> :
+					<Scanner.Toolbar
+						capturing={capturing}
+						flashMode={flashMode}
+						cameraType={cameraType}
+						setFlashMode={this.setFlashMode}
+						setCameraType={this.setCameraType}
+						onCaptureIn={this.handleCaptureIn}
+						onCaptureOut={this.handleCaptureOut}
+						onLongCapture={this.handleLongCapture}
+						onShortCapture={this.handleShortCapture}
+					/>
+				}
 			</React.Fragment>
 		);
 	};
