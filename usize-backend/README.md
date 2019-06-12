@@ -12,7 +12,7 @@ Flask API upload image and save to file.
 ## Setup
 ```
 pip install https://github.com/OlafenwaMoses/ImageAI/releases/download/2.0.2/imageai-2.0.2-py3-none-any.whl
-pip install -r requirements.txt
+pip install tensorflow numpy scipy opencv-python pillow matplotlib h5py keras
 ```
 
 ## Start server

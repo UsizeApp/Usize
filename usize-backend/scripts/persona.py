@@ -1,35 +1,22 @@
-from skimage import io, transform
-from sklearn import cluster
-import cv2
-import skimage.data as data
-import skimage.segmentation as seg
-import skimage.filters as filters
-import skimage.draw as draw
-import skimage.color as color
-import numpy as np
-import matplotlib.pyplot as plt
-
 from imageai.Detection import ObjectDetection
 import os
 
 execution_path = os.getcwd()
+SPEED = "normal" # normal, fast, fastest, flash
 
 def person_detector(file):
     detector = ObjectDetection()
     detector.setModelTypeAsRetinaNet()
     detector.setModelPath(os.path.join(execution_path , "resources/resnet50_coco_best_v2.0.1.h5"))
-    detector.loadModel()
-    detector.CustomObjects(person=True)
+    detector.loadModel(detection_speed=SPEED)
+    custom_objects = detector.CustomObjects(person=True)
     filename, file_ext = os.path.splitext(file)
     output = filename+"_detection"+file_ext
-    detections = detector.detectObjectsFromImage(input_image=file, output_image_path=output)
-    if len(detections) == 0:
-        print("Persona: 0 %")
-        return "Persona", 0
+    detections = detector.detectCustomObjectsFromImage(custom_objects=custom_objects, input_image=file, output_image_path=output, minimum_percentage_probability=70)
     for eachObject in detections:
         object_type = eachObject["name"]
         probability = eachObject["percentage_probability"]
-        print(object_type , " : " ,round(probability,2), "%")
+        print(object_type , " : " , probability, ":", eachObject["box_points"])
         if object_type == "person":
-            return object_type, probability
-    return None, None
+            return True
+    return None

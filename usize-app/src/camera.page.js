@@ -32,7 +32,8 @@ export default class CameraPage extends React.Component {
 		this.setState({ capturing: false })
 
 		var uri = photoData.uri;
-		var serverURL = "http://192.168.0.12:3333/login"
+		var uploadURL = "http://192.168.0.12:3333/upload"
+		var responseURL = "http://192.168.0.12:3333/response"
 
 		var photo = {
 			uri: uri,
@@ -48,29 +49,45 @@ export default class CameraPage extends React.Component {
 		body.append('title', 'A beautiful photo!');
 		
 		var xhr = new XMLHttpRequest();
-		xhr.open('POST', serverURL);
+		xhr.open('POST', uploadURL);
 		xhr.send(body);
 
 		var data = {
 			"username": "b",
-		}
+		};
 
-		/*
-		fetch(serverURL, {
-			method: "POST",
-			headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-			body: JSON.stringify(data)
-		})
-			.then(function (response) {
-				console.log(response)
-				return response.json();
-			})
-			.then(function (data) {
-				console.log(data)
-			});
+//		fetch(serverURL, {
+//		   method: "POST",
+//		   headers: headers,
+//		   body:  JSON.stringify(data)
+//		})
+//		.then(function(response){ 
+//		 return response.json();   
+//		})
+//		.then(function(data){ 
+//		console.log(data)
+//		});
 
-		*/
 	};
+
+//	serverResponse(){
+//		return fetch("http://192.168.0.12:3333/response")
+//			.then((response) => response.json())
+//			.then((responseJson) => {
+//
+//				this.setState({
+//					isLoading: false,
+//					dataSource: responseJson,
+//				}, function(){
+//
+//				});
+//
+//			})
+//			.catch((error) =>{
+//				console.error(error);
+//			});
+//	}
+
 
 	handleLongCapture = async () => {
 		const videoData = await this.camera.recordAsync();
@@ -107,8 +124,6 @@ export default class CameraPage extends React.Component {
 						ref={camera => this.camera = camera}
 					/>
 				</View>
-
-				{captures.length > 0 && <Gallery captures={captures} />}
 
 				<Toolbar
 					capturing={capturing}

@@ -1,8 +1,13 @@
+from scipy.spatial import distance as dist
 import cv2
 import time
 import numpy as np
 import os
-from scipy.spatial import distance as dist
+
+def midpoint(p1, p2):
+    if (p1 == None or p2 == None):
+        return -1
+    return [int((p1[0]+p2[0])/2) , int((p1[1]+p2[1])/2)]
 
 MODE = "COCO"
 
@@ -76,9 +81,26 @@ def open_pose_image(file, body_height_cm):
             cv2.circle(frame, points[partA], 8, (0, 0, 255), thickness=-1, lineType=cv2.FILLED)
 
 
-    head = points[14]
-    feet = points[10]
-    height_in_pixels = dist.euclidean(head, feet)
+    mouth = points[0]
+    
+    left_foot = points[10]
+    right_foot = points[13]
+
+    feet = midpoint(left_foot,right_foot)
+
+    if(feet == -1):
+        print("No se obtuvo la posición de un pie")
+        feet = [0,0]
+
+    cv2.circle(frame, tuple(feet), 8, (0, 255, 0), thickness=-1, lineType=cv2.FILLED)
+
+    forehead = midpoint(points[14],points[15])
+    forehead[1] = forehead[1] - (abs(mouth[1] - forehead[1])) 
+    
+    cv2.circle(frame, tuple(forehead), 8, (0, 255, 0), thickness=-1, lineType=cv2.FILLED)
+    cv2.line(frame,tuple(feet),tuple(forehead),(255,0,0),2)
+    
+    height_in_pixels = dist.euclidean(forehead, feet)
     
     pixelsPerMetric = height_in_pixels / body_height_cm
 
@@ -90,6 +112,9 @@ def open_pose_image(file, body_height_cm):
     left_elbow = points[3]
     left_wrist = points[4]
 
+    #sleeves = search_sleeves_v2(frame,left_wrist, 200, 100)
+    #cv2.circle(frame, tuple(sleeves), 8, (255, 0, 0), thickness=-1, lineType=cv2.FILLED)
+
     # compute the Euclidean distance between the points
     right_humerus = dist.euclidean(right_shoulder, right_elbow)
     right_forearm = dist.euclidean(right_elbow, right_wrist)
@@ -99,21 +124,23 @@ def open_pose_image(file, body_height_cm):
 
     right_arm = (right_humerus + right_forearm) / pixelsPerMetric
     left_arm = (left_humerus + left_forearm) / pixelsPerMetric
-    print(right_arm)
-    print(left_arm)
 
     # draw the object sizes on the image
     cv2.putText(frame, "{:.0f}cm".format(right_arm), (int(right_elbow[0] + 80), int(right_elbow[1])), cv2.FONT_HERSHEY_SIMPLEX, 3, (255, 255, 255), 2)
     cv2.putText(frame, "{:.0f}cm".format(left_arm), (int(left_elbow[0] - 300), int(left_elbow[1])), cv2.FONT_HERSHEY_SIMPLEX, 3, (255, 255, 255), 2)
 
-    #cv2.imshow('Output-Keypoints', frameCopy)
-    #cv2.imshow('Output-Skeleton', frame)
-
+    #cv2.imshow('Output-Keypoints', cv2.pyrDown(frameCopy))
+    #cv2.imshow('Output-Skeleton', cv2.pyrDown(frame))
 
     cv2.imwrite(os.path.abspath('output/Output-Keypoints.jpg'), frameCopy)
     cv2.imwrite(os.path.abspath('output/Output-Skeleton.jpg'), frame)
 
-    print("Total time taken : {:.3f}".format(time.time() - t))
+    measures = {
+        "right": right_arm,
+        "left": left_arm,
+        "path": os.path.abspath('output/Output-Skeleton.jpg'),
+        "time": "{:.3f}".format(time.time() - t)
+    }
 
+    return measures
     #cv2.waitKey(0)
-
