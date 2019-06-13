@@ -28,6 +28,8 @@ export default class ScannerPage extends React.Component {
 	handleCaptureOut = () => {
 		if (this.state.capturing)
 			this.camera.stopRecording();
+		const { navigation } = this.props
+		navigation.push('Measure')
 	};
 
 	handleShortCapture = async () => {
@@ -36,7 +38,7 @@ export default class ScannerPage extends React.Component {
 
 		var uri = photoData.uri;
 
-		var serverURL = "http://10.0.0.22:3333/upload"
+		var serverURL = "http://192.168.43.169:3333/upload"
 		//var serverURL = "http://192.168.0.5:3333/upload"
 
 		var photo = {
@@ -45,11 +47,11 @@ export default class ScannerPage extends React.Component {
 			name: 'photo.jpg',
 		};
 
-		var height = 174
+		const { navigation } = this.props;
 
 		var body = new FormData();
 		body.append('photo', photo);
-		body.append('height', height);
+		body.append('height', (navigation.state.params.height));
 		body.append('authToken', 'secret');
 
 		var xhr = new XMLHttpRequest();
