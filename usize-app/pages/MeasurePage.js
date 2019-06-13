@@ -1,10 +1,11 @@
 import React from 'react'
-import { View, Text, Image } from 'react-native'
+import { View, Text, Image, ActivityIndicator } from 'react-native'
 import Button from '../components/Utils/Button'
+import Spinner from 'react-native-loading-spinner-overlay'
 
 export default class MeasurePage extends React.Component {
   static navigationOptions = {
-    title: 'Home',
+    title: 'Measure',
     headerStyle: {
       backgroundColor: '#66CBFF',
       elevation: 0,
@@ -15,23 +16,59 @@ export default class MeasurePage extends React.Component {
   }
 
   state = {
+    data: 0,
+    validData: false,
     isLoading: true,
   }
 
-  handlePress = (to) => {
-    const { navigation } = this.props
-    navigation.push(to)
+  fetchFunction = async () => {
+    await this.setState({
+      data: 1
+    })
   }
 
-  componentDidMount() {
-    // su await para recibir del backend lo necesario
-    //cambiar valor de state isLoading a false una vez obtenida la data
+  timeout = (ms) => {
+      return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  checkData = async () => {
+
+    await this.timeout(3000);
+    console.log('Intentando')
+    this.fetchFunction()
+    const { data } = this.state
+
+    if (data === 0){
+      this.checkData()
+    } else if (data === 1) {
+      this.setState({isLoading: false})
+      const { navigation } = this.props
+      navigation.navigate('Home', {
+        error: true,
+      })
+    } else if (data === 2) {
+      this.setState({validData: true, isLoading: false})
+    }
+  }
+
+  async componentDidMount() {
+    this.checkData()
   }
 
   render () {
+    const { validData, isLoading } = this.state
 
     return (
       <View>
+        <Spinner
+          visible={isLoading}
+          customIndicator={
+            <View style={{flexDirection: 'row'}}>
+              <ActivityIndicator color="white" />
+              <Text style={{fontSize: 16, color: 'white'}}>Calculando...</Text>
+            </View>
+          }
+        />
         <View style={{alignItems: 'center', marginTop: 30}}>
           <Text style={{color: '#66CBFF', fontWeight: 'bold', fontSize: 18}}>¿Son estas tus medidas?</Text>
         </View>

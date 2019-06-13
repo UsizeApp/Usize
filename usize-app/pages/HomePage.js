@@ -4,6 +4,8 @@ import Layout from '../components/Layout'
 import LottieAnimation from '../components/Utils/LottieAnimation'
 import measureAnimation from '../assets/animations/measure'
 import Button from '../components/Utils/Button'
+import DropdownAlert from 'react-native-dropdownalert'
+import { NavigationEvents } from 'react-navigation'
 
 export default class AccessPage extends React.Component {
   static navigationOptions = {
@@ -22,6 +24,16 @@ export default class AccessPage extends React.Component {
     navigation.push(to)
   }
 
+  withError = () => {
+    const { navigation } = this.props;
+    const error = navigation.getParam('error');
+    if (error){
+      const { dropdown } = this
+      dropdown.alertWithType('error', 'No se pudo calcular las medidas', 'No se ha detectado una persona')
+      navigation.setParams({error: null})
+    }
+  }
+
   render() {
     return (
       <Layout>
@@ -29,6 +41,10 @@ export default class AccessPage extends React.Component {
           {this.renderAnimation()}
           {this.renderOptions()}
         </View>
+        <DropdownAlert ref={ref => this.dropdown = ref} />
+        <NavigationEvents
+          onWillFocus={() => this.withError()}
+        />
       </Layout>
     )
   }

@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { DangerZone } from 'expo'
 import { View } from 'react-native'
 import Lottie from 'lottie-react-native'
 
