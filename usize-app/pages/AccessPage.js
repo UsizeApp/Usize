@@ -78,12 +78,12 @@ export default class AccessPage extends React.Component {
                 <Text style={{ fontSize: 10, color: 'red' }}>{errors.password}</Text>
               }
               <TouchableOpacity style={{flexDirection: 'row', marginVertical: 5}} onPress={() => this.handlePress('Register')}>
-                <Text style={{color: '#8E8E8E'}}>¿No tienes una cuenta?, </Text><Text style={{color: '#66CBFF'}}>Registrate</Text>
+                <Text style={{color: '#8E8E8E'}}>¿No tienes una cuenta? </Text><Text style={{color: '#66CBFF'}}>Regístrate</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.ButtonHolder(isValid)} disabled={!isValid} onPress={handleSubmit}>
                 <Text style={styles.ButtonText}>Ingresar</Text>
               </TouchableOpacity>
-              <Button text="Usuario Anonimo" icon="ios-contact" to="Home" onPress={this.handlePress}/>
+              <Button text="Usar sin registarse" icon="ios-contact" to="Home" onPress={this.handlePress}/>
             </View>
           )}
         </Formik>
