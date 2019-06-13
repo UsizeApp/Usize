@@ -2,8 +2,11 @@ import requests
 
 API_addr = "http://127.0.0.1:3333/upload"
 
+human = 'samples\\single2.jpg'
+void = 'samples\\void.jpg'
+
 API_files = {
-	'photo': open('samples\\single2.jpg','rb')
+	'photo': open(human,'rb')
 }
 
 height = 174

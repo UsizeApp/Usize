@@ -35,8 +35,9 @@ export default class ScannerPage extends React.Component {
 		this.setState({ capturing: false })
 
 		var uri = photoData.uri;
-		//var serverURL = "http://10.0.0.22:3333/upload"
-		var serverURL = "http://192.168.0.5:3333/upload"
+
+		var serverURL = "http://10.0.0.22:3333/upload"
+		//var serverURL = "http://192.168.0.5:3333/upload"
 
 		var photo = {
 			uri: uri,
@@ -61,24 +62,43 @@ export default class ScannerPage extends React.Component {
 					if (JSON_mode == 1) {
 						// Obtengo la respuesta de la API
 						var json_res = JSON.parse(xhr.responseText);
-						//console.log(json_res);
+
 						var alert_left = "-1";
 						var alert_right = "-1";
+						var result = "";
+						var reason = "";
 						// Itero sobre los elementos del JSON de la respuesta
 						JSON.parse(xhr.responseText, function (k, v) {
 							//console.log(k);
 							//console.log(v);
-							if (k == "left")
+							if (k == "result")
+								result = v;
+							else if (k == "left")
 								alert_left = v;
-							if (k == "right")
+							else if (k == "right")
 								alert_right = v;
+							else if (k == "reason")
+								reason = v;
 						});
 						// Genero una alerta en la app
-						var myAlert = "Brazo izquierdo: " + alert_left + "\nBrazo derecho: " + alert_right;
-						console.log(myAlert);
+						var myTitle = "myTitle";
+						var myAlert = "myAlert";
+
+						if (result == "success") {
+							myTitle = "Resultados"
+							myAlert = "Brazo izquierdo: " + alert_left + "\nBrazo derecho: " + alert_right;
+						}
+						else if (result == "sys_error") {
+							myTitle = "Error de la API: código 42"
+							myAlert = "Informar al Size Team inmediatamente:\n" + reason;
+						}
+						else if (result == "no_human") {
+							myTitle = "Alerta"
+							myAlert = "La fotografía tomada no contiene a una persona\n" + reason;
+						}
 
 						if (Alert)
-							Alert.alert("Resultados", myAlert);
+							Alert.alert(myTitle, myAlert);
 						else
 							alert(myAlert);
 					}
