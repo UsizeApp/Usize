@@ -2,7 +2,6 @@ import cv2
 import time
 import numpy as np
 import os
-import imutils
 from scipy.spatial import distance as dist
 
 def midpoint(p1, p2):
@@ -12,7 +11,7 @@ def midpoint(p1, p2):
 
 def move(frame, point, direction, n, color):
     #0 move up, 1 move right, 2 move down, 3 move left
-    cv2.circle(frame, (point[0],point[1]), 8, (0,125,0), thickness=-1, lineType=cv2.FILLED)
+    #cv2.circle(frame, (point[0],point[1]), 8, (0,125,0), thickness=-1, lineType=cv2.FILLED)
     final = [point[1],point[0]]
     if((frame[tuple(final)] == color).all()):
         return [final[1],final[0]]
@@ -72,8 +71,9 @@ def open_pose_image(file, body_height_cm):
     
 
 
-    _,thresh = cv2.threshold(frameGray,70,255,0)
-    contours, _ = cv2.findContours(thresh,cv2.RETR_TREE,cv2.cv2.CHAIN_APPROX_NONE)
+    edged = cv2.Canny(frameGray, 30, 200)
+    #_,thresh = cv2.threshold(frameGray,70,255,0)
+    contours, _ = cv2.findContours(edged,cv2.RETR_TREE,cv2.cv2.CHAIN_APPROX_NONE)
     frameContours = cv2.drawContours(frameContours, contours, -1, (0,255,0), 3)
     
     net = cv2.dnn.readNetFromCaffe(protoFile, weightsFile)
@@ -149,7 +149,6 @@ def open_pose_image(file, body_height_cm):
     
     height_in_pixels = dist.euclidean(forehead, feet)
     
-    body_height_cm = height
     pixelsPerMetric = height_in_pixels / body_height_cm
 
     right_shoulder = points[5]
@@ -216,14 +215,15 @@ def open_pose_image(file, body_height_cm):
     cv2.putText(frame, "{:.0f}cm".format(new_left_arm), (int(left_elbow[0] - 300), int(left_elbow[1])), cv2.FONT_HERSHEY_SIMPLEX, 3, (255, 255, 255), 2)
 
     
-    cv2.imshow('Output-Keypoints', cv2.pyrDown(cv2.pyrDown(frameCopy)))
-    cv2.imshow('Output-Skeleton',cv2.pyrDown(cv2.pyrDown(frame)))
-    cv2.imshow('Contours', cv2.pyrDown(cv2.pyrDown(frameContours)))
-    
-    
     cv2.imwrite(os.path.abspath('output/Output-Keypoints.jpg'), frameCopy)
     cv2.imwrite(os.path.abspath('output/Output-Skeleton.jpg'), frame)
+    cv2.imwrite(os.path.abspath('output/Output-frameContours.jpg'), frameContours)
 
+    #cv2.imshow('Output-Keypoints', cv2.pyrDown(cv2.pyrDown(frameCopy)))
+#    cv2.imshow('Output-Skeleton',cv2.pyrDown(cv2.pyrDown(frame)))
+ #   cv2.imshow('Contours', cv2.pyrDown(cv2.pyrDown(frameContours)))
+    
+    
     measures = {
         "right": new_right_arm,
         "left": new_left_arm,
