@@ -43,3 +43,11 @@ wget -c ${RETINA_URL} -P ${RESOURCES_FOLDER}
 # "------------------------MISSING FOLDERS------------------------"
 mkdir ${INPUT_FOLDER}
 mkdir ${OUTPUT_FOLDER}
+
+
+: '
+http://posefs1.perception.cs.cmu.edu/OpenPose/models/pose/coco/pose_iter_440000.caffemodel
+http://posefs1.perception.cs.cmu.edu/OpenPose/models/pose/mpi/pose_iter_160000.caffemodel
+http://posefs1.perception.cs.cmu.edu/OpenPose/models/face/pose_iter_116000.caffemodel
+http://posefs1.perception.cs.cmu.edu/OpenPose/models/hand/pose_iter_102000.caffemodel
+'

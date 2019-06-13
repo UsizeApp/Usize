@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Linking } from 'react-native';
+import { View, Text, Linking, Alert } from 'react-native';
 import { Camera } from 'expo-camera'
 import * as Permissions from 'expo-permissions'
 import styles from '../styles/styles';
@@ -35,43 +35,69 @@ export default class ScannerPage extends React.Component {
 		this.setState({ capturing: false })
 
 		var uri = photoData.uri;
-		var serverURL = "http://192.168.0.5:3333/login"
+		//var serverURL = "http://10.0.0.22:3333/upload"
+		var serverURL = "http://192.168.0.5:3333/upload"
 
 		var photo = {
 			uri: uri,
 			type: 'image/jpeg',
 			name: 'photo.jpg',
 		};
+
 		var height = 174
+
 		var body = new FormData();
-		body.append('authToken', 'secret');
 		body.append('photo', photo);
 		body.append('height', height);
-		body.append('title', 'A beautiful photo!');
+		body.append('authToken', 'secret');
 
 		var xhr = new XMLHttpRequest();
 		xhr.open('POST', serverURL);
+
+		xhr.onload = function (e) {
+			if (xhr.readyState === 4) {
+				if (xhr.status === 200) {
+					var JSON_mode = 1
+					if (JSON_mode == 1) {
+						// Obtengo la respuesta de la API
+						var json_res = JSON.parse(xhr.responseText);
+						//console.log(json_res);
+						var alert_left = "-1";
+						var alert_right = "-1";
+						// Itero sobre los elementos del JSON de la respuesta
+						JSON.parse(xhr.responseText, function (k, v) {
+							//console.log(k);
+							//console.log(v);
+							if (k == "left")
+								alert_left = v;
+							if (k == "right")
+								alert_right = v;
+						});
+						// Genero una alerta en la app
+						var myAlert = "Brazo izquierdo: " + alert_left + "\nBrazo derecho: " + alert_right;
+						console.log(myAlert);
+
+						if (Alert)
+							Alert.alert("Resultados", myAlert);
+						else
+							alert(myAlert);
+					}
+					else {
+						var response = xhr.responseText;
+						var json_res2 = response.json()
+						console.log(json_res2)
+					}
+				} else {
+					console.error(xhr.statusText);
+				}
+			}
+		}.bind(this);
+
+		xhr.onerror = function (e) {
+			console.error(xhr.statusText);
+		};
+
 		xhr.send(body);
-
-		var data = {
-			"username": "b",
-		}
-
-		/*
-		fetch(serverURL, {
-			method: "POST",
-			headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-			body: JSON.stringify(data)
-		})
-			.then(function (response) {
-				console.log(response)
-				return response.json();
-			})
-			.then(function (data) {
-				console.log(data)
-			});
-
-		*/
 	};
 
 	handleLongCapture = async () => {
@@ -107,7 +133,7 @@ export default class ScannerPage extends React.Component {
 					/>
 				</View>
 
-				{captures.length === 2 ? <Scanner.Continue onPress={this.onContinueHandler}/> :
+				{captures.length === 2 ? <Scanner.Continue onPress={this.onContinueHandler} /> :
 					<Scanner.Toolbar
 						capturing={capturing}
 						flashMode={flashMode}
