@@ -18,11 +18,14 @@ app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 
-def handle_photo(photo, height):
+def handle_photo(photo, height, test):
     szNow = dt.now().strftime("%Y-%M-%d %H.%M.%S")
-    photo_path = "%s/photo_%s.jpg" % (PHOTO_FOLDER, szNow)
+    if test:
+        photo_path = "samples/test/front1.jpg"
+    else:
+        photo_path = "%s/photo_%s.jpg" % (PHOTO_FOLDER, szNow)
+        photo.save(photo_path)
 
-    photo.save(photo_path)
     full_path = os.path.abspath(photo_path)
     print(">> Saved: %s" % full_path)
 
@@ -53,7 +56,7 @@ def handle_photo(photo, height):
                 'exception': str(e)
             }
             return jsonify(result)
-    # Si pPersona < 0.7
+    # Si persona < 0.7
     else:
         s = "No pudimos detectar a una persona."
         result = {
@@ -73,8 +76,8 @@ def upload():
     if request.method == 'POST':
         photo = request.files['photo']
         height = int(request.form['height'])
-        
-        result = handle_photo(photo, height)
+        test = True
+        result = handle_photo(photo, height, test)
 
         if isinstance(result, dict):
             return jsonify(result)
