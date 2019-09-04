@@ -19,11 +19,12 @@ export default class MeasurePage extends React.Component {
     data: 0,
     validData: false,
     isLoading: true,
+    medidas: {},
   }
 
   fetchFunction = async () => {
     await this.setState({
-      data: 1
+      data: 2
     })
   }
 
@@ -33,8 +34,11 @@ export default class MeasurePage extends React.Component {
 
   checkData = async () => {
 
-    await this.timeout(3000);
-    console.log('Intentando')
+    const { navigation } = this.props;
+    json = navigation.state.params.json;
+
+    await this.timeout(1);
+    //console.log('Intentando');
     this.fetchFunction()
     const { data } = this.state
 
@@ -42,12 +46,11 @@ export default class MeasurePage extends React.Component {
       this.checkData()
     } else if (data === 1) {
       this.setState({isLoading: false})
-      const { navigation } = this.props
       navigation.navigate('Home', {
         error: true,
       })
     } else if (data === 2) {
-      this.setState({validData: true, isLoading: false})
+      this.setState({validData: true, isLoading: false, medidas: json})
     }
   }
 
@@ -56,7 +59,7 @@ export default class MeasurePage extends React.Component {
   }
 
   render () {
-    const { validData, isLoading } = this.state
+    const { validData, isLoading, medidas } = this.state
 
     return (
       <View>
@@ -70,7 +73,7 @@ export default class MeasurePage extends React.Component {
           }
         />
         <View style={{alignItems: 'center', marginTop: 30}}>
-          <Text style={{color: '#66CBFF', fontWeight: 'bold', fontSize: 18}}>¿Son estas tus medidas?</Text>
+          <Text style={{color: '#66CBFF', fontWeight: 'bold', fontSize: 18}}>Tus medidas son:</Text>
         </View>
         {this.renderGallery()}
         {this.renderOptions()}
@@ -80,14 +83,17 @@ export default class MeasurePage extends React.Component {
 
   renderGallery = () => {
     return (
-      <View style={{flexDirection: 'row', marginTop: 30}}>
-        <View style={{flex: 1, alignItems: 'center'}}>
-          <Image source={{uri: 'http://placehold.it/100x100'}} style={{width: 100, height: 100}}/>
-          <Text style={{marginTop: 10, color: '#66CBFF', fontWeight: 'bold'}}>Brazo Izquierdo</Text>
-        </View>
-        <View style={{flex: 1, alignItems: 'center'}}>
-          <Image source={{uri: 'http://placehold.it/100x100'}} style={{width: 100, height: 100}}/>
-          <Text style={{marginTop: 10, color: '#66CBFF', fontWeight: 'bold'}}>Brazo Derecho</Text>
+      <View style={{flexDirection: 'column', flex: 1, marginTop: 30, justifyContent: 'space-between'}}>
+        <View style={{alignItems: 'stretch'}}>
+          <Text style={{marginTop: 10, color: '#32CD32', fontWeight: 'bold'}}>Brazo Izquierdo: {this.state.medidas.left_arm} [cm]</Text>
+          <Text style={{marginTop: 10, color: '#32CD32', fontWeight: 'bold'}}>Brazo Derecho: {this.state.medidas.right_arm} [cm]</Text>
+          <Text style={{marginTop: 10, color: '#32CD32', fontWeight: 'bold'}}>Brazo Derecho: {this.state.medidas.right_arm} [cm]</Text>
+          <Text style={{marginTop: 10, color: '#32CD32', fontWeight: 'bold'}}>Pierna Izquierda: {this.state.medidas.left_leg} [cm]</Text>
+          <Text style={{marginTop: 10, color: '#32CD32', fontWeight: 'bold'}}>Pierna Derecha: {this.state.medidas.right_leg} [cm]</Text>
+          <Text style={{marginTop: 10, color: '#000000', fontWeight: 'bold'}}>Cintura: {this.state.medidas.waist} [cm]</Text>
+          <Text style={{marginTop: 10, color: '#000000', fontWeight: 'bold'}}>Cadera: {this.state.medidas.hip} [cm]</Text>
+          <Text style={{marginTop: 10, color: '#000000', fontWeight: 'bold'}}>Pecho: {this.state.medidas.chest} [cm]</Text>
+          <Text style={{marginTop: 10, color: '#000000', fontWeight: 'bold'}}>Busto: {this.state.medidas.bust} [cm]</Text>
         </View>
       </View>
     )
@@ -95,7 +101,7 @@ export default class MeasurePage extends React.Component {
 
   renderOptions = () => {
     return (
-      <View style={{alignItems: 'center', marginTop: 50}}>
+      <View style={{alignItems: 'center', marginTop: 300}}>
         <Button text="Confirmar Medidas" icon="ios-checkmark-circle" to="Access" onPress={this.handlePress}/>
         <Button text="Recalcular" icon="ios-aperture" to="Scanner" onPress={this.handlePress}/>
       </View>

@@ -31,16 +31,12 @@ def handle_photo(photo, height, test):
 
     result = None
 
-    # Si pPersona >= 0.7...
+    # Si persona >= 0.7...
     if person_detector(full_path):
         try:
             medidas = open_pose_image(full_path, height)
             if (DBG):
                 print(medidas)
-
-            for i in ['left', 'right']:
-                if i in medidas.keys():
-                    medidas[i] = "%.2f [cm]" % medidas[i]
 
             medidas['result'] = 'success'
             result = medidas

@@ -17,8 +17,8 @@ export default class ScannerPage extends React.Component {
 	};
 
 	onContinueHandler = () => {
-		const { navigation } = this.props
-		navigation.push('Measure')
+		//const { navigation } = this.props
+		//navigation.push('Measure')
 	}
 
 	setFlashMode = (flashMode) => this.setState({ flashMode });
@@ -28,8 +28,8 @@ export default class ScannerPage extends React.Component {
 	handleCaptureOut = () => {
 		if (this.state.capturing)
 			this.camera.stopRecording();
-		const { navigation } = this.props
-		navigation.push('Measure')
+		//const { navigation } = this.props
+		//navigation.push('Measure')
 	};
 
 	handleShortCapture = async () => {
@@ -60,10 +60,9 @@ export default class ScannerPage extends React.Component {
 		xhr.onload = function (e) {
 			if (xhr.readyState === 4) {
 				if (xhr.status === 200) {
-					var JSON_mode = 1
+					var JSON_mode = 2
 					if (JSON_mode == 1) {
 						// Obtengo la respuesta de la API
-						var json_res = JSON.parse(xhr.responseText);
 
 						var alert_left = "-1";
 						var alert_right = "-1";
@@ -105,9 +104,10 @@ export default class ScannerPage extends React.Component {
 							alert(myAlert);
 					}
 					else {
-						var response = xhr.responseText;
-						var json_res2 = response.json()
-						console.log(json_res2)
+						var json_res = JSON.parse(xhr.responseText);
+					    navigation.push('Measure', {
+					      json: json_res
+					    })
 					}
 				} else {
 					console.error(xhr.statusText);
@@ -129,8 +129,9 @@ export default class ScannerPage extends React.Component {
 
 	async componentDidMount() {
 		const camera = await Permissions.askAsync(Permissions.CAMERA);
-		const audio = await Permissions.askAsync(Permissions.AUDIO_RECORDING);
-		const hasCameraPermission = (camera.status === 'granted' && audio.status === 'granted');
+		//const audio = await Permissions.askAsync(Permissions.AUDIO_RECORDING);
+		//const hasCameraPermission = (camera.status === 'granted' && audio.status === 'granted');
+		const hasCameraPermission = (camera.status === 'granted');
 		this.setState({ hasCameraPermission });
 	};
 
