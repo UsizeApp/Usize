@@ -1,10 +1,13 @@
 # Usize
 Usize, tu talla correcta, tu ropa ideal.
 
-## Install libraries
+## Install expo
 ```
 npm install -g expo-cli
-npm install react-native-easy-grid @expo/vector-icons react-navigation formik yup react-native-dropdownalert react-native-loading-spinner-overlay
+```
+## Install libraries
+```
+npm install
 ```
 
 ## Start server

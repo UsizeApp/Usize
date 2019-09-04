@@ -38,8 +38,8 @@ export default class ScannerPage extends React.Component {
 
 		var uri = photoData.uri;
 
-		var serverURL = "http://192.168.43.169:3333/upload"
-		//var serverURL = "http://192.168.0.5:3333/upload"
+		//var serverURL = "http://192.168.43.169:3333/upload"
+		var serverURL = "http://192.168.0.11:3333/upload"
 
 		var photo = {
 			uri: uri,

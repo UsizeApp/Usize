@@ -1,5 +1,6 @@
 import React from 'react'
-import { createStackNavigator, createAppContainer } from 'react-navigation'
+import { createAppContainer } from 'react-navigation'
+import { createStackNavigator } from 'react-navigation-stack'
 import Home from '../pages/HomePage'
 import Access from '../pages/AccessPage'
 import Register from '../pages/RegisterPage'
