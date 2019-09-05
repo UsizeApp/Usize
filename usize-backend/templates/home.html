@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+	<title>Home</title>
+</head>
+
+<body>
+	<h2>Home</h2>
+	<a href="{{ url_for('login') }}">Login</a><br>
+	<a href="{{ url_for('upload') }}">Upload</a><br>
+	<a href="{{ url_for('register') }}">Register</a><br>
+
+	{% if session.user_id %}
+	<h4>user_id: {{ session.user_id }}</h4>
+	<a href="{{ url_for('logout') }}">Logout</a><br>
+	{% else %}
+	<h4>Not logged in. {{ session }}</h4>
+	{% endif %}
+
+	{% if q %}
+	{% for u in q  %}
+	{{ u.id }} {{ u.email }} {{ u.hash }}<br>
+	{% endfor %}
+	{% endif %}
+</body>
+
+</html>

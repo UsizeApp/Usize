@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+	<title>Register</title>
+</head>
+
+<body>
+	<a href="{{ url_for('home') }}">Home</a><br>	
+	{% if form %}
+	<h2>Register</h2>
+	<form method="POST">
+		{{form.csrf_token}}
+		{{form.email.label}} {{ form.email }}<br>
+		{{form.pwd.label}} {{ form.pwd }}<br>
+		<input type="submit" value="Submit">
+	</form>
+	{% endif %}
+</body>
+
+</html>
