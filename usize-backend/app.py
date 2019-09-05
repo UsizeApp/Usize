@@ -66,7 +66,7 @@ Usuario.populate()
 ################################################
 # Rutas de Flask
 ################################################
-WEB_BROWSER_ENABLED = 0
+WEB_BROWSER_ENABLED = 1
 LOG_FORM = 1
 IGNORE_FORM_VALIDATE = 1
 FAKE_TIMEOUT = 0
@@ -88,10 +88,12 @@ def responder(s='null', d=None):
 			
 	# Si el resultado final de resp es un diccionario, se retorna
 	if isinstance(d, dict):
-		return jsonify(resp)
+		j = jsonify(resp)
 	else:
-		return jsonify(RESPUESTA_BASE)
-
+		j = jsonify(RESPUESTA_BASE)
+	
+	#if DBG: print(j.response)
+	return j
 
 class UserForm(FlaskForm):
 	defaultemail = None
@@ -210,7 +212,19 @@ def profile():
 		if u is not None:
 			if DBG: print('usuario %d encontrado' % id)
 			sleep(FAKE_TIMEOUT)
-			return jsonify({'email': u.email})
+			return responder('ok', {
+				'email': u.email,
+				'right_arm': u.right_arm,
+				'left_arm': u.left_arm,
+				'right_leg': u.right_leg,
+				'left_leg': u.left_leg,
+				'waist': u.waist,
+				'hip': u.hip,
+				'chest': u.chest,
+				'bust': u.bust,
+				'nombre': u.nombre,
+				'rut': u.rut,
+			})
 		if DBG: print('user no encontrado')
 		return 'user no encontrado'		
 	
@@ -231,9 +245,13 @@ def upload():
 
 			result = tf.handle_photo(photo, height)
 			
-			if DBG: print(result)
+			#if DBG: print(result)
 
 			if isinstance(result, dict):
+				# Si la sesion tiene un usuario, actualizamos las medidas
+				if 'user_id' in session.keys():
+					id = session['user_id']
+					guardarMedidas(id, result)
 				return jsonify(result)
 			else:
 				return jsonify({'result': 'fatal_error'})
@@ -244,3 +262,20 @@ def upload():
 	
 	return render_template('upload.html', form=form) if WEB_BROWSER_ENABLED else 'Usize'
 
+
+def guardarMedidas(id, result):
+	u = Usuario.getUsuarioByID(id)
+	if u is not None:
+		try:
+			u.right_arm = result['right_arm']
+			u.left_arm = result['left_arm']
+			u.right_leg = result['right_leg']
+			u.left_leg = result['left_leg']
+			u.waist = result['waist']
+			u.hip = result['hip']
+			u.chest = result['chest']
+			u.bust = result['bust']
+
+			db.session.commit()
+		except:
+			pass

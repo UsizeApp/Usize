@@ -10,6 +10,18 @@ class Usuario(db.Model):
 	email = db.Column(db.String(80), unique=True, nullable=False)
 	hash = db.Column(db.String(128), nullable=False)
 
+	right_arm = db.Column(db.String(10))
+	left_arm = db.Column(db.String(10))
+	right_leg = db.Column(db.String(10))
+	left_leg = db.Column(db.String(10))
+	waist = db.Column(db.String(10))
+	hip = db.Column(db.String(10))
+	chest = db.Column(db.String(10))
+	bust = db.Column(db.String(10))
+
+	nombre = db.Column(db.String(80))
+	rut = db.Column(db.Integer)
+
 	def set_pwd(self, pwd):
 		self.hash = genpw(pwd)
 

@@ -82,6 +82,9 @@ export default class AccessPage extends React.Component {
       case "pwd incorrecta":
         status = 2;
         break;
+      case "email no existe":
+        status = 3;
+        break;
       default:
         status = -1;
     }
@@ -94,18 +97,21 @@ export default class AccessPage extends React.Component {
     return (
       <View style={styles.FormContainer}>
         <Formik
-          initialValues={{ email: 'example@email.com', password: 'holaholaa' }}
+          initialValues={{ email: 'example@email.comm', password: 'holaholaa' }}
           onSubmit={values => {
             // Falta encapsular todo esto con un icono de cargando
             // Y hacer el "handle" para cuando el login falla, o cuando esta todo ok
             this.loginAPI(values.email, values.password).done(() => {
               switch (this.state.status) {
                 case 1:
+                  //this.dropdown.alertWithType('success', 'Sesión iniciada')
                   this.props.navigation.navigate('Perfil')
                   break;
                 case 2:
-                  const { dropdown } = this
-                  dropdown.alertWithType('error', 'Error de autenticación', 'Usuario o contraseña incorrectos')
+                  this.dropdown.alertWithType('error', 'Error de autenticación', 'Usuario o contraseña incorrectos')
+                  break;
+                case 3:
+                  this.dropdown.alertWithType('error', 'Error de autenticación', 'El email ingresado no existe en nuestra base de datos')
                   break;
                 default:
                   break;

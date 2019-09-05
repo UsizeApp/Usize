@@ -5,7 +5,7 @@ import Spinner from 'react-native-loading-spinner-overlay'
 
 export default class MeasurePage extends React.Component {
   static navigationOptions = {
-    title: 'Measure',
+    title: 'Resultados',
     headerStyle: {
       backgroundColor: '#66CBFF',
       elevation: 0,
@@ -87,7 +87,6 @@ export default class MeasurePage extends React.Component {
         <View style={{alignItems: 'stretch'}}>
           <Text style={{marginTop: 10, color: '#32CD32', fontWeight: 'bold'}}>Brazo Izquierdo: {this.state.medidas.left_arm} [cm]</Text>
           <Text style={{marginTop: 10, color: '#32CD32', fontWeight: 'bold'}}>Brazo Derecho: {this.state.medidas.right_arm} [cm]</Text>
-          <Text style={{marginTop: 10, color: '#32CD32', fontWeight: 'bold'}}>Brazo Derecho: {this.state.medidas.right_arm} [cm]</Text>
           <Text style={{marginTop: 10, color: '#32CD32', fontWeight: 'bold'}}>Pierna Izquierda: {this.state.medidas.left_leg} [cm]</Text>
           <Text style={{marginTop: 10, color: '#32CD32', fontWeight: 'bold'}}>Pierna Derecha: {this.state.medidas.right_leg} [cm]</Text>
           <Text style={{marginTop: 10, color: '#000000', fontWeight: 'bold'}}>Cintura: {this.state.medidas.waist} [cm]</Text>
@@ -102,8 +101,7 @@ export default class MeasurePage extends React.Component {
   renderOptions = () => {
     return (
       <View style={{alignItems: 'center', marginTop: 300}}>
-        <Button text="Confirmar Medidas" icon="ios-checkmark-circle" to="Access" onPress={this.handlePress}/>
-        <Button text="Recalcular" icon="ios-aperture" to="Scanner" onPress={this.handlePress}/>
+        <Button text="Salir" icon="ios-checkmark-circle" to="Access" onPress={this.handlePress}/>
       </View>
     )
   }
