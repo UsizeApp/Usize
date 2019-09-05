@@ -1,0 +1,18 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# usize-backend
+input/
+resources/
+
+SECRET_KEY
+usize.sqlite
+
+.vscode/
+migrations/
+output/
+pose/
+samples/
+utils/
