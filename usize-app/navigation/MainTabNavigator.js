@@ -6,6 +6,7 @@ import Access from '../pages/AccessPage'
 import Register from '../pages/RegisterPage'
 import Scanner from '../pages/ScannerPage'
 import Measure from '../pages/MeasurePage'
+import Perfil from '../pages/PerfilPage'
 
 const AppNavigator = createStackNavigator(
   {
@@ -14,6 +15,7 @@ const AppNavigator = createStackNavigator(
     Scanner: Scanner,
     Home: Home,
     Measure: Measure,
+    Perfil: Perfil,
   },
   {
     initialRouteName: "Access"

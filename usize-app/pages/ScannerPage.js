@@ -38,8 +38,14 @@ export default class ScannerPage extends React.Component {
 
 		var uri = photoData.uri;
 
+		// PC? Alejandro
 		//var serverURL = "http://192.168.43.169:3333/upload"
-		var serverURL = "http://192.168.0.11:3333/upload"
+
+		// Jara
+		//var serverURL = "http://192.168.0.11:3333/upload"
+
+		// Otra cosa del Ale
+		var serverURL = "http://10.0.0.22:5000/upload"
 
 		var photo = {
 			uri: uri,
@@ -84,7 +90,6 @@ export default class ScannerPage extends React.Component {
 		xhr.onprogress = function(event) { // triggers periodically
 		  alert('Received ${event.loaded} of ${event.total}');
 		};
-
 	};
 
 	handleLongCapture = async () => {
@@ -139,8 +144,9 @@ export default class ScannerPage extends React.Component {
 	};
 };
 
-
-///		xhr.onload = function (e) {
+///		Ex handleo de error
+//
+//		xhr.onload = function (e) {
 //			if (xhr.readyState === 4) {
 //				if (xhr.status === 200) {
 //					var JSON_mode = 2

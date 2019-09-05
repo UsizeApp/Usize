@@ -11,7 +11,7 @@ RUN getModels.sh from command line.
 ## Setup
 ```
 pip install https://github.com/OlafenwaMoses/ImageAI/releases/download/2.0.2/imageai-2.0.2-py3-none-any.whl
-pip install tensorflow numpy==1.16.4 scipy opencv-python pillow matplotlib h5py keras flask
+pip install tensorflow numpy==1.16.4 scipy opencv-python pillow matplotlib h5py keras flask flask_sqlalchemy flask_migrate wtforms flask_wtf
 ```
 
 ## Start server

@@ -6,3 +6,13 @@ __pycache__/
 # usize-backend
 input/
 resources/
+
+SECRET_KEY
+usize.sqlite
+
+.vscode/
+migrations/
+output/
+pose/
+samples/
+utils/

@@ -1,0 +1,11 @@
+*.jks
+*.key
+*.mobileprovision
+*.orig.*
+*.p12
+.expo-shared/*
+.expo/*
+npm-debug.*
+node_modules/
+web-build/
+web-report/

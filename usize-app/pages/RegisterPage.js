@@ -16,10 +16,69 @@ export default class RegisterPage extends React.Component {
     headerTintColor: 'white',
   }
 
-  handleSubmit = (form) => {
-    const { navigation } = this.props
+//  handleSubmit = (form) => {
+//    const { navigation } = this.props
+//
+//    var serverURL = "http://192.168.0.11:3333/register"
+//
+//    var user_data = {
+//      first_name: form.first_name,
+//      last_name: form.last_name,
+//      rut: form.rut,
+//      email: form.email,
+//      password: form.password,
+//    };
+//
+//    // 1. Create a new XMLHttpRequest object
+//    var xhr = new XMLHttpRequest();
+//
+//    // 2. Configure it: POST-request for the server URL
+//    xhr.open("POST", serverURL);
+//    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+//
+//    // 3. Send the request over the network
+//    xhr.send(JSON.stringify(user_data));
+//
+//    // 4. This will be called after the response is received
+//    xhr.onload = function (e) {
+//      if (xhr.readyState === 4) {
+//        if (xhr.status === 200) {
+//          var json_res = JSON.parse(xhr.responseText);
+//          if (json_res.result == "fatal_error") {
+//            alert("Ha ocurrido un problema en el registro.");
+//            navigation.push("Register")
+//          } else if (json_res.result == "success") {
+//            alert("Registrado correctamente!");
+//            navigation.push("Access")
+//          }
+//        } else {
+//          console.error(xhr.statusText);
+//        }
+//      }
+//    };
+//
+//    xhr.onerror = function (e) {
+//      alert("Request failed");
+//    };
+//
+//    xhr.onprogress = function(event) { // triggers periodically
+//      alert('Received ${event.loaded} of ${event.total}');
+//    };
+//}
 
-    var serverURL = "http://192.168.0.11:3333/register"
+  // Constructor y variables de la clase
+  constructor() {
+    super();
+    this.state = {
+      status: 0,
+    }
+  }
+
+  async registroAPI(form) {
+
+    const URL = 'http://10.0.0.22:5000/register'
+
+    const formData = new FormData()
 
     var user_data = {
       first_name: form.first_name,
@@ -29,42 +88,27 @@ export default class RegisterPage extends React.Component {
       password: form.password,
     };
 
-//    // 1. Create a new XMLHttpRequest object
-    var xhr = new XMLHttpRequest();
+    formData.append('user_data', user_data);
+    formData.append('email', email);
+    formData.append('pwd', pwd);
+    formData.append('source', 'app');
 
-//    // 2. Configure it: POST-request for the server URL
-    xhr.open("POST", serverURL);
-    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    const response = await fetch(URL, {
+      credentials: 'same-origin',
+      method: 'POST',
+      body: formData,
+    });
 
-//    // 3. Send the request over the network
-    xhr.send(JSON.stringify(user_data));
+    try {
+      const json = await response.json();
+      console.log(json)
+    }
+    catch (e) {
+      console.log(e)
+    }
 
-    // 4. This will be called after the response is received
-    xhr.onload = function (e) {
-      if (xhr.readyState === 4) {
-        if (xhr.status === 200) {
-          var json_res = JSON.parse(xhr.responseText);
-          if (json_res.result == "fatal_error") {
-            alert("Ha ocurrido un problema en el registro.");
-            navigation.push("Register")
-          } else if (json_res.result == "success") {
-            alert("Registrado correctamente!");
-            navigation.push("Access")
-          }
-        } else {
-          console.error(xhr.statusText);
-        }
-      }
-    };
-
-    xhr.onerror = function (e) {
-      alert("Request failed");
-    };
-
-    xhr.onprogress = function(event) { // triggers periodically
-      alert('Received ${event.loaded} of ${event.total}');
-    };
-
+    // Cuando se obtengan las respuestas, seteamos las variables de la clase
+    this.setState({ status: 1 });
   }
 
   render() {
@@ -81,7 +125,13 @@ export default class RegisterPage extends React.Component {
     return (
       <Formik
         initialValues={{ first_name: '', last_name: '', rut: '', email: '', password: '', confirmPassword: '' }}
-        onSubmit={values => Alert.alert(JSON.stringify(values))}
+        onSubmit={values => {
+          //Alert.alert(JSON.stringify(values))
+          this.registroAPI(values).done(() => {
+            if (this.state.status == 1)
+              this.props.navigation.navigate('Perfil')
+          });
+        }}
         validationSchema={yup.object().shape({
           first_name: yup
             .string()
@@ -178,7 +228,7 @@ export default class RegisterPage extends React.Component {
             {touched.confirmPassword && errors.confirmPassword &&
               <Text style={{ fontSize: 10, color: 'red' }}>{errors.confirmPassword}</Text>
             }
-            <TouchableOpacity style={styles.Container(isValid)} disabled={!isValid} onPress={() => this.handleSubmit(values)}  >
+            <TouchableOpacity style={styles.Container(isValid)} disabled={!isValid} onPress={handleSubmit}>
               <Text style={styles.ButtonText}>Registrarse</Text>
             </TouchableOpacity>
           </View>
@@ -190,7 +240,7 @@ export default class RegisterPage extends React.Component {
 
 const styles = StyleSheet.create({
   Container: (isValid) => ({
-    backgroundColor: isValid ? '#66CBFF': "#8E8E8E",
+    backgroundColor: isValid ? '#66CBFF' : "#8E8E8E",
     padding: 8,
     borderRadius: 5,
     marginVertical: 15,

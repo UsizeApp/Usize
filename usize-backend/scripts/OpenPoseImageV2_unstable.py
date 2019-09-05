@@ -101,7 +101,8 @@ def open_pose_image(file, body_height_cm):
 
     edged = cv2.Canny(frameGray, 30, 200)
     #_,thresh = cv2.threshold(frameGray,70,255,0)
-    contours, _ = cv2.findContours(edged,cv2.RETR_TREE,cv2.cv2.CHAIN_APPROX_NONE)
+
+    contours = cv2.findContours(edged,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
     frameContours = cv2.drawContours(frameContours, contours, -1, (0,255,0), 3)
     
     net = cv2.dnn.readNetFromCaffe(protoFile, weightsFile)

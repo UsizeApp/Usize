@@ -61,7 +61,7 @@ export default class AccessPage extends React.Component {
       <View style={styles.FormContainer}>
         <Text style={{color: '#8E8E8E'}}>Ingrese su altura en centimetros</Text>
         <Formik
-          initialValues={{ height: '' }}
+          initialValues={{ height: '17' }}
           onSubmit={values => Alert.alert(JSON.stringify(values))}
           validationSchema={yup.object().shape({
             height: yup

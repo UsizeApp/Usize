@@ -5,7 +5,7 @@ import Spinner from 'react-native-loading-spinner-overlay'
 
 export default class MeasurePage extends React.Component {
   static navigationOptions = {
-    title: 'Measure',
+    title: 'Resultados',
     headerStyle: {
       backgroundColor: '#66CBFF',
       elevation: 0,
@@ -103,6 +103,7 @@ export default class MeasurePage extends React.Component {
       <View style={{alignItems: 'center', marginTop: 300}}>
         <Button text="Confirmar Medidas" icon="ios-checkmark-circle" to="Access" onPress={this.handlePress}/>
         <Button text="Recalcular" icon="ios-aperture" to="Scanner" onPress={this.handlePress}/>
+        <Button text="Salir" icon="ios-checkmark-circle" to="Access" onPress={this.handlePress}/>
       </View>
     )
   }
