@@ -54,72 +54,37 @@ export default class ScannerPage extends React.Component {
 		body.append('height', (navigation.state.params.height));
 		body.append('authToken', 'secret');
 
+		// 1. Create a new XMLHttpRequest object
 		var xhr = new XMLHttpRequest();
+
+		// 2. Configure it: POST-request for the server URL
 		xhr.open('POST', serverURL);
 
+		// 3. Send the request over the network
+		xhr.send(body);
+
+		// 4. This will be called after the response is received
 		xhr.onload = function (e) {
 			if (xhr.readyState === 4) {
 				if (xhr.status === 200) {
-					var JSON_mode = 2
-					if (JSON_mode == 1) {
-						// Obtengo la respuesta de la API
-
-						var alert_left = "-1";
-						var alert_right = "-1";
-						var result = "";
-						var reason = "";
-						// Itero sobre los elementos del JSON de la respuesta
-						JSON.parse(xhr.responseText, function (k, v) {
-							//console.log(k);
-							//console.log(v);
-							if (k == "result")
-								result = v;
-							else if (k == "left")
-								alert_left = v;
-							else if (k == "right")
-								alert_right = v;
-							else if (k == "reason")
-								reason = v;
-						});
-						// Genero una alerta en la app
-						var myTitle = "myTitle";
-						var myAlert = "myAlert";
-
-						if (result == "success") {
-							myTitle = "Resultados"
-							myAlert = "Brazo izquierdo: " + alert_left + "\nBrazo derecho: " + alert_right;
-						}
-						else if (result == "sys_error") {
-							myTitle = "Error de la API: código 42"
-							myAlert = "Informar al Size Team inmediatamente:\n" + reason;
-						}
-						else if (result == "no_human") {
-							myTitle = "Alerta"
-							myAlert = "La fotografía tomada no contiene a una persona\n" + reason;
-						}
-
-						if (Alert)
-							Alert.alert(myTitle, myAlert);
-						else
-							alert(myAlert);
-					}
-					else {
-						var json_res = JSON.parse(xhr.responseText);
-					    navigation.push('Measure', {
-					      json: json_res
-					    })
-					}
+					var json_res = JSON.parse(xhr.responseText);
+				    navigation.push('Measure', {
+				      json: json_res
+				    })
 				} else {
 					console.error(xhr.statusText);
 				}
 			}
-		}.bind(this);
-
-		xhr.onerror = function (e) {
-			console.error(xhr.statusText);
 		};
 
-		xhr.send(body);
+		xhr.onerror = function (e) {
+			alert("Request failed");
+		};
+
+		xhr.onprogress = function(event) { // triggers periodically
+		  alert('Received ${event.loaded} of ${event.total}');
+		};
+
 	};
 
 	handleLongCapture = async () => {
@@ -173,3 +138,62 @@ export default class ScannerPage extends React.Component {
 		);
 	};
 };
+
+
+///		xhr.onload = function (e) {
+//			if (xhr.readyState === 4) {
+//				if (xhr.status === 200) {
+//					var JSON_mode = 2
+//					if (JSON_mode == 1) {
+//						// Obtengo la respuesta de la API
+//
+//						var alert_left = "-1";
+//						var alert_right = "-1";
+//						var result = "";
+//						var reason = "";
+//						// Itero sobre los elementos del JSON de la respuesta
+//						JSON.parse(xhr.responseText, function (k, v) {
+//							//console.log(k);
+//							//console.log(v);
+//							if (k == "result")
+//								result = v;
+//							else if (k == "left")
+//								alert_left = v;
+//							else if (k == "right")
+//								alert_right = v;
+//							else if (k == "reason")
+//								reason = v;
+//						});
+//						// Genero una alerta en la app
+//						var myTitle = "myTitle";
+//						var myAlert = "myAlert";
+//
+//						if (result == "success") {
+//							myTitle = "Resultados"
+//							myAlert = "Brazo izquierdo: " + alert_left + "\nBrazo derecho: " + alert_right;
+//						}
+//						else if (result == "sys_error") {
+//							myTitle = "Error de la API: código 42"
+//							myAlert = "Informar al Size Team inmediatamente:\n" + reason;
+//						}
+//						else if (result == "no_human") {
+//							myTitle = "Alerta"
+//							myAlert = "La fotografía tomada no contiene a una persona\n" + reason;
+//						}
+//
+//						if (Alert)
+//							Alert.alert(myTitle, myAlert);
+//						else
+//							alert(myAlert);
+//					}
+//					else {
+//						var json_res = JSON.parse(xhr.responseText);
+//					    navigation.push('Measure', {
+//					      json: json_res
+//					    })
+//					}
+//				} else {
+//					console.error(xhr.statusText);
+//				}
+//			}
+//		}.bind(this);

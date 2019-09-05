@@ -84,16 +84,15 @@ export default class MeasurePage extends React.Component {
   renderGallery = () => {
     return (
       <View style={{flexDirection: 'column', flex: 1, marginTop: 30, justifyContent: 'space-between'}}>
-        <View style={{alignItems: 'stretch'}}>
-          <Text style={{marginTop: 10, color: '#32CD32', fontWeight: 'bold'}}>Brazo Izquierdo: {this.state.medidas.left_arm} [cm]</Text>
-          <Text style={{marginTop: 10, color: '#32CD32', fontWeight: 'bold'}}>Brazo Derecho: {this.state.medidas.right_arm} [cm]</Text>
-          <Text style={{marginTop: 10, color: '#32CD32', fontWeight: 'bold'}}>Brazo Derecho: {this.state.medidas.right_arm} [cm]</Text>
-          <Text style={{marginTop: 10, color: '#32CD32', fontWeight: 'bold'}}>Pierna Izquierda: {this.state.medidas.left_leg} [cm]</Text>
-          <Text style={{marginTop: 10, color: '#32CD32', fontWeight: 'bold'}}>Pierna Derecha: {this.state.medidas.right_leg} [cm]</Text>
-          <Text style={{marginTop: 10, color: '#000000', fontWeight: 'bold'}}>Cintura: {this.state.medidas.waist} [cm]</Text>
-          <Text style={{marginTop: 10, color: '#000000', fontWeight: 'bold'}}>Cadera: {this.state.medidas.hip} [cm]</Text>
-          <Text style={{marginTop: 10, color: '#000000', fontWeight: 'bold'}}>Pecho: {this.state.medidas.chest} [cm]</Text>
-          <Text style={{marginTop: 10, color: '#000000', fontWeight: 'bold'}}>Busto: {this.state.medidas.bust} [cm]</Text>
+        <View style={{marginTop: 10, alignItems: 'stretch'}}>
+          <Text style={{color: '#32CD32', fontWeight: 'bold'}}>Brazo Izquierdo: {this.state.medidas.left_arm} [cm]</Text>
+          <Text style={{color: '#32CD32', fontWeight: 'bold'}}>Brazo Derecho: {this.state.medidas.right_arm} [cm]</Text>
+          <Text style={{color: '#32CD32', fontWeight: 'bold'}}>Pierna Izquierda: {this.state.medidas.left_leg} [cm]</Text>
+          <Text style={{color: '#32CD32', fontWeight: 'bold'}}>Pierna Derecha: {this.state.medidas.right_leg} [cm]</Text>
+          <Text style={{color: '#000000'}}>Cintura: {this.state.medidas.waist} [cm]</Text>
+          <Text style={{color: '#000000'}}>Cadera: {this.state.medidas.hip} [cm]</Text>
+          <Text style={{color: '#000000'}}>Pecho: {this.state.medidas.chest} [cm]</Text>
+          <Text style={{color: '#000000'}}>Busto: {this.state.medidas.bust} [cm]</Text>
         </View>
       </View>
     )

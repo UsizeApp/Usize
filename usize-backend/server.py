@@ -3,7 +3,7 @@ from flask import Flask, session, redirect, url_for, escape, request, jsonify
 import os
 from datetime import datetime as dt
 
-from scripts.OpenPoseImage import open_pose_image
+from scripts.OpenPoseImageV2 import open_pose_image
 from scripts.persona import person_detector
 
 DBG = 1
@@ -63,6 +63,12 @@ def handle_photo(photo, height, test):
 
     return result    
 
+def register_user(user_data):
+    print(user_data)
+    # hacer cosillas
+    return {'result': 'success'}
+
+
 @app.route('/')
 def index():
     return 'Usize/'
@@ -80,6 +86,18 @@ def upload():
         else:
             return jsonify({'result': 'fatal_error'})
     return "Usize/upload"
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        user_data = request.get_json()
+        result = register_user(user_data)
+
+        if isinstance(result, dict):
+            return jsonify(result)
+        else:
+            return jsonify({'result': 'fatal_error'})
+    return "Usize/register"
 
 
 # GET requests will be blocked

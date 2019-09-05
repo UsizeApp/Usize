@@ -50,7 +50,7 @@ export default class AccessPage extends React.Component {
               .required('Ingrese un Correo'),
             password: yup
               .string()
-              .min(6, 'Contraseña debe ser de al menos 6 caracteres')
+              .min(8, 'Contraseña debe ser de al menos 8 caracteres')
               .required('Ingrese una Contraseña'),
           })}
         >
