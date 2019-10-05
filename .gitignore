@@ -1,0 +1,14 @@
+*.jks
+*.key
+*.mobileprovision
+*.orig.*
+*.p12
+.expo-shared/*
+.expo/*
+node_modules
+node_modules/**/*
+npm-debug.*
+web-build/
+web-report/
+.watchmanconfig
+.vscode/

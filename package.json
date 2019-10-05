@@ -1,0 +1,39 @@
+{
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "eject": "expo eject"
+  },
+  "dependencies": {
+    "@expo/vector-icons": "^10.0.5",
+    "braces": "^3.0.2",
+    "expo": "^34.0.4",
+    "expo-camera": "^6.0.0",
+    "expo-module-scripts": "^1.0.1",
+    "formik": "^1.5.8",
+    "lottie-react-native": "^2.6.1",
+    "react": "^16.8.6",
+    "react-dom": "^16.9.0",
+    "react-native": "^0.59.8",
+    "react-native-app-intro-slider": "^3.0.0",
+    "react-native-dropdownalert": "^4.2.0",
+    "react-native-easy-grid": "^0.2.2",
+    "react-native-gesture-handler": "^1.3.0",
+    "react-native-loading-spinner-overlay": "^1.0.1",
+    "react-native-reanimated": "^1.1.0",
+    "react-native-safe-modules": "^1.0.0",
+    "react-native-web": "^0.11.7",
+    "react-navigation": "^4.0.5",
+    "react-navigation-stack": "^1.7.3",
+    "react-navigation-tabs": "^2.5.2",
+    "rn-tri-toggle-switch": "^1.0.4",
+    "yup": "^0.27.0"
+  },
+  "devDependencies": {
+    "babel-preset-expo": "^6.0.0"
+  },
+  "private": true
+}
