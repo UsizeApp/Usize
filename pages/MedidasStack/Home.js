@@ -16,7 +16,7 @@ function FilaMedida(props) {
     }}
     >
       <Text style={{ flex: 1, color: 'grey' }}>{tipo}</Text>
-      <Text style={{ textAlign: 'right', color: 'blue' }}>{medida}</Text>
+      <Text style={{ textAlign: 'right', color: 'grey' }}>{medida}</Text>
     </View>
   );
 }
@@ -52,7 +52,7 @@ export default class MedidasHome extends Component {
     console.log('Medidas::getMedidas');
     const u = new Usuario();
 
-    const medidas = await u.getMedidas();
+    const medidas = await u.getMedidas(true);
     // const metodo = await u.getMetodoAuth();
 
     this.setState({
@@ -79,7 +79,7 @@ export default class MedidasHome extends Component {
 
             <FilaMedida tipo="Pierna Izquierda" medida={medidas.left_leg} />
             <FilaMedida tipo="Pierna Derecha" medida={medidas.right_leg} />
-
+			
             <FilaMedida tipo="Cintura" medida={medidas.waist} />
             <FilaMedida tipo="Cadera" medida={medidas.hip} />
             <FilaMedida tipo="Pecho" medida={medidas.chest} />

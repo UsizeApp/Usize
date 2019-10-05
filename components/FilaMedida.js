@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   },
   medida: {
     textAlign: 'right',
-    color: 'blue',
+    color: 'grey',
   },
 });
 

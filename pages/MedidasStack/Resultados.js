@@ -6,6 +6,8 @@ import { Usuario } from '../../models/API'
 import estilos from '../../styles/estilos';
 import FilaMedida from '../../components/FilaMedida';
 
+import { NavigationActions, StackActions } from 'react-navigation';
+
 export default class Resultados extends React.Component {
   static navigationOptions = {
     title: 'Resultados',
@@ -30,7 +32,14 @@ export default class Resultados extends React.Component {
 
   handlePress = (to) => {
     const { navigation } = this.props
-    navigation.navigate(to)
+	
+	resetAction = StackActions.reset({
+                index: 0,
+                actions: [NavigationActions.navigate({ routeName: to })],
+            });
+
+	this.props.navigation.dispatch(resetAction); 
+    //navigation.navigate(to)
   }
 
   async componentDidMount() {
@@ -62,15 +71,16 @@ export default class Resultados extends React.Component {
     const { medidas } = this.state;
     return (
       <View style={estilos.marco}>
-        <FilaMedida tipo="Brazo Izquierdo" medida={medidas.left_arm} />
-        <FilaMedida tipo="Brazo Derecho" medida={medidas.right_arm} />
+        <FilaMedida tipo="Brazo Izquierdo" medida={medidas.left_arm + ' cm'} />
+        <FilaMedida tipo="Brazo Derecho" medida={medidas.right_arm + ' cm'} />
 
-        <FilaMedida tipo="Pierna Izquierda" medida={medidas.left_leg} />
-        <FilaMedida tipo="Pierna Derecha" medida={medidas.right_leg} />
+        <FilaMedida tipo="Pierna Izquierda" medida={medidas.left_leg + ' cm'} />
+        <FilaMedida tipo="Pierna Derecha" medida={medidas.right_leg + ' cm'} />
 
-        <FilaMedida tipo="Cadera" medida={medidas.hips_length} />
-        <FilaMedida tipo="Pecho" medida={medidas.chest_length} />
-        <FilaMedida tipo="Busto" medida={medidas.bust_length} bbw="0" />
+		<FilaMedida tipo="Cintura" medida={medidas.waist + ' cm'} />
+        <FilaMedida tipo="Cadera" medida={medidas.hips_length + ' cm'} />
+        <FilaMedida tipo="Pecho" medida={medidas.chest_length + ' cm'} />
+        <FilaMedida tipo="Busto" medida={medidas.bust_length + ' cm'} bbw="0" />
       </View>
     )
   }

@@ -12,3 +12,4 @@ web-build/
 web-report/
 .watchmanconfig
 .vscode/
+.eslintrc.json

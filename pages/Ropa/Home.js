@@ -12,9 +12,9 @@ function Separador() {
   return <View style={styles.separador} />;
 }
 
-export default class PerfilHome extends Component {
+export default class Ropa1 extends Component {
   static navigationOptions = {
-    title: 'Perfil',
+    title: 'Tallas',
     headerStyle: {
       backgroundColor: '#66CBFF',
       elevation: 0,
@@ -33,18 +33,19 @@ export default class PerfilHome extends Component {
   }
 
   componentDidMount() {
-    this.getPerfil();
+    this.getMedidas();
   }
 
-  async getPerfil() {
-    console.log('Perfil::getPerfil');
-
+  async getMedidas() {
+    console.log('Medidas::getMedidas');
     const u = new Usuario();
 
-    const perfil = await u.getPerfil();
+    const medidas = await u.getMedidas(false);
+    // const metodo = await u.getMetodoAuth();
 
     this.setState({
-      perfil,
+      medidas,
+      // metodo,
       done: true,
     });
   }
@@ -72,17 +73,38 @@ export default class PerfilHome extends Component {
     const { done } = this.state;
 
     if (done) {
-      const { perfil } = this.state;
+		const { medidas } = this.state;
+		
+		var talla_pantalon = 44
+		var talla_polera = 'XS'
+		var media_leg = (Number(medidas.left_leg) + Number(medidas.right_leg))/2
+		var media_arms = Number(medidas.waist)
+		
+		console.log(media_leg)
+		console.log(media_arms)
+		var tallas_pantalon = [[44, 103.5], [46, 106.5], [48, 109.5], [50, 112.5], [52, 115.5], [54, 118.5], [56, 121.5], [58, 124.5]]
+		//var tallas_polera = [['XS', 63.5], ['S', 64.25], ['M', 64.77], ['L', 65.28], ['XL', 64.04]]
+		var tallas_polera = [['XS',71, 76], ['S',76, 83], ['M',83, 91], ['L', 91,100], ['XL',100, 110], ['XXL', 110,121]]
+		
+		for(let i = 0; i < tallas_polera.length; i += 1){
+			console.log("Comprobando polera")
+			if(media_arms >= tallas_polera[i][1] && media_arms <= tallas_polera[i][2]){
+				var x = tallas_polera[i][0];
+				console.log(x)
+				talla_polera = x
+				talla_pantalon = x
+			}
+		}
+
 
       return (
         <View style={styles.container}>
           <View style={styles.marco}>
-            <Text style={styles.titulo}>Perfil de usuario:</Text>
-            {this.ElementoPerfil('E-mail', perfil.email)}
+            <Text style={styles.titulo}>Tus tallas de ropa son:</Text>
+            <Text style={styles.titulo2}>Marca: Adidas</Text>
+            {this.ElementoPerfil('Talla pantalón', talla_pantalon)}
             <Separador />
-			{this.ElementoPerfil('Nombre', perfil.nombre)}
-            <Separador />
-            {this.ElementoPerfil('RUT', perfil.rut)}
+			{this.ElementoPerfil('Talla polera', talla_polera)}
           </View>
         </View>
       );
@@ -135,6 +157,12 @@ const styles = StyleSheet.create({
   },
   titulo: {
     fontSize: 16,
+    fontWeight: 'bold',
+    marginTop: 5,
+    marginBottom: 15
+  },
+  titulo2: {
+    fontSize: 14,
     fontWeight: 'bold',
     marginTop: 5,
     marginBottom: 15

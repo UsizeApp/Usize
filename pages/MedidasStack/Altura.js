@@ -62,8 +62,6 @@ export default class Altura extends React.Component {
       <View style={styles.FormContainer}>
         <Text style={{ color: '#8E8E8E' }}>Ingrese su altura en centímetros:</Text>
         <Formik
-          isInitialValid={true}
-          initialValues={{ height: '174' }}
           onSubmit={values => Alert.alert(JSON.stringify(values))}
           validationSchema={yup.object().shape({
             height: yup

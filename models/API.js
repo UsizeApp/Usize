@@ -6,7 +6,9 @@ Llamadas a la API en Flask
 import { AsyncStorage } from 'react-native';
 
 export function getAPI() {
-  const type = 'diego';
+  const type = 'ale';
+
+  return 'http://10.0.0.22:5000';
 
   switch (type) {
     case 'ale':
@@ -16,7 +18,7 @@ export function getAPI() {
     case 'diego':
       return 'http://192.168.0.11:5000';
     default:
-      return 'http://192.168.1.111:5000';
+      return 'http://localhost:5000';
   }
 }
 
@@ -123,19 +125,33 @@ export class Usuario {
     await AsyncStorage.setItem('medidas', JSON.stringify(medidas));
   }
 
-  async getMedidas() {
+  async getMedidas(datosCM) {
+    datosCM = datosCM || false;
     let medidas = await AsyncStorage.getItem('medidas');
     medidas = JSON.parse(medidas);
-    return {
-      right_arm: `${medidas.right_arm} cm`,
-      left_arm: `${medidas.left_arm} cm`,
-      right_leg: `${medidas.right_leg} cm`,
-      left_leg: `${medidas.left_leg} cm`,
-      waist: `${medidas.waist} cm`,
-      hip: `${medidas.hip} cm`,
-      chest: `${medidas.chest} cm`,
-      bust: `${medidas.bust} cm`,
-    }
+	
+	if (datosCM) {
+		return {
+		  right_arm: `${medidas.right_arm} cm`,
+		  left_arm: `${medidas.left_arm} cm`,
+		  right_leg: `${medidas.right_leg} cm`,
+		  left_leg: `${medidas.left_leg} cm`,
+		  waist: `${medidas.waist} cm`,
+		  hip: `${medidas.hip} cm`,
+		  chest: `${medidas.chest} cm`,
+		  bust: `${medidas.bust} cm`,
+		}
+	}
+	return {
+		  right_arm: medidas.right_arm,
+		  left_arm: medidas.left_arm,
+		  right_leg: medidas.right_leg,
+		  left_leg: medidas.left_leg,
+		  waist: medidas.waist,
+		  hip: medidas.hip,
+		  chest: medidas.chest,
+		  bust: medidas.bust,	  
+		}	
   }
 
   async getTallasAPI() {

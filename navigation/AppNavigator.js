@@ -10,6 +10,7 @@ import MedidasStack from '../pages/MedidasStack';
 import RopaStack from '../pages/RopaStack';
 import PerfilStack from '../pages/PerfilStack';
 import Info from '../pages/Info'
+import Ropa from '../pages/Ropa';
 
 class CerrarSesion extends React.Component {
   constructor() {
@@ -43,7 +44,7 @@ const AppMainTabs = createBottomTabNavigator(
       },
     },
     Ropa: { // RopaTabsStack
-      screen: RopaStack,
+      screen: Ropa,
       navigationOptions: {
         title: 'Tallas',
         tabBarIcon: ({ tintColor }) => (
@@ -59,6 +60,7 @@ const AppMainTabs = createBottomTabNavigator(
         ),
       },
     },
+	/*
     Ajustes: { // AjustesStack
       screen: CerrarSesion,
       navigationOptions: {
@@ -68,6 +70,7 @@ const AppMainTabs = createBottomTabNavigator(
         ),
       },
     },
+	*/
     CerrarSesion: {
       screen: CerrarSesion,
       navigationOptions: {
