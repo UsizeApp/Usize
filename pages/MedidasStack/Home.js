@@ -23,7 +23,6 @@ function FilaMedida(props) {
 
 export default class MedidasHome extends Component {
 
-
   static navigationOptions = {
     title: 'Medidas',
     headerStyle: {
@@ -39,6 +38,7 @@ export default class MedidasHome extends Component {
     super(props);
     this.state = {
       medidas: null,
+      sexo: null,
       // metodo: null,
       done: false,
     };
@@ -53,10 +53,12 @@ export default class MedidasHome extends Component {
     const u = new Usuario();
 
     const medidas = await u.getMedidas(true);
+    const perfil = await u.getPerfil(true);
     // const metodo = await u.getMetodoAuth();
 
     this.setState({
       medidas,
+      sexo: perfil.sexo,
       // metodo,
       done: true,
     });
@@ -70,10 +72,15 @@ export default class MedidasHome extends Component {
     if (done) {
       const { medidas } = this.state;
 
+    busto = null
+    if (this.state.sexo == "femenino"){
+      busto = <FilaMedida tipo="Busto" medida={medidas.bust} bbw="0" />;
+    }
+
       return (
         <View style={styles.container}>
           <View style={styles.marco}>
-            <Text style={styles.titulo}>Sus medidas:</Text>
+            {/*<Text style={styles.titulo}>Sus medidas:</Text>*/}
             <FilaMedida tipo="Brazo Izquierdo" medida={medidas.left_arm} />
             <FilaMedida tipo="Brazo Derecho" medida={medidas.right_arm} />
 
@@ -83,9 +90,11 @@ export default class MedidasHome extends Component {
             <FilaMedida tipo="Cintura" medida={medidas.waist} />
             <FilaMedida tipo="Cadera" medida={medidas.hip} />
             <FilaMedida tipo="Pecho" medida={medidas.chest} />
-            <FilaMedida tipo="Busto" medida={medidas.bust} bbw="0" />
+            {busto}
           </View>
-          <Button text="Actualizar medidas" onPress={() => navigation.navigate('Altura')} />
+          <View>
+            <Button text="Actualizar" onPress={() => navigation.navigate('Altura')} />
+          </View>
         </View>
       );
     }
@@ -106,10 +115,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   container: {
-    margin: 10,
+    marginTop: "20%",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   marco: {
     padding: 20,
+    width: '70%',
     borderWidth: 0,
     borderRadius: 10,
     borderColor: '#ddd',

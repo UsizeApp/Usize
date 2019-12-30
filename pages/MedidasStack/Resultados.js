@@ -27,6 +27,7 @@ export default class Resultados extends React.Component {
       done: false,
       reason: '',
       medidas: null,
+      sexo: null
     }
   }
 
@@ -56,6 +57,7 @@ export default class Resultados extends React.Component {
     var lateralURI = lateral.uri;
 
     u = new Usuario();
+    const perfil = await u.getPerfil(true)
     const resp = await u.doUploadPhoto(frontalURI, lateralURI, height);
     const { medidas, mensaje } = resp;
     let error = true;
@@ -64,31 +66,33 @@ export default class Resultados extends React.Component {
       error = false;
     }
 
-    this.setState({ error: error, reason: mensaje, medidas: medidas, done: true })
+    this.setState({ error: error, reason: mensaje, medidas: medidas, done: true, sexo: perfil.sexo })
   }
 
   renderResultados = () => {
     const { medidas } = this.state;
+    busto = null
+    if (this.state.sexo == "femenino"){
+      busto = <FilaMedida tipo="Busto" medida={medidas.bust} bbw="0" />;
+    }
     return (
-      <View style={estilos.marco}>
-        <FilaMedida tipo="Brazo Izquierdo" medida={medidas.left_arm + ' cm'} />
-        <FilaMedida tipo="Brazo Derecho" medida={medidas.right_arm + ' cm'} />
-
-        <FilaMedida tipo="Pierna Izquierda" medida={medidas.left_leg + ' cm'} />
-        <FilaMedida tipo="Pierna Derecha" medida={medidas.right_leg + ' cm'} />
-
-		<FilaMedida tipo="Cintura" medida={medidas.waist + ' cm'} />
-        <FilaMedida tipo="Cadera" medida={medidas.hips_length + ' cm'} />
-        <FilaMedida tipo="Pecho" medida={medidas.chest_length + ' cm'} />
-        <FilaMedida tipo="Busto" medida={medidas.bust_length + ' cm'} bbw="0" />
-      </View>
+    <View style={estilos.marco}>
+      <FilaMedida tipo="Brazo Izquierdo" medida={medidas.left_arm + ' cm'} />
+      <FilaMedida tipo="Brazo Derecho" medida={medidas.right_arm + ' cm'} />
+      <FilaMedida tipo="Pierna Izquierda" medida={medidas.left_leg + ' cm'} />
+      <FilaMedida tipo="Pierna Derecha" medida={medidas.right_leg + ' cm'} />
+		  <FilaMedida tipo="Cintura" medida={medidas.waist + ' cm'} />
+      <FilaMedida tipo="Cadera" medida={medidas.hips_length + ' cm'} />
+      <FilaMedida tipo="Pecho" medida={medidas.chest_length + ' cm'} />
+      {busto}
+    </View>
     )
   }
 
   renderOptions = () => {
     return (
       <View style={{ alignItems: 'center' }}>
-        <Button text="Volver al Inicio" icon="ios-checkmark-circle" to="Home" onPress={this.handlePress} />
+        <Button text="Volver" to="Home" onPress={this.handlePress} />
       </View>
     )
   }
@@ -126,10 +130,10 @@ export default class Resultados extends React.Component {
         console.log("Resultados::renderResultados")
         return (
           <View style={{ margin: 10 }}>
-            <View style={{ alignItems: 'center', marginTop: 30 }}>
+            <View style={{ alignItems: 'center', marginTop: 30 , justifyContent: 'center'}}>
               <Text style={{ color: '#66CBFF', fontWeight: 'bold', fontSize: 18 }}>Sus medidas son:</Text>
-            </View>
             {this.renderResultados()}
+            </View>
             {this.renderOptions()}
           </View>
         )

@@ -6,15 +6,15 @@ Llamadas a la API en Flask
 import { AsyncStorage } from 'react-native';
 
 export function getAPI() {
-  const type = 'ale';
+  const type = 'anibal';
 
-  return 'http://10.0.0.22:5000';
+  //return 'http://10.0.0.22:5000';
 
   switch (type) {
     case 'ale':
       return 'http://190.45.47.176:5000';
     case 'anibal':
-      return 'http://192.168.0.12:5000';
+      return 'http://192.168.0.14:5000';
     case 'diego':
       return 'http://192.168.0.11:5000';
     default:
@@ -219,14 +219,15 @@ export class Usuario {
     await AsyncStorage.multiRemove(['token', 'medidas', 'perfil']);
   }
 
-  fakeEnabled = 0;
+  fakeEnabled = 1;
 
   fakeToken = '99999999';
 
   fakePerfil = {
     email: 'example@email.com',
     nombre: 'Juan Perez',
-    rut: '33333333-3',
+    rut: 333333333,
+    sexo: 'masculino'
   };
 
   fakeMedidas = {

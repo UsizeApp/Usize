@@ -1,11 +1,14 @@
 import React from 'react';
-import { View, Image, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Alert } from 'react-native'
-import Layout from 'components/Layout'
-import { Formik } from 'formik'
-import * as yup from 'yup'
+import { View, Image, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView, Alert, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import Layout from 'components/Layout';
+import { Formik } from 'formik';
+import * as yup from 'yup';
 import { AsyncStorage } from 'react-native';
-import { getAPI } from '../../models/API'
-import TriStateToggleSwitch from 'rn-tri-toggle-switch'
+import { getAPI } from '../../models/API';
+import {CheckBox} from 'react-native-elements';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareView } from 'react-native-keyboard-aware-view';
+import TriStateToggleSwitch from 'rn-tri-toggle-switch';
 
 export default class Register extends React.Component {
   static navigationOptions = {
@@ -24,6 +27,7 @@ export default class Register extends React.Component {
     super();
     this.state = {
       status: 0,
+      offset: 0,
     }
   }
 
@@ -38,10 +42,10 @@ export default class Register extends React.Component {
     var pwd = form.password
     var nombre = form.first_name + ' ' + form.last_name
     var rut = form.rut
-    if (form.gender == undefined) {
-      var gender = undefined;
+    if (form.male == true) {
+      var gender = 'masculino';
     } else {
-      var gender = form.gender.choiceCode;
+      var gender = 'femenino';
     }
     formData.append('email', email);
     formData.append('pwd', pwd);
@@ -57,10 +61,11 @@ export default class Register extends React.Component {
     });
 
     try {
-      const json = await response.json();
-      console.log(json)
-      await AsyncStorage.setItem('token', json.token);
-      await AsyncStorage.setItem('token', json.response);
+      console.log(formData)
+      //const json = await response.json();
+      //console.log(json)
+      //await AsyncStorage.setItem('token', json.token);
+      //await AsyncStorage.setItem('token', json.response);
     }
     catch (e) {
       console.log(e)
@@ -72,15 +77,68 @@ export default class Register extends React.Component {
 
   render() {
     return (
-      <React.Fragment>
-        <Layout>
-          {this.renderForm()}
-        </Layout>
-      </React.Fragment>
+      <KeyboardAwareScrollView>
+        <React.Fragment>
+          <Layout>    
+            {this.renderForm()}
+          </Layout>
+        </React.Fragment>
+      </KeyboardAwareScrollView>
     )
   }
 
   renderForm = () => {
+
+    let validationSchema = yup.object().shape({
+      first_name: yup
+        .string()
+        .label('Nombres')
+        .required('Ingrese su nombre'),
+      last_name: yup
+        .string()
+        .label('Apellidos')
+        .required('Ingrese su apellido'),
+      rut: yup
+        .string()
+        .label('RUT')
+        .required('Ingrese su RUT'),
+      email: yup
+        .string()
+        .email('Ingrese un correo válido')
+        .label('Correo')
+        .required('Ingrese un Correo'),
+      password: yup
+        .string()
+        .label('Contraseña')
+        .min(8, 'Contraseña debe ser de al menos 8 caracteres')
+        .required('Ingrese una Contraseña'),
+      confirmPassword: yup
+        .string()
+        .label('Confirme su contraseña')
+        .required('Ingrese una Contraseña')
+        .test('passwords-match', 'Las contraseñas deben coincidir', function(value) {
+          return this.parent.password === value;
+        }),
+        
+      male: yup.bool().required(),
+      female: yup.bool().required(),
+    })
+
+    /*validationSchema.test(
+      'checkbox-test',
+      null,
+      (obj) => {
+        if ( obj.male || obj.female) {
+          return true;
+        }
+        return new yup.ValidationError(
+          'Seleccione su genero',
+          null,
+          'checkbox-failed'
+        );
+      }
+    );*/
+
     return (
       <Formik
         onSubmit={values => {
@@ -90,104 +148,90 @@ export default class Register extends React.Component {
               this.props.navigation.push('Perfil')
           });
         }}
-        validationSchema={yup.object().shape({
-          first_name: yup
-            .string()
-            .label('Nombres')
-            .required('Ingrese su nombre'),
-          last_name: yup
-            .string()
-            .label('Apellidos')
-            .required('Ingrese su apellido'),
-          rut: yup
-            .string()
-            .label('RUT')
-            .required('Ingrese su RUT'),
-          email: yup
-            .string()
-            .email()
-            .label('Correo')
-            .required('Ingrese un Correo'),
-          password: yup
-            .string()
-            .label('Contraseña')
-            .min(8, 'Contraseña debe ser de al menos 8 caracteres')
-            .required('Ingrese una Contraseña'),
-          confirmPassword: yup
-            .string()
-            .label('Confirme su contraseña')
-            .required('Ingrese una Contraseña')
-            .test('passwords-match', 'Las contraseñas deben coincidir', function(value) {
-              return this.parent.password === value;
-            }),
-        })}
+        
+        validationSchema = {validationSchema}
+
       >
-        {({ values, handleChange, errors, setFieldTouched, touched, isValid, handleSubmit }) => (
+        {({ values, handleChange, errors, setValues, setFieldTouched, touched, isValid, handleSubmit }) => (
           <View style={{margin: 10}}>
+            <Text>Nombres:</Text>
             <TextInput
               style={styles.InputField}
               value={values.first_name}
               onChangeText={handleChange('first_name')}
               onBlur={() => setFieldTouched('first_name')}
-              placeholder="Nombres"
             />
             {touched.first_name && errors.first_name &&
               <Text style={{ fontSize: 10, color: 'red' }}>{errors.first_name}</Text>
             }
+            <Text>Apellidos:</Text>
             <TextInput
               style={styles.InputField}
               value={values.last_name}
               onChangeText={handleChange('last_name')}
               onBlur={() => setFieldTouched('last_name')}
-              placeholder="Apellidos"
             />
             {touched.last_name && errors.last_name &&
               <Text style={{ fontSize: 10, color: 'red' }}>{errors.last_name}</Text>
             }
+            <Text>RUT (sin puntos ni guión):</Text>
             <TextInput
               style={styles.InputField}
               value={values.rut}
               onChangeText={handleChange('rut')}
               onBlur={() => setFieldTouched('rut')}
-              placeholder="RUT"
             />
             {touched.rut && errors.rut &&
               <Text style={{ fontSize: 10, color: 'red' }}>{errors.rut}</Text>
             }
+            <Text>Correo:</Text>
             <TextInput
               style={styles.InputField}
               value={values.email}
               onChangeText={handleChange('email')}
               onBlur={() => setFieldTouched('email')}
-              placeholder="Correo"
             />
             {touched.email && errors.email &&
               <Text style={{ fontSize: 10, color: 'red' }}>{errors.email}</Text>
             }
+            <Text>Contraseña:</Text>
             <TextInput
               style={styles.InputField}
               value={values.password}
               onChangeText={handleChange('password')}
-              placeholder="Contraseña"
               onBlur={() => setFieldTouched('password')}
               secureTextEntry={true}
             />
             {touched.password && errors.password &&
               <Text style={{ fontSize: 10, color: 'red' }}>{errors.password}</Text>
             }
+            <Text>Confirme su contraseña:</Text>
             <TextInput
               style={styles.InputField}
               value={values.confirmPassword}
               onChangeText={handleChange('confirmPassword')}
-              placeholder="Confirme su contraseña"
               onBlur={() => setFieldTouched('confirmPassword')}
               secureTextEntry={true}
             />
             {touched.confirmPassword && errors.confirmPassword &&
               <Text style={{ fontSize: 10, color: 'red' }}>{errors.confirmPassword}</Text>
             }
-            <Text style={{ color: '#c3c3c3', marginVertical: 30, fontSize: 15 }}>Género (opcional):</Text>
-            <TriStateToggleSwitch 
+            <Text>Sexo:</Text>
+            <View style = {{flexDirection:'row', marginLeft:'7%'}}>
+              <CheckBox
+                title = "Masculino"
+                checked = {values.male}
+                onPress = {() => setValues({...values, 'male':true, 'female':false})}
+                containerStyle = {styles.CheckboxContainer}
+              />
+              <CheckBox
+                title = "Femenino"
+                checked = {values.female}
+                onPress = {() => setValues({...values,'male':false, 'female':true})}
+                containerStyle = {styles.CheckboxContainer}
+              />
+            </View>
+            {/*<TriStateToggleSwitch 
                 width={200} 
                 height={35} 
                 selectedNoneBgColor={'#999999'}
@@ -198,10 +242,12 @@ export default class Register extends React.Component {
                 circleBgColor={'white'}
                 choices={choicesProp}
                 onChange={(value) => { values.gender = value; }}
-            />
-            <TouchableOpacity style={styles.Container(isValid)} disabled={!isValid} onPress={handleSubmit}>
-              <Text style={styles.ButtonText}>Registrarse</Text>
-            </TouchableOpacity>
+            />*/}
+            <View style = {{alignItems: 'center'}}>
+              <TouchableOpacity style={styles.Container(isValid)} disabled={!isValid} onPress={handleSubmit}>
+                <Text style={styles.ButtonText}>Registrarse</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         )}
       </Formik>
@@ -225,7 +271,7 @@ const styles = StyleSheet.create({
     backgroundColor: isValid ? '#66CBFF' : "#8E8E8E",
     padding: 15,
     borderRadius: 5,
-    marginVertical: 100,
+    marginVertical: 20,
     justifyContent: 'center',
     flexDirection: 'row'
   }),
@@ -236,7 +282,19 @@ const styles = StyleSheet.create({
     color: 'white',
     marginLeft: 8
   },
+  InputContainer:{
+    flexDirection: 'row',
+    alignItems:'center',
+    justifyContent: 'space-between'
+  },
   InputField: {
-    marginVertical: 5
+    marginVertical: 10,
+    borderColor: 'gray',
+    borderWidth: 1, 
+    borderRadius: 4
+  },
+  CheckboxContainer:{
+    borderWidth:0,
+    margin:0
   }
 })

@@ -54,6 +54,15 @@ export default class PerfilHome extends Component {
     navigation.navigate('CambiarItem', { item });
   }
 
+  formatearRUT (RUT){
+    RUT = RUT.replace("-","")
+    DV = RUT[RUT.length - 1];
+    RUTSinDV = RUT.substr(0,RUT.length-1);
+    RUTSinDV = RUTSinDV.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    RUTfinal = RUTSinDV.concat("-".concat(DV));
+    return RUTfinal;
+  }
+
   ElementoPerfil = (item, valor) => (
     <TouchableOpacity onPress={() => this.cambiarItem(item)}>
       <View style={{ flexDirection: 'row' }}>
@@ -77,12 +86,12 @@ export default class PerfilHome extends Component {
       return (
         <View style={styles.container}>
           <View style={styles.marco}>
-            <Text style={styles.titulo}>Perfil de usuario:</Text>
+            {/*<Text style={styles.titulo}>Perfil de usuario:</Text>*/}
             {this.ElementoPerfil('E-mail', perfil.email)}
             <Separador />
 			{this.ElementoPerfil('Nombre', perfil.nombre)}
             <Separador />
-            {this.ElementoPerfil('RUT', perfil.rut)}
+            {this.ElementoPerfil('RUT', this.formatearRUT(perfil.rut.toString()))}
           </View>
         </View>
       );
