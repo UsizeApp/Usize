@@ -6,11 +6,10 @@ import * as yup from 'yup';
 import { AsyncStorage } from 'react-native';
 import { getAPI } from '../../models/API';
 import {CheckBox} from 'react-native-elements';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { KeyboardAwareView } from 'react-native-keyboard-aware-view';
 import TriStateToggleSwitch from 'rn-tri-toggle-switch';
 
 export default class Register extends React.Component {
+
   static navigationOptions = {
     title: 'Registro',
     headerStyle: {
@@ -77,13 +76,13 @@ export default class Register extends React.Component {
 
   render() {
     return (
-      <KeyboardAwareScrollView>
+      <ScrollView ref={'scroll'} scrollEnabled={false}>
         <React.Fragment>
           <Layout>    
             {this.renderForm()}
           </Layout>
         </React.Fragment>
-      </KeyboardAwareScrollView>
+      </ScrollView>
     )
   }
 
@@ -153,7 +152,7 @@ export default class Register extends React.Component {
 
       >
         {({ values, handleChange, errors, setValues, setFieldTouched, touched, isValid, handleSubmit }) => (
-          <View style={{margin: 10}}>
+          <View style={{margin: 10,paddingBottom: 100}}>
             <Text>Nombres:</Text>
             <TextInput
               style={styles.InputField}
@@ -199,7 +198,8 @@ export default class Register extends React.Component {
               style={styles.InputField}
               value={values.password}
               onChangeText={handleChange('password')}
-              onBlur={() => setFieldTouched('password')}
+              onFocus = {() => this.refs['scroll'].scrollTo({y: 60, animated:false})}
+              onBlur={() => {setFieldTouched('password'); this.refs['scroll'].scrollTo({y: 0, animated:false})}}
               secureTextEntry={true}
             />
             {touched.password && errors.password &&
@@ -210,7 +210,8 @@ export default class Register extends React.Component {
               style={styles.InputField}
               value={values.confirmPassword}
               onChangeText={handleChange('confirmPassword')}
-              onBlur={() => setFieldTouched('confirmPassword')}
+              onFocus = {() => this.refs['scroll'].scrollTo({y: 140, animated:false})}
+              onBlur={() => {setFieldTouched('confirmPassword'); this.refs['scroll'].scrollTo({y: 0, animated:false})}}
               secureTextEntry={true}
             />
             {touched.confirmPassword && errors.confirmPassword &&
