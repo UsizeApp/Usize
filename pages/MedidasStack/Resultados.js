@@ -86,25 +86,26 @@ export default class Resultados extends React.Component {
   renderResultados = () => {
     const { medidas, bEsFemenino } = this.state;
 
-    busto = null
+    filaP = <FilaMedida tipo="Pecho" medida={medidas.chest} bbw="0" />
+    filaB = null
+
     if (bEsFemenino) {
-      busto = <FilaMedida tipo="Busto" medida={medidas.bust} bbw="0" />;
+      filaP = <FilaMedida tipo="Pecho" medida={medidas.chest} />
+      filaB = <FilaMedida tipo="Busto" medida={medidas.bust} bbw="0" />
     }
 
     return (
-      <View style={styles.container}>
-        <View style={styles.marco}>
-          <FilaMedida tipo="Brazo Izquierdo" medida={medidas.left_arm} />
-          <FilaMedida tipo="Brazo Derecho" medida={medidas.right_arm} />
+      <View style={styles.marco}>
+        <FilaMedida tipo="Brazo Izquierdo" medida={medidas.left_arm} />
+        <FilaMedida tipo="Brazo Derecho" medida={medidas.right_arm} />
 
-          <FilaMedida tipo="Pierna Izquierda" medida={medidas.left_leg} />
-          <FilaMedida tipo="Pierna Derecha" medida={medidas.right_leg} />
+        <FilaMedida tipo="Pierna Izquierda" medida={medidas.left_leg} />
+        <FilaMedida tipo="Pierna Derecha" medida={medidas.right_leg} />
 
-          <FilaMedida tipo="Cintura" medida={medidas.waist} />
-          <FilaMedida tipo="Cadera" medida={medidas.hips} />
-          <FilaMedida tipo="Pecho" medida={medidas.chest} />
-          {busto}
-        </View>
+        <FilaMedida tipo="Cintura" medida={medidas.waist} />
+        <FilaMedida tipo="Cadera" medida={medidas.hips} />
+        {filaP}
+        {filaB}
       </View>
     );
   }
@@ -119,18 +120,18 @@ export default class Resultados extends React.Component {
 
   render() {
     if (this.state.done) {
-      if (!this.state.error) {        
+      if (!this.state.error) {
         console.log("Resultados::renderResultados")
-        
+
         return (
-          <View style={{ margin: 10 }}>
+          <View>
             <View style={{ alignItems: 'center', marginTop: 30, justifyContent: 'center' }}>
-              <Text style={{ color: '#66CBFF', fontWeight: 'bold', fontSize: 18 }}>Sus medidas son:</Text>
+              <Text style={{ color: '#66CBFF', fontWeight: 'bold', fontSize: 18 }}>Tus medidas son:</Text>
               {this.renderResultados()}
             </View>
             {this.renderOptions()}
           </View>
-        )        
+        )
       }
       else {
         console.log("Resultados::error")
@@ -152,7 +153,7 @@ export default class Resultados extends React.Component {
         <Text style={{ color: '#8E8E8E' }}>Calculando medidas...</Text>
         <ActivityIndicator size="large" color="#66CBFF" />
       </View>
-    );    
+    );
   }
 }
 

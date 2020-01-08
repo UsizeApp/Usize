@@ -47,17 +47,18 @@ export default class Register extends React.Component {
     else
       gender = 'F'
 
-    const resp = await u.registrarEmailAPI(email, pwd, nombre, rut, gender);
+    const resp = await u.registrarEmail(email, pwd, nombre, rut, gender);
 
-    const respuesta = resp.respuesta
-    const token = resp.token
+    const { respuesta, token } = resp
 
     console.log(respuesta)
     console.log(token)
 
     // Si hay un token válido, el registro funcionó
+    // Podemos iniciar sesión con normalidad
     if (token != null) {
-      await u.setToken(token);
+      await u.iniciarSesion(email, pwd)
+
       // Vamos al Home
       const { navigation } = this.props;
       navigation.navigate('Info');
@@ -121,7 +122,7 @@ export default class Register extends React.Component {
     return (
       <Formik
         isInitialValid={true}
-        initialValues={{ email: 'ale2@usm.cl', password: '12345678', first_name: 'A', last_name: 'A', rut: '3', confirmPassword: '12345678', male:true, female:false }}
+        initialValues={{ email: 'ale2@usm.cl', password: '12345678', first_name: 'A', last_name: 'A', rut: '3', confirmPassword: '12345678', male: true, female: false }}
         onSubmit={values => { this.registroAPI(values) }}
         validationSchema={validationSchema}
       >

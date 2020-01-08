@@ -54,11 +54,7 @@ export default class Login extends React.Component {
     const token = await u.iniciarSesion(email, pwd);
 
     if (token != null) {
-      console.log("Token disponible, se descargan los datos")
-      
-      // Descargar los datos del Email y de la primera Persona
-      await u.bajarDatosEmail()
-      await u.bajarDatosPersona()
+      console.log("Token disponible, datos descargados")
       // Ir al Home
       this.handlePress('Info');
     } else {

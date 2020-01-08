@@ -82,21 +82,22 @@ export default class MedidasHome extends Component {
     if (done) {
       const { datosPersona, bTieneMedidas, medidas, bEsFemenino } = this.state;
 
-      encabezado = (
-        <View>
-          <Text style={{ color: '#8E8E8E' }}>Ultima actualización:</Text>
-          <Text style={{ color: '#8E8E8E' }}>{datosPersona.fecha_ultimas_medidas}</Text>
-        </View>
-      )
+      encabezado = null
 
       if (bTieneMedidas) {
-        filaPB = <FilaMedida tipo="Pecho" medida={medidas.chest}  bbw="0" />
+        encabezado = (
+          <View>
+            <Text style={{ color: '#8E8E8E' }}>Ultima actualización:</Text>
+            <Text style={{ color: '#8E8E8E' }}>{datosPersona.fecha_ultimas_medidas}</Text>
+          </View>
+        )
+
+        filaP = <FilaMedida tipo="Pecho" medida={medidas.chest} bbw="0" />
+        filaB = null
 
         if (bEsFemenino) {
-          filaPB = <View>
-            <FilaMedida tipo="Pecho" medida={medidas.chest} />
-            <FilaMedida tipo="Busto" medida={medidas.bust} bbw="0" />;
-            </View>
+          filaP = <FilaMedida tipo="Pecho" medida={medidas.chest} />
+          filaB = <FilaMedida tipo="Busto" medida={medidas.bust} bbw="0" />
         }
 
         return (
@@ -111,10 +112,18 @@ export default class MedidasHome extends Component {
 
               <FilaMedida tipo="Cintura" medida={medidas.waist} />
               <FilaMedida tipo="Cadera" medida={medidas.hips} />
-              {filaPB}
+              {filaP}
+              {filaB}
             </View>
             <View>
               <Button text="Actualizar medidas" onPress={() => navigation.navigate('Altura')} />
+              <Button text="RESULTADOS" onPress={() => {
+                navigation.push('Resultados', {
+                  height: 1,
+                  frontal: null,
+                  lateral: null,
+                });
+              }} />
             </View>
           </View>
         );

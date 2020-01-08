@@ -65,7 +65,7 @@ async function callAPI(args) {
       }
     })
     .then((data) => {
-      
+
       if (logging) {
         console.log("callAPI::responseJSON")
         console.log('data:', data);
@@ -147,6 +147,24 @@ async function apiUpload(id_persona, height, frontalURI, lateralURI) {
   return resp
 }
 
+async function apiRegister(email, pwd, nombre, rut, gender) {
+  let body = new FormData();
+
+  body.append('email', email);
+  body.append('pwd', pwd);
+  body.append('nombre', nombre);
+  body.append('rut', rut);
+  body.append('gender', gender);
+
+  const resp = await callAPI({
+    pagina: '/register',
+    metodo: 'POST',
+    body: body,
+  });
+
+  return resp
+}
+
 
 /*********
 Funciones del storage
@@ -192,13 +210,20 @@ export class Email {
     await this.storageResetIDPersona();
 
     let token;
+
     if (this.fakeEnabled) {
       token = this.fakeToken;
     } else {
       token = await apiLogin(email, pwd)
     }
 
+    // Guardamos el token en storage
     await this.storageSetToken(token);
+
+    // Descargar los datos del Email y de la primera Persona
+    await u.bajarDatosEmail()
+    await u.bajarDatosPersona()
+
     return token;
   }
 
@@ -285,17 +310,22 @@ export class Email {
   */
 
   fakeDatosPersona = {
-    right_arm: '67.4',
-    left_arm: '64.6',
-    right_leg: '89,5',
-    left_leg: '84,9',
-    waist: '0,0',
-    hip: '42,8',
-    chest: '0,0',
-    bust: '0,0',
+    alias: 'Fake Alias',
+    gender: 'F',
+    fecha_ultimas_medidas: 'Fake Fecha',
+    medidas: {
+      left_arm: 58.46,
+      right_arm: 58.29,
 
+      left_leg: 73.33,
+      right_leg: 73.24,
 
-  };
+      waist: 84.91,
+      hips: 93.77,
+      chest: 92.49,
+      bust: 91.98,
+    }
+  }
   PK_DATOS_PERSONA = 'datosPersona'
 
   bajarDatosPersona = async () => {
@@ -310,7 +340,7 @@ export class Email {
       const datosEmail = await this.storageGetDatosEmail()
       const personas = datosEmail.personas
       id_persona = personas[0]
-      await this.storageSetIDPersona(id_persona)      
+      await this.storageSetIDPersona(id_persona)
     }
 
     datosPersona = await apiDatosPersona(id_persona)
@@ -336,24 +366,11 @@ export class Email {
     console.log("API::medidasEnBruto")
 
     let medidas = null;
-    let medidasEnBruto = null
 
     const datosPersona = await this.storageGetDatosPersona()
 
     if (datosPersona != null) {
       medidas = datosPersona.medidas
-      //medidas = JSON.parse(medidas);
-
-      medidasEnBruto = {
-        right_arm: medidas.right_arm,
-        left_arm: medidas.left_arm,
-        right_leg: medidas.right_leg,
-        left_leg: medidas.left_leg,
-        waist: medidas.waist,
-        hips: medidas.hips,
-        chest: medidas.chest,
-        bust: medidas.bust,
-      }
     }
 
     return medidas
@@ -365,6 +382,7 @@ export class Email {
     let medidasParaTabla = null;
 
     const medidas = await this.medidasEnBruto()
+
     if (medidas != null) {
       medidasParaTabla = {
         right_arm: `${parseInt(medidas.right_arm)} cm`,
@@ -384,9 +402,6 @@ export class Email {
   /*
   Otros
   */
-
-
-
 
   async getTallasAPI() {
     let headers = {
@@ -449,16 +464,16 @@ export class Email {
 
     let resp = null
 
-    const frontalURI = frontal.uri;
-    const lateralURI = lateral.uri;
-
-    if (this.fakeEnabled) {
+    if (this.fakeEnabled || 1) {
       resp = {
-        mensaje: "success",
+        mensaje: "fakeSuccess",
         datosPersona: this.fakeDatosPersona,
       }
     } else {
+      const frontalURI = frontal.uri;
+      const lateralURI = lateral.uri;
       const id_persona = await this.storageGetIDPersona()
+
       resp = await apiUpload(id_persona, height, frontalURI, lateralURI)
     }
 
@@ -506,22 +521,9 @@ export class Email {
     return (datosPersona.fecha_ultimas_medidas != null || bForzar)
   }
 
-  registrarEmailAPI = async (email, pwd, nombre, rut, gender) => {
-    let body = new FormData();
+  registrarEmail = async (email, pwd, nombre, rut, gender) => {
+    resp = await apiRegister(email, pwd, nombre, rut, gender)
 
-    body.append('email', email);
-    body.append('pwd', pwd);
-    body.append('nombre', nombre);
-    body.append('rut', rut);
-    body.append('gender', gender);
-
-    const resp = await callAPI({
-      pagina: '/register',
-      metodo: 'POST',
-      body: body,
-    });
-
-    console.log(resp)
     return resp
   }
 }
