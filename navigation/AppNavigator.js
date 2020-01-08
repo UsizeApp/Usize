@@ -52,6 +52,15 @@ const AppMainTabs = createBottomTabNavigator(
         ),
       },
     },
+    RopaStack: { // RopaTabsStack
+      screen: RopaStack,
+      navigationOptions: {
+        title: 'Marcas',
+        tabBarIcon: ({ tintColor }) => (
+          <Ionicons name="ios-shirt" size={17} color={tintColor} />
+        ),
+      },
+    },
     Perfil: {
       screen: PerfilStack,
       navigationOptions: {
@@ -95,7 +104,7 @@ const OcultarTabBar = ({ navigation }) => {
 };
 
 MedidasStack.navigationOptions = OcultarTabBar;
-RopaStack.navigationOptions = OcultarTabBar;
+//RopaStack.navigationOptions = OcultarTabBar;
 PerfilStack.navigationOptions = OcultarTabBar;
 
 const RootSwitch = createSwitchNavigator(

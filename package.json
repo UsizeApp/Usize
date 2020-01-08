@@ -25,6 +25,7 @@
     "react-native-loading-spinner-overlay": "^1.0.1",
     "react-native-reanimated": "^1.1.0",
     "react-native-safe-modules": "^1.0.0",
+    "react-native-table-component": "^1.2.1",
     "react-native-web": "^0.11.7",
     "react-navigation": "^4.0.5",
     "react-navigation-stack": "^1.7.3",
