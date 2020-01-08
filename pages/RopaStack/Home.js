@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Image, View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
 import Button from '../../components/Utils/Button';
-import { Usuario } from '../../models/API';
+import { Usuario, Email } from '../../models/API';
 import { Table, TableWrapper, Row, Rows, Col } from 'react-native-table-component';
 import { Ionicons } from '@expo/vector-icons';
+
 
 export default class BrandSizes extends Component {
   static navigationOptions = {
@@ -34,6 +35,20 @@ export default class BrandSizes extends Component {
     }
   }
 
+
+  async getTallas() {
+    console.log('Tallas::getTallas');
+    const u = new Email();
+
+    const tallas = await u.getTallas();
+    console.log(tallas);
+    console.log("ctmallas");
+    this.setState({
+      tallas,
+      // metodo,
+      done: true,
+    });
+  }
 
   render() {
     const state = this.state;

@@ -23,11 +23,12 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginVertical: 15,
     flexDirection: 'row',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   ButtonText: {
     fontSize: 17,
     color: 'white',
-    marginLeft: 8,
+    
   }
 })

@@ -6,7 +6,7 @@ import { AntDesign } from '@expo/vector-icons';
 import Layout from '../../components/Layout';
 import Button from '../../components/Utils/Button';
 
-import { Usuario } from '../../models/API';
+import { Email } from '../../models/API';
 
 function Separador() {
   return <View style={styles.separador} />;
@@ -38,14 +38,12 @@ export default class Ropa1 extends Component {
 
   async getMedidas() {
     console.log('Medidas::getMedidas');
-    const u = new Usuario();
+    const u = new Email();
 
     const medidas = await u.getMedidas(false);
-    // const metodo = await u.getMetodoAuth();
 
     this.setState({
       medidas,
-      // metodo,
       done: true,
     });
   }

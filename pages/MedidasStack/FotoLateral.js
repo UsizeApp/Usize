@@ -6,7 +6,6 @@ import Scanner from 'components/Scanner';
 import styles from '../../styles/styles';
 
 export default class FotoLateral extends Component {
-
     static navigationOptions = {
         title: 'Paso 2/2: Foto Lateral',
         headerStyle: {
@@ -32,6 +31,8 @@ export default class FotoLateral extends Component {
     }
 
     async componentDidMount() {
+        console.log("FotoLateral::mounted")
+
         const camera = await Permissions.askAsync(Permissions.CAMERA);
         // const audio = await Permissions.askAsync(Permissions.AUDIO_RECORDING);
         // const hasCameraPermission = (camera.status === 'granted' && audio.status === 'granted');
@@ -46,28 +47,38 @@ export default class FotoLateral extends Component {
     }
     */
 
-    setFlashMode = (flashMode) => this.setState({ flashMode });
+    setFlashMode = (flashMode) => {
+        console.log("setFlashMode")
+        this.setState({ flashMode })
+    };
 
-    setCameraType = (cameraType) => this.setState({ cameraType });
+    setCameraType = (cameraType) => {
+        console.log("setCameraType")
+        this.setState({ cameraType })
+    };
 
-    handleCaptureIn = () => this.setState({ capturing: true });
+    handleCaptureIn = () => {
+        console.log("handleCaptureIn")
+        this.setState({ capturing: true })
+    };
 
     handleCaptureOut = () => {
-        const { capturing } = this.state;
-        if (capturing) {
-            this.camera.stopRecording();
-        }
+        console.log("handleCaptureOut")
+        this.setState({ capturing: false });
     };
 
     handleShortCapture = async () => {
+        console.log('FotoLateral::handleShortCapture')
+
         await this.camera.takePictureAsync()
-            .then((lateralPhotoData) => {
-                this.setState({ capturing: false });
+            .then((foto) => {
+                console.log(foto)
+
                 const { navigation } = this.props;
                 navigation.push('Resultados', {
-                    frontal: navigation.state.params.frontal,
-                    lateral: lateralPhotoData,
                     height: navigation.state.params.height,
+                    frontal: navigation.state.params.frontal,
+                    lateral: foto,
                 });
             })
             .catch((err) => console.error(err));
@@ -80,9 +91,7 @@ export default class FotoLateral extends Component {
 
 
     render() {
-        const {
-            hasCameraPermission, flashMode, cameraType, capturing, captures,
-        } = this.state;
+        const { hasCameraPermission, flashMode, cameraType, capturing, } = this.state;
 
         if (hasCameraPermission) {
             return (

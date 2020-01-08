@@ -23,7 +23,7 @@ class CerrarSesion extends React.Component {
 
   logout = async () => {
     const { navigation } = this.props;
-    console.log('logout');
+    console.log('AppNavigator::logout');
     await AsyncStorage.clear();
     navigation.navigate('Auth');
   };

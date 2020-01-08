@@ -9,7 +9,7 @@ import * as yup from 'yup';
 
 import DropdownAlert from 'react-native-dropdownalert';
 
-import { Usuario } from '../../models/API';
+import { Email } from '../../models/API';
 
 export default class Login extends React.Component {
   static navigationOptions = {
@@ -49,13 +49,18 @@ export default class Login extends React.Component {
 
   async handleLogin(email, pwd) {
     console.log('Login::handleLogin');
-    u = new Usuario();
-
-    const token = await u.tryLogin(email, pwd);
+    
+    u = new Email();
+    const token = await u.iniciarSesion(email, pwd);
 
     if (token != null) {
-      const { navigation } = this.props;
-      navigation.navigate('Info');
+      console.log("Token disponible, se descargan los datos")
+      
+      // Descargar los datos del Email y de la primera Persona
+      await u.bajarDatosEmail()
+      await u.bajarDatosPersona()
+      // Ir al Home
+      this.handlePress('Info');
     } else {
       this.dropdown.alertWithType('error', 'Error de autenticación', 'E-mail o contraseña incorrectos')
     }
@@ -79,38 +84,50 @@ export default class Login extends React.Component {
         })}
       >
         {({ values, handleChange, errors, setFieldTouched, touched, isValid, handleSubmit }) => (
-          <View style={{ margin: 10 }}>
-            <TextInput
-              style={styles.InputField}
-              keyboardType="email-address"
-              value={values.email}
-              onChangeText={handleChange('email')}
-              onBlur={() => setFieldTouched('email')}
-              placeholder="Correo"
-            />
-            {touched.email && errors.email
-              && <Text style={{ fontSize: 10, color: 'red' }}>{errors.email}</Text>}
-            <TextInput
-              style={styles.InputField}
-              value={values.password}
-              onChangeText={handleChange('password')}
-              placeholder="Contraseña"
-              onBlur={() => setFieldTouched('password')}
-              secureTextEntry={true}
-            />
-            {touched.password && errors.password &&
-              <Text style={{ fontSize: 10, color: 'red' }}>{errors.password}</Text>
-            }
+          <View>
+            <View style={{ margin: 10 }}>
+              <Text style = {{fontWeight:'bold'}}>
+                Email:
+              </Text>
+              <TextInput
+                style={styles.InputField}
+                keyboardType="email-address"
+                value={values.email}
+                onChangeText={handleChange('email')}
+                onBlur={() => setFieldTouched('email')}
+              />
+              {touched.email && errors.email
+                && <Text style={{ fontSize: 10, color: 'red' }}>{errors.email}</Text>}
+            </View>
+            <View style={{ margin: 10 }}>
+              <Text style = {{fontWeight:'bold'}}>
+                Contraseña:
+              </Text>
+              <TextInput
+                style={styles.InputField}
+                value={values.password}
+                onChangeText={handleChange('password')}
+                onBlur={() => setFieldTouched('password')}
+                secureTextEntry={true}
+              />
+              {touched.password && errors.password &&
+                <Text style={{ fontSize: 10, color: 'red' }}>{errors.password}</Text>
+              }
 
-            <TouchableOpacity style={{ flexDirection: 'row', marginVertical: 5 }} onPress={() => this.handlePress('Register')}>
-              <Text style={{ color: '#8E8E8E' }}>¿No tienes una cuenta? </Text>
-              <Text style={{ color: '#66CBFF' }}>Regístrate</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.ButtonHolder(isValid)} disabled={!isValid} onPress={handleSubmit}>
-              <Text style={styles.ButtonText}>Ingresar</Text>
-            </TouchableOpacity>
-
+              <TouchableOpacity style={{ justifyContent : 'center', alignItems : 'center', flexDirection: 'row', marginVertical: 5 }} onPress={() => this.handlePress('Register')}>
+                <Text style={{ color: '#8E8E8E' }}>¿No tienes una cuenta? </Text>
+                <Text style={{ color: '#66CBFF' }}>Regístrate</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{ flexDirection: 'row', marginVertical: 5 }} onPress={() => this.handlePress('Register')}>
+                <Text style={{ color: '#8E8E8E' }}>¿Olvidaste tu contraseña? </Text>
+                <Text style={{ color: '#66CBFF' }}>Recuperar</Text>
+              </TouchableOpacity>
+              <View style = {{alignItems : 'center'}}>
+                <TouchableOpacity style={styles.ButtonHolder(isValid)} disabled={!isValid} onPress={handleSubmit}>
+                  <Text style={styles.ButtonText}>Ingresar</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
         )}
       </Formik>
@@ -155,11 +172,11 @@ const styles = StyleSheet.create({
     marginVertical: 15,
     flexDirection: 'row',
     justifyContent: 'center',
+    width: '45%'
   }),
   ButtonText: {
     fontSize: 17,
-    color: 'white',
-    marginLeft: 8,
+    color: 'white'
   },
   InputField: {
     marginVertical: 5,

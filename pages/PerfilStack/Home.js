@@ -6,7 +6,7 @@ import { AntDesign } from '@expo/vector-icons';
 import Layout from '../../components/Layout';
 import Button from '../../components/Utils/Button';
 
-import { Usuario } from '../../models/API';
+import { Email } from '../../models/API';
 
 function Separador() {
   return <View style={styles.separador} />;
@@ -39,12 +39,13 @@ export default class PerfilHome extends Component {
   async getPerfil() {
     console.log('Perfil::getPerfil');
 
-    const u = new Usuario();
-
-    const perfil = await u.getPerfil();
+    const u = new Email();
+    const datosEmail = await u.storageGetDatosEmail()
+    const datosPersona = await u.storageGetDatosPersona()
 
     this.setState({
-      perfil,
+      datosEmail,
+      datosPersona,
       done: true,
     });
   }
@@ -52,6 +53,15 @@ export default class PerfilHome extends Component {
   cambiarItem = (item) => {
     const { navigation } = this.props;
     navigation.navigate('CambiarItem', { item });
+  }
+
+  formatearRUT (RUT){
+    RUT = RUT.replace("-","")
+    DV = RUT[RUT.length - 1];
+    RUTSinDV = RUT.substr(0,RUT.length-1);
+    RUTSinDV = RUTSinDV.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    RUTfinal = RUTSinDV.concat("-".concat(DV));
+    return RUTfinal;
   }
 
   ElementoPerfil = (item, valor) => (
@@ -72,17 +82,20 @@ export default class PerfilHome extends Component {
     const { done } = this.state;
 
     if (done) {
-      const { perfil } = this.state;
+      const { datosEmail, datosPersona } = this.state;
 
       return (
         <View style={styles.container}>
           <View style={styles.marco}>
-            <Text style={styles.titulo}>Perfil de usuario:</Text>
-            {this.ElementoPerfil('E-mail', perfil.email)}
-            <Separador />
-			{this.ElementoPerfil('Nombre', perfil.nombre)}
-            <Separador />
-            {this.ElementoPerfil('RUT', perfil.rut)}
+            <Text style={styles.titulo}>Datos del Email:</Text>
+            {this.ElementoPerfil('E-mail', datosEmail.email)}<Separador />
+            {this.ElementoPerfil('Nombre', datosEmail.nombre)}<Separador />
+            {this.ElementoPerfil('RUT', this.formatearRUT(datosEmail.rut.toString()))}<Separador />
+            
+            <Text style={styles.titulo}>Datos de la Persona activa:</Text>
+            {this.ElementoPerfil('Alias', datosPersona.alias)}<Separador />
+            {this.ElementoPerfil('Género', datosPersona.gender)}<Separador />
+            {this.ElementoPerfil('fecha_ultimas_medidas', datosPersona.fecha_ultimas_medidas)}
           </View>
         </View>
       );
