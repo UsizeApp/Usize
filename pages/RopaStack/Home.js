@@ -3,7 +3,7 @@ import {
   View, Text, StyleSheet, ActivityIndicator,
 } from 'react-native';
 import Button from '../../components/Utils/Button';
-import { Usuario } from '../../models/API';
+import { Email } from '../../models/API';
 
 function FilaMedida(props) {
   const { tipo, medida } = props;
@@ -50,7 +50,7 @@ export default class MedidasHome extends Component {
 
   async getTallas() {
     console.log('Tallas::getTallas');
-    const u = new Usuario();
+    const u = new Email();
 
     const tallas = await u.getTallas();
     console.log(tallas);

@@ -4,9 +4,11 @@ import Layout from 'components/Layout';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import { AsyncStorage } from 'react-native';
-import { getAPI } from '../../models/API';
-import {CheckBox} from 'react-native-elements';
+import { Email } from '../../models/API';
+import { CheckBox } from 'react-native-elements';
 import TriStateToggleSwitch from 'rn-tri-toggle-switch';
+
+import DropdownAlert from 'react-native-dropdownalert';
 
 export default class Register extends React.Component {
 
@@ -21,7 +23,7 @@ export default class Register extends React.Component {
     headerTintColor: 'white',
   }
 
-  
+
   constructor() {
     super();
     this.state = {
@@ -31,55 +33,50 @@ export default class Register extends React.Component {
   }
 
   async registroAPI(form) {
-    console.log('registroAPI')
+    console.log('Register::registroAPI')
 
-    var URL = getAPI() + "/register"
+    u = new Email();
 
-    const formData = new FormData()
+    const email = form.email
+    const pwd = form.password
+    const nombre = form.first_name + ' ' + form.last_name
+    const rut = form.rut
+    let gender = 'M'
+    if (form.male)
+      gender = 'M'
+    else
+      gender = 'F'
 
-    var email = form.email
-    var pwd = form.password
-    var nombre = form.first_name + ' ' + form.last_name
-    var rut = form.rut
-    if (form.male == true) {
-      var gender = 'masculino';
+    const resp = await u.registrarEmailAPI(email, pwd, nombre, rut, gender);
+
+    const respuesta = resp.respuesta
+    const token = resp.token
+
+    console.log(respuesta)
+    console.log(token)
+
+    // Si hay un token válido, el registro funcionó
+    if (token != null) {
+      await u.setToken(token);
+      // Vamos al Home
+      const { navigation } = this.props;
+      navigation.navigate('Info');
+    }
+    // Si no, o el email ya existe o algo extra pasó
+    else if (respuesta == 'ya_existe') {
+      this.dropdown.alertWithType('error', 'Error en el registro', 'El e-mail ingresado ya existe')
     } else {
-      var gender = 'femenino';
+      this.dropdown.alertWithType('error', 'Error', 'Error desconocido')
     }
-    formData.append('email', email);
-    formData.append('pwd', pwd);
-    formData.append('nombre', nombre);
-    formData.append('rut', rut);
-    formData.append('gender', gender);
-    formData.append('source', 'app');
-
-    const response = await fetch(URL, {
-      credentials: 'same-origin',
-      method: 'POST',
-      body: formData,
-    });
-
-    try {
-      console.log(formData)
-      //const json = await response.json();
-      //console.log(json)
-      //await AsyncStorage.setItem('token', json.token);
-      //await AsyncStorage.setItem('token', json.response);
-    }
-    catch (e) {
-      console.log(e)
-    }
-
-    // Cuando se obtengan las respuestas, seteamos las variables de la clase
-    this.setState({ status: 1 });
   }
 
   render() {
     return (
       <ScrollView ref={'scroll'} scrollEnabled={false}>
         <React.Fragment>
-          <Layout>    
+          <Layout>
             {this.renderForm()}
+            <DropdownAlert ref={(ref) => { this.dropdown = ref; }} />
           </Layout>
         </React.Fragment>
       </ScrollView>
@@ -87,7 +84,6 @@ export default class Register extends React.Component {
   }
 
   renderForm = () => {
-
     let validationSchema = yup.object().shape({
       first_name: yup
         .string()
@@ -115,44 +111,22 @@ export default class Register extends React.Component {
         .string()
         .label('Confirme su contraseña')
         .required('Ingrese una Contraseña')
-        .test('passwords-match', 'Las contraseñas deben coincidir', function(value) {
+        .test('passwords-match', 'Las contraseñas deben coincidir', function (value) {
           return this.parent.password === value;
         }),
-        
       male: yup.bool().required(),
       female: yup.bool().required(),
     })
 
-    /*validationSchema.test(
-      'checkbox-test',
-      null,
-      (obj) => {
-        if ( obj.male || obj.female) {
-          return true;
-        }
-        return new yup.ValidationError(
-          'Seleccione su genero',
-          null,
-          'checkbox-failed'
-        );
-      }
-    );*/
-
     return (
       <Formik
-        onSubmit={values => {
-          //Alert.alert(JSON.stringify(values))
-          this.registroAPI(values).done(() => {
-            if (this.state.status == 1)
-              this.props.navigation.push('Perfil')
-          });
-        }}
-        
-        validationSchema = {validationSchema}
-
+        isInitialValid={true}
+        initialValues={{ email: 'ale2@usm.cl', password: '12345678', first_name: 'A', last_name: 'A', rut: '3', confirmPassword: '12345678', male:true, female:false }}
+        onSubmit={values => { this.registroAPI(values) }}
+        validationSchema={validationSchema}
       >
         {({ values, handleChange, errors, setValues, setFieldTouched, touched, isValid, handleSubmit }) => (
-          <View style={{margin: 10,paddingBottom: 100}}>
+          <View style={{ margin: 10, paddingBottom: 100 }}>
             <Text>Nombres:</Text>
             <TextInput
               style={styles.InputField}
@@ -198,8 +172,8 @@ export default class Register extends React.Component {
               style={styles.InputField}
               value={values.password}
               onChangeText={handleChange('password')}
-              onFocus = {() => this.refs['scroll'].scrollTo({y: 60, animated:false})}
-              onBlur={() => {setFieldTouched('password'); this.refs['scroll'].scrollTo({y: 0, animated:false})}}
+              onFocus={() => this.refs['scroll'].scrollTo({ y: 60, animated: false })}
+              onBlur={() => { setFieldTouched('password'); this.refs['scroll'].scrollTo({ y: 0, animated: false }) }}
               secureTextEntry={true}
             />
             {touched.password && errors.password &&
@@ -210,41 +184,29 @@ export default class Register extends React.Component {
               style={styles.InputField}
               value={values.confirmPassword}
               onChangeText={handleChange('confirmPassword')}
-              onFocus = {() => this.refs['scroll'].scrollTo({y: 140, animated:false})}
-              onBlur={() => {setFieldTouched('confirmPassword'); this.refs['scroll'].scrollTo({y: 0, animated:false})}}
+              onFocus={() => this.refs['scroll'].scrollTo({ y: 140, animated: false })}
+              onBlur={() => { setFieldTouched('confirmPassword'); this.refs['scroll'].scrollTo({ y: 0, animated: false }) }}
               secureTextEntry={true}
             />
             {touched.confirmPassword && errors.confirmPassword &&
               <Text style={{ fontSize: 10, color: 'red' }}>{errors.confirmPassword}</Text>
             }
             <Text>Sexo:</Text>
-            <View style = {{flexDirection:'row', marginLeft:'7%'}}>
+            <View style={{ flexDirection: 'row', marginLeft: '7%' }}>
               <CheckBox
-                title = "Masculino"
-                checked = {values.male}
-                onPress = {() => setValues({...values, 'male':true, 'female':false})}
-                containerStyle = {styles.CheckboxContainer}
+                title="Masculino"
+                checked={values.male}
+                onPress={() => setValues({ ...values, 'male': true, 'female': false })}
+                containerStyle={styles.CheckboxContainer}
               />
               <CheckBox
-                title = "Femenino"
-                checked = {values.female}
-                onPress = {() => setValues({...values,'male':false, 'female':true})}
-                containerStyle = {styles.CheckboxContainer}
+                title="Femenino"
+                checked={values.female}
+                onPress={() => setValues({ ...values, 'male': false, 'female': true })}
+                containerStyle={styles.CheckboxContainer}
               />
             </View>
-            {/*<TriStateToggleSwitch 
-                width={200} 
-                height={35} 
-                selectedNoneBgColor={'#999999'}
-                selectedLeftBgColor={'#0027ff'}
-                selectedRightBgColor={'#0027ff'}
-                fontColor={'#fff'}
-                fontSize={13}
-                circleBgColor={'white'}
-                choices={choicesProp}
-                onChange={(value) => { values.gender = value; }}
-            />*/}
-            <View style = {{alignItems: 'center'}}>
+            <View style={{ alignItems: 'center' }}>
               <TouchableOpacity style={styles.Container(isValid)} disabled={!isValid} onPress={handleSubmit}>
                 <Text style={styles.ButtonText}>Registrarse</Text>
               </TouchableOpacity>
@@ -255,17 +217,6 @@ export default class Register extends React.Component {
     )
   }
 }
-
-let choicesProp = [
-  {
-    choiceCode: 'M',
-    choiceText: 'Hombre'
-  },
-  {
-    choiceCode: 'F',
-    choiceText: 'Mujer'
-  }
-]
 
 const styles = StyleSheet.create({
   Container: (isValid) => ({
@@ -283,19 +234,19 @@ const styles = StyleSheet.create({
     color: 'white',
     marginLeft: 8
   },
-  InputContainer:{
+  InputContainer: {
     flexDirection: 'row',
-    alignItems:'center',
+    alignItems: 'center',
     justifyContent: 'space-between'
   },
   InputField: {
     marginVertical: 10,
     borderColor: 'gray',
-    borderWidth: 1, 
+    borderWidth: 1,
     borderRadius: 4
   },
-  CheckboxContainer:{
-    borderWidth:0,
-    margin:0
+  CheckboxContainer: {
+    borderWidth: 0,
+    margin: 0
   }
 })

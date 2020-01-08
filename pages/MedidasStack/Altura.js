@@ -76,6 +76,7 @@ export default class Altura extends React.Component {
               <TextInput
                 style={styles.InputField}
                 value={values.height}
+                autoFocus={true}
                 onChangeText={handleChange('height')}
                 onBlur={() => setFieldTouched('height')}
                 maxLength={3}
@@ -88,7 +89,7 @@ export default class Altura extends React.Component {
               }
               <TouchableOpacity disabled={!isValid} style={styles.Container(!isValid)} onPress={() => this.handlePress("Foto", values.height)}>
                 <Ionicons name="ios-aperture" color="white" size={25} />
-                <Text style={styles.ButtonText}>Calcular mis medidas</Text>
+                <Text style={styles.ButtonText}>Tomar fotos</Text>
               </TouchableOpacity>
 
             </View>

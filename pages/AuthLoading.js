@@ -4,51 +4,82 @@ import {
   View,
   Text,
   ActivityIndicator,
-  AsyncStorage,
   StyleSheet,
 } from 'react-native';
 
-import { Usuario } from '../models/API';
+import { Email } from '../models/API';
 
 export default class AuthLoadingScreen extends Component {
   constructor() {
     super();
+
     this.state = {
-      validToken: false
+      comprobandoToken: false,
+      obteniendoPerfil: false
     }
+
+    // Esta pagina no renderiza nada, solo es el intermedio para validar el login
     this.validarAuthGuardado();
   }
 
   async validarAuthGuardado() {
-    u = new Usuario();
-    let savedToken = await u.getToken()
+    console.log("AuthLoading::validarAuthGuardado")
 
-    if (savedToken) {
-      console.log("AuthLoading::getToken = " + savedToken)
-      this.setState({ validToken: true });      
-      await u.fetchDatosUsuario();
-      // const promesa = u.fetchDatosUsuario()
-      // await u.setMetodoAuth('login');
-      this.props.navigation.navigate('App');
-    } else {
-      console.log("AuthLoading::Sin token; al login")
+    u = new Email();
+    // Obtenemos el token de la app
+    const token = await u.storageGetToken()
+
+    // Si es un token aceptable, consultamos a la API
+    if (token !== null && token.length > 0) {
+      console.log("Comprobando token en la API...")
+      this.setState({ comprobandoToken: true });
+
+      bTokenValido = await u.validarToken(token);
+
+      if (bTokenValido) {
+        console.log("Token valido")
+        this.setState({ obteniendoPerfil: true });
+        // Se descargan los datos guardados
+        await u.bajarDatosEmail()
+        await u.bajarDatosPersona()
+        this.props.navigation.navigate('App');
+      }
+      else {
+        console.log("Token guardado invalido")
+        // Como el token no sirvió, borramos todo lo guardado por seguridad
+        u.resetAll();
+        this.props.navigation.navigate('Auth');
+      }
+    }
+    else {
+      console.log("No hay token guardado")
+      u.resetAll();
       this.props.navigation.navigate('Auth');
     }
   };
 
   render() {
-    if (this.state.validToken) {
+    if (this.state.obteniendoPerfil) {
       return (
-        <View style={styles.container}>
-          <ActivityIndicator />
-          <Text>Obteniendo perfil...</Text>
+        <View style={styles.FormContainer}>
+          <Text style={{ color: '#8E8E8E' }}>Obteniendo perfil...</Text>
+          <ActivityIndicator size="large" color="#66CBFF" />
         </View>
       )
-    } else {
+    }
+    else if (this.state.comprobandoToken) {
       return (
-        <View style={styles.container}>
-          <ActivityIndicator />
-          <Text>Validando credenciales guardadas...</Text>
+        <View style={styles.FormContainer}>
+          <Text style={{ color: '#8E8E8E' }}>Validando credenciales guardadas...</Text>
+          <ActivityIndicator size="large" color="#66CBFF" />
+        </View>
+      );
+    }
+    else {
+      return (
+        <View style={styles.FormContainer}>
+          <Text style={{ color: '#8E8E8E' }}>¡Bienvenido a Usize!</Text>
+          <ActivityIndicator size="large" color="#66CBFF" />
         </View>
       );
     }
@@ -58,6 +89,11 @@ export default class AuthLoadingScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  FormContainer: {
+    flex: 3,
     alignItems: 'center',
     justifyContent: 'center',
   },

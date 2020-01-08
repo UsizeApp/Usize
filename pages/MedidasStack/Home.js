@@ -3,7 +3,7 @@ import {
   View, Text, StyleSheet, ActivityIndicator,
 } from 'react-native';
 import Button from '../../components/Utils/Button';
-import { Usuario } from '../../models/API';
+import { Email } from '../../models/API';
 
 function FilaMedida(props) {
   const { tipo, medida } = props;
@@ -22,7 +22,6 @@ function FilaMedida(props) {
 }
 
 export default class MedidasHome extends Component {
-
   static navigationOptions = {
     title: 'Medidas',
     headerStyle: {
@@ -39,69 +38,104 @@ export default class MedidasHome extends Component {
     this.state = {
       medidas: null,
       sexo: null,
-      // metodo: null,
       done: false,
     };
   }
 
   componentDidMount() {
-    this.getMedidas();
+    this.getMedidas(); // Obtenemos las medidas en el Home
   }
 
   async getMedidas() {
-    console.log('Medidas::getMedidas');
-    const u = new Usuario();
+    console.log('Home::getMedidas');
 
-    const medidas = await u.getMedidas(true);
-    const perfil = await u.getPerfil(true);
-    // const metodo = await u.getMetodoAuth();
+    const u = new Email();
+    const datosPersona = await u.storageGetDatosPersona()
+
+    if (datosPersona == null) {
+      console.error('Error de datos')
+      return
+    }
+
+    const bTieneMedidas = await u.bTieneMedidas()
+    let medidas = null;
+    let bEsFemenino = false;
+
+    if (bTieneMedidas) {
+      medidas = await u.medidasParaTabla()
+      bEsFemenino = await u.bEsFemenino()
+    }
 
     this.setState({
+      datosPersona,
+      bTieneMedidas,
       medidas,
-      sexo: perfil.sexo,
-      // metodo,
-      done: true,
+      bEsFemenino,
+      done: true
     });
   }
 
   render() {
-
     const { done } = this.state;
     const { navigation } = this.props;
 
     if (done) {
-      const { medidas } = this.state;
+      const { datosPersona, bTieneMedidas, medidas, bEsFemenino } = this.state;
 
-    busto = null
-    if (this.state.sexo == "femenino"){
-      busto = <FilaMedida tipo="Busto" medida={medidas.bust} bbw="0" />;
-    }
-
-      return (
-        <View style={styles.container}>
-          <View style={styles.marco}>
-            {/*<Text style={styles.titulo}>Sus medidas:</Text>*/}
-            <FilaMedida tipo="Brazo Izquierdo" medida={medidas.left_arm} />
-            <FilaMedida tipo="Brazo Derecho" medida={medidas.right_arm} />
-
-            <FilaMedida tipo="Pierna Izquierda" medida={medidas.left_leg} />
-            <FilaMedida tipo="Pierna Derecha" medida={medidas.right_leg} />
-			
-            <FilaMedida tipo="Cintura" medida={medidas.waist} />
-            <FilaMedida tipo="Cadera" medida={medidas.hip} />
-            <FilaMedida tipo="Pecho" medida={medidas.chest} />
-            {busto}
-          </View>
-          <View>
-            <Button text="Actualizar" onPress={() => navigation.navigate('Altura')} />
-          </View>
+      encabezado = (
+        <View>
+          <Text style={{ color: '#8E8E8E' }}>Ultima actualización:</Text>
+          <Text style={{ color: '#8E8E8E' }}>{datosPersona.fecha_ultimas_medidas}</Text>
         </View>
-      );
+      )
+
+      if (bTieneMedidas) {
+        filaPB = <FilaMedida tipo="Pecho" medida={medidas.chest}  bbw="0" />
+
+        if (bEsFemenino) {
+          filaPB = <View>
+            <FilaMedida tipo="Pecho" medida={medidas.chest} />
+            <FilaMedida tipo="Busto" medida={medidas.bust} bbw="0" />;
+            </View>
+        }
+
+        return (
+          <View style={styles.container}>
+            {encabezado}
+            <View style={styles.marco}>
+              <FilaMedida tipo="Brazo Izquierdo" medida={medidas.left_arm} />
+              <FilaMedida tipo="Brazo Derecho" medida={medidas.right_arm} />
+
+              <FilaMedida tipo="Pierna Izquierda" medida={medidas.left_leg} />
+              <FilaMedida tipo="Pierna Derecha" medida={medidas.right_leg} />
+
+              <FilaMedida tipo="Cintura" medida={medidas.waist} />
+              <FilaMedida tipo="Cadera" medida={medidas.hips} />
+              {filaPB}
+            </View>
+            <View>
+              <Button text="Actualizar medidas" onPress={() => navigation.navigate('Altura')} />
+            </View>
+          </View>
+        );
+      }
+      else {
+        return (
+          <View style={styles.container}>
+            {encabezado}
+            <Text style={{ color: '#8E8E8E' }}>¡Aún no has calculado tus medidas!</Text>
+            <Button text="Obtén tus medidas" onPress={() => navigation.navigate('Altura')} />
+            <Text style={{ color: '#8E8E8E' }}>Si lo prefieres, puedes ingresar tus medidas manualmente</Text>
+            <Button text="Ingresar manualmente" onPress={() => navigation.navigate('Altura')} />
+          </View>
+        )
+      }
     }
 
+    // Else
     return (
       <View style={styles.FormContainer}>
-        <Text style={{ color: '#8E8E8E' }}>Obteniendo perfil...</Text>
+        <Text style={{ color: '#8E8E8E' }}>Obteniendo medidas...</Text>
         <ActivityIndicator size="large" color="#66CBFF" />
       </View>
     );
@@ -115,7 +149,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   container: {
-    marginTop: "20%",
+    marginTop: "10%",
     alignItems: 'center',
     justifyContent: 'center',
   },
