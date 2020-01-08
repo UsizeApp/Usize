@@ -3,196 +3,15 @@ Logica del negocio
 Llamadas a la API en Flask
 */
 
-import { AsyncStorage } from 'react-native';
+import { storageGet, storageSet, storageReset } from './storage';
 
-function getAPI() {
-  const type = 'ale_LAN';
-
-  switch (type) {
-    case 'ale_LAN':
-      return 'http://10.0.0.23:5000';
-    case 'ale_INTERNET':
-      return 'http://190.161.250.69:5000';
-    case 'anibal':
-      return 'http://192.168.0.14:5000';
-    case 'diego':
-      return 'http://192.168.0.11:5000';
-    default:
-      return 'http://localhost:5000';
-  }
-}
-
-/****************
-Llamadas a la API
-*****************/
-
-// Funcion base para llamar a la API usando GET o POST
-async function callAPI(args) {
-  const pagina = args.pagina || '/';
-  console.log('API::callAPI:', pagina)
-
-  const metodo = args.metodo || 'GET';
-  const headers = args.headers || null;
-  const body = args.body || null;
-
-  const logging = args.logging || 0;
-
-  if (logging) {
-    console.log('headers', headers);
-    console.log('body', body);
-  }
-
-  const url = getAPI() + pagina;
-
-  const data = await fetch(url, {
-    method: metodo,
-    headers: headers,
-    body: body,
-  })
-    .then((response) => {
-      if (response.status !== 200) {
-        // console.error();
-        return {
-          status: 'error',
-          token: null,
-        };
-      } else {
-        if (logging) {
-          console.log("callAPI::response")
-          console.log('status:', response.status);
-        }
-        return response.json();
-      }
-    })
-    .then((data) => {
-
-      if (logging) {
-        console.log("callAPI::responseJSON")
-        console.log('data:', data);
-      }
-      return data;
-    })
-    .catch((error) => console.error(error));
-
-  return data;
-}
-
-async function apiLogin(email, pwd) {
-  let body = new FormData();
-  body.append('email', email);
-  body.append('pwd', pwd);
-
-  const resp = await callAPI({
-    pagina: '/login',
-    metodo: 'POST',
-    body: body,
-  });
-
-  return resp.token
-}
-
-async function apiDatosEmail(token) {
-  let headers = {
-    'token': token,
-  };
-
-  const resp = await callAPI({
-    pagina: '/datosEmail',
-    metodo: 'POST',
-    headers: headers,
-  });
-
-  return resp.datosEmail
-}
-
-async function apiDatosPersona(id_persona) {
-  let headers = {
-    'id': id_persona,
-  };
-
-  const resp = await callAPI({
-    pagina: '/datosPersona',
-    metodo: 'POST',
-    headers: headers,
-  });
-
-  return resp.datosPersona;
-}
-
-async function apiUpload(id_persona, height, frontalURI, lateralURI) {
-  let headers = {
-    'id': id_persona,
-  };
-
-  let body = new FormData();
-  body.append('frontalphoto', {
-    uri: frontalURI,
-    type: 'image/jpg',
-    name: 'frontal_photo.jpg',
-  });
-  body.append('lateralphoto', {
-    uri: lateralURI,
-    type: 'image/jpg',
-    name: 'lateral_photo.jpg',
-  });
-  body.append('height', height);
-
-  resp = await callAPI({
-    pagina: '/upload',
-    metodo: 'POST',
-    headers: headers,
-    body: body,
-  });
-
-  return resp
-}
-
-async function apiRegister(email, pwd, nombre, rut, gender) {
-  let body = new FormData();
-
-  body.append('email', email);
-  body.append('pwd', pwd);
-  body.append('nombre', nombre);
-  body.append('rut', rut);
-  body.append('gender', gender);
-
-  const resp = await callAPI({
-    pagina: '/register',
-    metodo: 'POST',
-    body: body,
-  });
-
-  return resp
-}
-
-
-/*********
-Funciones del storage
-**********/
-
-// Get
-async function storageGet(PK) {
-  const valor = await AsyncStorage.getItem(PK);
-  if (0)
-    console.log('storageGet:', PK, valor)
-  return valor;
-}
-
-// Set
-async function storageSet(PK, valor) {
-  if (0)
-    console.log('storageSet:', PK, valor)
-  await AsyncStorage.setItem(PK, valor);
-}
-
-// Reset
-async function storageReset(PK) {
-  await AsyncStorage.multiRemove([PK]);
-}
+import { apiLogin, apiDatosEmail, apiDatosPersona, apiUpload, apiRegister, apiValidarToken } from './apiCalls';
 
 export class Email {
-  // Si se quiere utilizar datos falsos, ignorando la API
-  fakeEnabled = 0;
+  /************************************
+  Si se quiere utilizar datos falsos, ignorando la API
+  ************************************/
+  fakeEnabled = 1;
 
   /*
   Token / id_email
@@ -247,7 +66,9 @@ export class Email {
     email: 'example@email.com',
     nombre: 'Juan Perez',
     rut: 333333333,
-    sexo: 'masculino'
+
+    mostrar_bienvenida: false,
+    personas: [this.fakeIDPersona, this.fakeIDPersona + 1, this.fakeIDPersona + 2]
   };
 
   /*
@@ -334,18 +155,23 @@ export class Email {
     let datosPersona = null;
 
     let id_persona = await this.storageGetIDPersona()
+
+    if (this.fakeEnabled) {
+      id_persona = this.fakeIDPersona
+      datosPersona = this.fakeDatosPersona
+    }
     // Si la id_persona guardada es invalida
     // se utiliza y setea la primera persona del Email
-    if (id_persona == null) {
+    else if (id_persona == null) {
       const datosEmail = await this.storageGetDatosEmail()
       const personas = datosEmail.personas
       id_persona = personas[0]
-      await this.storageSetIDPersona(id_persona)
+      datosPersona = await apiDatosPersona(id_persona)
     }
 
-    datosPersona = await apiDatosPersona(id_persona)
-
+    await this.storageSetIDPersona(id_persona)
     await this.storageSetDatosPersona(datosPersona)
+
     return datosPersona
   }
 
@@ -432,12 +258,9 @@ export class Email {
   }
 
 
-  async resetUsuario() {
-    await AsyncStorage.multiRemove(['medidas', 'perfil']);
-  }
-
-  async resetAll() {
-    await AsyncStorage.multiRemove(['token', 'medidas', 'perfil']);
+  async reiniciarStorage() {
+    await this.storageResetToken()
+    await this.storageResetIDPersona()
   }
 
   async setFakeUsuario() {
@@ -445,18 +268,8 @@ export class Email {
     await this.setPerfil(this.fakePerfil);
   }
 
-  async doFakeLogin() {
-    await this.setFakeToken();
-    await this.setFakeUsuario();
-  }
-
   fakeSleep(milliseconds) {
     return new Promise((resolve) => setTimeout(resolve, milliseconds));
-  }
-
-  async getMetodoAuth() {
-    const metodo = await AsyncStorage.getItem('metodo');
-    return metodo;
   }
 
   async subirFotos(height, frontal, lateral) {
@@ -490,21 +303,10 @@ export class Email {
     }
   }
 
-  validarToken = async (token) => {
-    let headers = {
-      'token': token,
-    };
+  async validarToken(token) {
+    const respuesta = await apiValidarToken(token);
 
-    resp = await callAPI({
-      pagina: '/validarToken',
-      metodo: 'POST',
-      headers: headers,
-      body: null,
-    });
-
-    const respuesta = resp.respuesta;
-
-    return (respuesta == 'valido')
+    return (respuesta == 'valido' || this.fakeEnabled)
   }
 
   bEsFemenino = async () => {

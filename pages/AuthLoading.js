@@ -45,15 +45,15 @@ export default class AuthLoadingScreen extends Component {
         this.props.navigation.navigate('App');
       }
       else {
-        console.log("Token guardado invalido")
-        // Como el token no sirvió, borramos todo lo guardado por seguridad
-        u.resetAll();
+        console.log("Token guardado invalido; borrando storage")
+        // Como el token no sirvió, borramos el storage por seguridad
+        u.reiniciarStorage();
         this.props.navigation.navigate('Auth');
       }
     }
     else {
       console.log("No hay token guardado")
-      u.resetAll();
+      u.reiniciarStorage();
       this.props.navigation.navigate('Auth');
     }
   };
