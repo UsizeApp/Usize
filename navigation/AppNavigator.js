@@ -68,6 +68,11 @@ const AppMainTabs = createBottomTabNavigator(
       },
     },
   },
+  {
+    tabBarOptions: {
+      activeTintColor: '#66CBFF'
+    }
+  }
 );
 
 const OcultarTabBar = ({ navigation }) => {

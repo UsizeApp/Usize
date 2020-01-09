@@ -83,7 +83,7 @@ export default class Login extends React.Component {
           <View>
             <View style={{ margin: 10 }}>
               <Text style = {{fontWeight:'bold'}}>
-                Email:
+                E-mail:
               </Text>
               <TextInput
                 style={styles.InputField}
@@ -113,10 +113,6 @@ export default class Login extends React.Component {
               <TouchableOpacity style={{ justifyContent : 'center', alignItems : 'center', flexDirection: 'row', marginVertical: 5 }} onPress={() => this.handlePress('Register')}>
                 <Text style={{ color: '#8E8E8E' }}>¿No tienes una cuenta? </Text>
                 <Text style={{ color: '#66CBFF' }}>Regístrate</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={{ flexDirection: 'row', marginVertical: 5 }} onPress={() => this.handlePress('Register')}>
-                <Text style={{ color: '#8E8E8E' }}>¿Olvidaste tu contraseña? </Text>
-                <Text style={{ color: '#66CBFF' }}>Recuperar</Text>
               </TouchableOpacity>
               <View style = {{alignItems : 'center'}}>
                 <TouchableOpacity style={styles.ButtonHolder(isValid)} disabled={!isValid} onPress={handleSubmit}>
@@ -163,12 +159,12 @@ const styles = StyleSheet.create({
   },
   ButtonHolder: (isValid) => ({
     backgroundColor: isValid ? '#66CBFF' : '#8E8E8E',
-    padding: 8,
+    padding: 10,
     borderRadius: 5,
     marginVertical: 15,
     flexDirection: 'row',
     justifyContent: 'center',
-    width: '45%'
+    width: '85%',
   }),
   ButtonText: {
     fontSize: 17,

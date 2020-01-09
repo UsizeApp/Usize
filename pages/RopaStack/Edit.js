@@ -85,7 +85,7 @@ export default class Edit extends Component {
               </TableWrapper>
             </Table>
           </View>
-        )
+          )
     }
 }
  

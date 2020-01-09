@@ -7,6 +7,8 @@ import Button from '../../components/Utils/Button';
 
 import { Email } from '../../models/API';
 
+import { Contenedor, Marco } from 'components/MisComponentes'
+
 function Separador() {
   return <View style={styles.separador} />;
 }
@@ -39,6 +41,7 @@ export default class Tab2Persona extends Component {
 
     const u = new Email();
     const datos = await u.storageGetDatosPersona()
+    console.log(datos)
 
     this.setState({
       datos,
@@ -72,14 +75,14 @@ export default class Tab2Persona extends Component {
       const { datos } = this.state;
 
       return (
-        <View style={styles.container}>
-          <View style={styles.marco}>
-            <Text style={styles.titulo}>Datos de la Persona activa:</Text>
+        <Contenedor>
+          <Marco>
+            <Text style={styles.titulo}>Datos de la Persona activa</Text>
             {this.ElementoPerfil('Alias', datos.alias)}<Separador />
             {this.ElementoPerfil('Género', datos.gender)}<Separador />
-            {this.ElementoPerfil('fecha_ultimas_medidas', datos.fecha_ultimas_medidas)}
-          </View>
-        </View>
+            {this.ElementoPerfil('Fecha última medición', datos.fecha_ultimas_medidas)}
+          </Marco>
+        </Contenedor>
       );
     }
 

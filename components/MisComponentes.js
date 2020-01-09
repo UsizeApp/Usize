@@ -5,7 +5,7 @@ https://stackoverflow.com/questions/49706823/what-is-this-props-children-and-whe
 
 import React from 'react'
 
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, View, Text } from 'react-native'
 
 export const Contenedor = (props) => {
 	return (
@@ -17,30 +17,45 @@ export const Contenedor = (props) => {
 
 export const Marco = (props) => {
 	return (
-		<Contenedor>
-			<View style={estilos.Marco}>
-				{props.children}
-			</View>
-		</Contenedor>
+		<View style={estilos.Marco}>
+			{props.children}
+		</View>
+	)
+}
+
+export const Titulo = (props) => {
+	return (
+		<Text style={estilos.Titulo}>
+			{props.children}
+		</Text>
 	)
 }
 
 const estilos = StyleSheet.create({
 	Contenedor: {
-		margin: 20
+		margin: 15,
+		alignItems: 'center',
+		justifyContent: 'center',
 	},
 	Marco: {
-		padding: 20,
-		borderWidth: 0,
-		borderRadius: 10,
+		padding: 15,
+		marginBottom: 10,
+		width: '95%',
+		borderWidth: 1,
+		borderRadius: 15,
 		borderColor: '#ddd',
 		shadowColor: '#000',
 		shadowOffset: {
 			width: 0,
 			height: 2,
 		},
-		shadowOpacity: 0.23,
-		shadowRadius: 1,
-		elevation: 2,
+		shadowOpacity: 0.8,
+		shadowRadius: 2,
+	},
+	Titulo: {
+		fontSize: 16,
+		fontWeight: 'bold',
+		marginTop: 5,
+		marginBottom: 15
 	},
 })
