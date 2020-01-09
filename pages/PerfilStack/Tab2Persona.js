@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {
   View, Text, StyleSheet, ActivityIndicator, TouchableOpacity
 } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
 import Layout from '../../components/Layout';
 import Button from '../../components/Utils/Button';
 
@@ -12,11 +11,10 @@ function Separador() {
   return <View style={styles.separador} />;
 }
 
-export default class PerfilHome extends Component {
+export default class Tab2Persona extends Component {
   static navigationOptions = {
-    title: 'Perfil',
+    title: 'Persona activa',
     headerStyle: {
-      backgroundColor: '#66CBFF',
       elevation: 0,
       shadowOpacity: 0,
       borderBottomWidth: 0,
@@ -33,19 +31,17 @@ export default class PerfilHome extends Component {
   }
 
   componentDidMount() {
-    this.getPerfil();
+    this.getDatos();
   }
 
-  async getPerfil() {
-    console.log('Perfil::getPerfil');
+  async getDatos() {
+    console.log('Perfil::getDatos');
 
     const u = new Email();
-    const datosEmail = await u.storageGetDatosEmail()
-    const datosPersona = await u.storageGetDatosPersona()
+    const datos = await u.storageGetDatosPersona()
 
     this.setState({
-      datosEmail,
-      datosPersona,
+      datos,
       done: true,
     });
   }
@@ -53,15 +49,6 @@ export default class PerfilHome extends Component {
   cambiarItem = (item) => {
     const { navigation } = this.props;
     navigation.navigate('CambiarItem', { item });
-  }
-
-  formatearRUT (RUT){
-    RUT = RUT.replace("-","")
-    DV = RUT[RUT.length - 1];
-    RUTSinDV = RUT.substr(0,RUT.length-1);
-    RUTSinDV = RUTSinDV.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    RUTfinal = RUTSinDV.concat("-".concat(DV));
-    return RUTfinal;
   }
 
   ElementoPerfil = (item, valor) => (
@@ -82,20 +69,15 @@ export default class PerfilHome extends Component {
     const { done } = this.state;
 
     if (done) {
-      const { datosEmail, datosPersona } = this.state;
+      const { datos } = this.state;
 
       return (
         <View style={styles.container}>
           <View style={styles.marco}>
-            <Text style={styles.titulo}>Datos del Email:</Text>
-            {this.ElementoPerfil('E-mail', datosEmail.email)}<Separador />
-            {this.ElementoPerfil('Nombre', datosEmail.nombre)}<Separador />
-            {this.ElementoPerfil('RUT', this.formatearRUT(datosEmail.rut.toString()))}<Separador />
-            
             <Text style={styles.titulo}>Datos de la Persona activa:</Text>
-            {this.ElementoPerfil('Alias', datosPersona.alias)}<Separador />
-            {this.ElementoPerfil('Género', datosPersona.gender)}<Separador />
-            {this.ElementoPerfil('fecha_ultimas_medidas', datosPersona.fecha_ultimas_medidas)}
+            {this.ElementoPerfil('Alias', datos.alias)}<Separador />
+            {this.ElementoPerfil('Género', datos.gender)}<Separador />
+            {this.ElementoPerfil('fecha_ultimas_medidas', datos.fecha_ultimas_medidas)}
           </View>
         </View>
       );
@@ -103,7 +85,7 @@ export default class PerfilHome extends Component {
 
     return (
       <View style={styles.FormContainer}>
-        <Text style={{ color: '#8E8E8E' }}>Obteniendo perfil...</Text>
+        <Text style={{ color: '#8E8E8E' }}>Obteniendo datos...</Text>
         <ActivityIndicator size="large" color="#66CBFF" />
       </View>
     );

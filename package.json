@@ -19,6 +19,7 @@
     "react-dom": "^16.9.0",
     "react-native": "^0.59.8",
     "react-native-app-intro-slider": "^3.0.0",
+    "react-native-dialog-input": "^1.0.7",
     "react-native-dropdownalert": "^4.2.0",
     "react-native-easy-grid": "^0.2.2",
     "react-native-elements": "^1.2.7",

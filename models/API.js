@@ -5,13 +5,13 @@ Llamadas a la API en Flask
 
 import { storageGet, storageSet, storageReset } from './storage';
 
-import { apiLogin, apiDatosEmail, apiDatosPersona, apiUpload, apiRegister, apiValidarToken } from './apiCalls';
+import { apiLogin, apiDatosEmail, apiDatosPersona, apiUpload, apiRegister, apiValidarToken, apiNuevaPersona } from './apiCalls';
 
 export class Email {
   /************************************
   Si se quiere utilizar datos falsos, ignorando la API
   ************************************/
-  fakeEnabled = 1;
+  fakeEnabled = 0;
 
   /*
   Token / id_email
@@ -98,7 +98,7 @@ export class Email {
     return datosEmail;
   }
 
-  storageGetDatosEmail = async () => {
+  async storageGetDatosEmail() {
     const datos = await storageGet(this.PK_DATOS_EMAIL)
     return JSON.parse(datos);
   }
@@ -145,6 +145,11 @@ export class Email {
       hips: 93.77,
       chest: 92.49,
       bust: 91.98,
+    }, 
+    tallas: {
+      "adidas": ['A', 'D' ],
+      "hm":     ['H', 'M' ],
+      "nike":   ['N', 'K']
     }
   }
   PK_DATOS_PERSONA = 'datosPersona'
@@ -160,12 +165,14 @@ export class Email {
       id_persona = this.fakeIDPersona
       datosPersona = this.fakeDatosPersona
     }
-    // Si la id_persona guardada es invalida
-    // se utiliza y setea la primera persona del Email
-    else if (id_persona == null) {
-      const datosEmail = await this.storageGetDatosEmail()
-      const personas = datosEmail.personas
-      id_persona = personas[0]
+    else {
+      if (id_persona == null) {
+        // Si la id_persona guardada es inválida
+        // Entonces se usa y setea la primera persona del Email
+        const datosEmail = await this.storageGetDatosEmail()
+        id_persona = datosEmail.personas[0]
+      }
+      // Descargamos los datos segun la id_persona definida
       datosPersona = await apiDatosPersona(id_persona)
     }
 
@@ -226,6 +233,44 @@ export class Email {
   }
 
   /*
+  Tallas
+  */
+
+  tallasEnBruto = async () => {
+    console.log("API::tallasEnBruto")
+
+    let tallas = null;
+
+    const datosPersona = await this.storageGetDatosPersona()
+
+    if (datosPersona != null) {
+      tallas = datosPersona.tallas
+    }
+
+    return tallas
+  }
+
+  tallasPorMarca = async () => {
+    console.log("API::tallasPorMarca")
+
+    let marcas = null;
+    let tallas = null;
+
+    const tallasBruto = await this.tallasEnBruto()
+
+    if (tallasBruto != null) {
+      marcas = [];
+      tallas = [];
+      Object.entries(tallasBruto).forEach(([key, value])=>{
+        marcas.push(key)
+        tallas.push(value)
+      })
+    }
+
+    return [marcas, tallas];
+  }
+
+  /*
   Otros
   */
 
@@ -277,7 +322,7 @@ export class Email {
 
     let resp = null
 
-    if (this.fakeEnabled || 1) {
+    if (this.fakeEnabled) {
       resp = {
         mensaje: "fakeSuccess",
         datosPersona: this.fakeDatosPersona,
@@ -304,9 +349,12 @@ export class Email {
   }
 
   async validarToken(token) {
+    if (this.fakeEnabled)
+      return true
+
     const respuesta = await apiValidarToken(token);
 
-    return (respuesta == 'valido' || this.fakeEnabled)
+    return (respuesta == 'valido')
   }
 
   bEsFemenino = async () => {
@@ -325,6 +373,14 @@ export class Email {
 
   registrarEmail = async (email, pwd, nombre, rut, gender) => {
     resp = await apiRegister(email, pwd, nombre, rut, gender)
+
+    return resp
+  }
+
+  async guardarNuevaPersona(alias, gender) {
+    const token = await this.storageGetToken()
+
+    resp = await apiNuevaPersona(token, alias, gender)
 
     return resp
   }

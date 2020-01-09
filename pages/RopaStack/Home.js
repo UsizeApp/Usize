@@ -5,10 +5,9 @@ import { Usuario, Email } from '../../models/API';
 import { Table, TableWrapper, Row, Rows, Col } from 'react-native-table-component';
 import { Ionicons } from '@expo/vector-icons';
 
-
-export default class BrandSizes extends Component {
+export default class MarcasHome extends Component {
   static navigationOptions = {
-    title: 'Tallas',
+    title: 'Marcas',
     headerStyle: {
       backgroundColor: '#66CBFF',
       elevation: 0,
@@ -20,33 +19,43 @@ export default class BrandSizes extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      tableHead: ['Marcas', 'Polera', 'Pantalón'],
       brands: {
         "nike":   <Image style={styles.image} source={require("../../assets/brands/nike.png")} />,
         "hm":     <Image style={styles.image} source={require("../../assets/brands/hm.png")} />,
         "adidas": <Image style={styles.image} source={require("../../assets/brands/adidas.png")} />
       },
-      userBrands: ["hm", "nike", "adidas"],
-      tableData: [
-        ['S', 'M'  ],
-        ['S', 'M'  ],
-        ['M', '42' ]
-      ]
+      userBrands: [],
+      tableData: []
     }
   }
 
+  componentDidMount() {
+    this.getTallas();
+  }
 
   async getTallas() {
-    console.log('Tallas::getTallas');
-    const u = new Email();
+    console.log('Marcas::getTallas');
 
-    const tallas = await u.getTallas();
-    console.log(tallas);
-    console.log("ctmallas");
+    const u = new Email();
+    const datosPersona = await u.storageGetDatosPersona()
+
+    if (datosPersona == null) {
+      console.error('Error de datos')
+      return
+    }
+
+    const bTieneMedidas = await u.bTieneMedidas()
+    let marcas = null;
+
+    if (bTieneMedidas) {
+      marcas = await u.tallasPorMarca()
+    }
+    userBrands = marcas[0]
+    tableData = marcas[1]
+
     this.setState({
-      tallas,
-      // metodo,
-      done: true,
+      userBrands,
+      tableData
     });
   }
 

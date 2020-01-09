@@ -14,12 +14,11 @@ function getAPI() {
 		case 'anibal':
 			return 'http://192.168.0.14:5000';
 		case 'diego':
-			return 'http://192.168.0.11:5000';
+			return 'http://192.168.0.6:5000';
 		default:
 			return 'http://localhost:5000';
 	}
 }
-
 
 // Funcion base para llamar a la API usando GET o POST
 async function callAPI(args) {
@@ -173,4 +172,23 @@ export async function apiValidarToken(token) {
 	});
 
 	return resp.respuesta
+}
+
+export async function apiNuevaPersona(token, alias, gender) {
+	let headers = {
+		'token': token,
+	};
+
+	let body = new FormData();
+	body.append('alias', alias);
+	body.append('gender', gender);
+
+	const resp = await callAPI({
+		pagina: '/nuevaPersona',
+		metodo: 'POST',
+		headers: headers,
+		body: body,
+	});
+
+	return resp.id
 }
