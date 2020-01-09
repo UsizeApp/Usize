@@ -394,8 +394,8 @@ export class Email {
     return id_persona
   }
 
-  async actualizarMedidas(medidas) {
-    console.log("API::actualizarMedidas")
+  async guardarMedidasManuales(medidas) {
+    console.log("API::guardarMedidasManuales")
 
     let id_persona = await this.storageGetIDPersona()
 

@@ -1,199 +1,86 @@
-import React, { Component, useRef } from 'react';
+import React, { Component } from 'react';
 import {
-  View, Text, StyleSheet, ActivityIndicator, Modal, Alert, TextInput, TouchableOpacity, ScrollView
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  Modal,
+  Alert,
+  TextInput,
+  TouchableOpacity,
+  Keyboard,
+  ScrollView,
+  ToastAndroid,
 } from 'react-native';
-import Layout from 'components/Layout';
 import Button from '../../components/Utils/Button';
-import { Formik } from 'formik';
-import * as yup from 'yup';
 import { Email } from '../../models/API';
 import { Ionicons } from '@expo/vector-icons';
-import DropdownAlert from 'react-native-dropdownalert';
+
+import { NavigationActions, StackActions } from 'react-navigation';
 
 import { Contenedor, Marco } from 'components/MisComponentes'
 
-function CreateModal(props) {
-  const { tipo, medida } = props;
-  let validationSchema = useRef(null);
-  const {
-    bEsFemenino
-  } = props;
 
-  renderForm = () => {
-    validationSchema = yup.object().shape({
-      brazo_izquierdo: yup
-        .number()
-        .label('Brazo izquierdo')
-        .required('Ingrese el largo de su brazo izquierdo en cm'),
-      brazo_derecho: yup
-        .number()
-        .label('Brazo derecho')
-        .required('Ingrese el largo de su brazo derecho en cm'),
-      pierna_izquierda: yup
-        .number()
-        .label('Pierna izquierda')
-        .required('Ingrese el largo de su pierna izquierda en cm'),
-      pierna_derecha: yup
-        .number()
-        .label('Pierna derecha')
-        .required('Ingrese el largo de su pierna derecha en cm'),
-      cintura: yup
-        .number()
-        .label('Cintura')
-        .required('Ingrese la medida de su cintura en cm'),
-      cadera: yup
-        .number()
-        .label('Cadera')
-        .required('Ingrese la medida de su cadera en cm'),
-    })
+const FilaModal = (props) => {
+  const { tipo, nombre, handleChange } = props;
+  let { bbw } = props;
+  bbw = typeof bbw === 'undefined'
+    ? 1
+    : 0;
 
-    if (bEsFemenino) {
-      validationSchema.busto = yup
-        .number()
-        .label('Busto')
-        .required('Ingrese la medida del busto en cm')
-
-      validationSchema.pecho = yup
-        .number()
-        .label('Pecho')
-        .required('Ingrese la medida del pecho en cm')
-    }
-
-    return (
-      <Formik
-        isInitialValid={true}
-        initialValues={{
-          brazo_izquierdo: '', brazo_derecho: '', pierna_derecha: '',
-          pierna_izquierda: '', cadera: '', cintura: '', pecho: '', busto: ''
-        }}
-        onSubmit={values => { console.log(values) }} //AGREGAAAR FUNCION LLAMADA DE MEDIDAS NUEVAS
-        validationSchema={validationSchema}
-      >
-        {({ values, handleChange, errors, setValues, setFieldTouched, touched, isValid, handleSubmit }) => (
-          <View style={{ margin: 10, paddingBottom: 100 }}>
-            <Text>Pierna Izquierda:</Text>
-            <TextInput
-              style={styles.InputField}
-              value={values.pierna_izquierda}
-              onChangeText={handleChange('pierna_izquierda')}
-              onBlur={() => setFieldTouched('pierna_izquierda')}
-            />
-            {touched.pierna_izquierda && errors.pierna_izquierda &&
-              <Text style={{ fontSize: 15, color: 'red' }}>{errors.pierna_izquierda}</Text>
-            }
-            <Text>Pierna Derecha:</Text>
-            <TextInput
-              style={styles.InputField}
-              value={values.pierna_derecha}
-              onChangeText={handleChange('pierna_derecha')}
-              onBlur={() => setFieldTouched('pierna_derecha')}
-            />
-            {touched.pierna_derecha && errors.pierna_derecha &&
-              <Text style={{ fontSize: 10, color: 'red' }}>{errors.pierna_derecha}</Text>
-            }
-            <Text>Brazo Izquierdo:</Text>
-            <TextInput
-              style={styles.InputField}
-              value={values.brazo_izquierdo}
-              onChangeText={handleChange('brazo_izquierdo')}
-              onBlur={() => setFieldTouched('brazo_izquierdo')}
-            />
-            {touched.brazo_izquierdo && errors.brazo_izquierdo &&
-              <Text style={{ fontSize: 10, color: 'red' }}>{errors.brazo_izquierdo}</Text>
-            }
-            <Text>Brazo Derecho:</Text>
-            <TextInput
-              style={styles.InputField}
-              value={values.brazo_derecho}
-              onChangeText={handleChange('brazo_derecho')}
-              onBlur={() => setFieldTouched('brazo_derecho')}
-            />
-            {touched.brazo_derecho && errors.brazo_derecho &&
-              <Text style={{ fontSize: 10, color: 'red' }}>{errors.brazo_derecho}</Text>
-            }
-            <Text>Cintura:</Text>
-            <TextInput
-              style={styles.InputField}
-              value={values.cintura}
-              onChangeText={handleChange('cintura')}
-              onFocus={() => this.refs['scroll'].scrollTo({ y: 60, animated: false })}
-              onBlur={() => { setFieldTouched('cintura'); this.refs['scroll'].scrollTo({ y: 0, animated: false }) }}
-              secureTextEntry={true}
-            />
-            {touched.cintura && errors.cintura &&
-              <Text style={{ fontSize: 10, color: 'red' }}>{errors.cintura}</Text>
-            }
-            <Text>Cadera:</Text>
-            <TextInput
-              style={styles.InputField}
-              value={values.cadera}
-              onChangeText={handleChange('cadera')}
-              onFocus={() => this.refs['scroll'].scrollTo({ y: 140, animated: false })}
-              onBlur={() => { setFieldTouched('cadera'); this.refs['scroll'].scrollTo({ y: 0, animated: false }) }}
-              secureTextEntry={true}
-            />
-            {touched.cadera && errors.cadera &&
-              <Text style={{ fontSize: 10, color: 'red' }}>{errors.cadera}</Text>
-            }
-            <Text>Busto:</Text>
-            <TextInput
-              style={styles.InputField}
-              value={values.busto}
-              onChangeText={handleChange('busto')}
-              onFocus={() => this.refs['scroll'].scrollTo({ y: 140, animated: false })}
-              onBlur={() => { setFieldTouched('busto'); this.refs['scroll'].scrollTo({ y: 0, animated: false }) }}
-              secureTextEntry={true}
-            />
-            {touched.busto && errors.busto &&
-              <Text style={{ fontSize: 10, color: 'red' }}>{errors.busto}</Text>
-            }
-            <Text>Pecho:</Text>
-            <TextInput
-              style={styles.InputField}
-              value={values.pecho}
-              onChangeText={handleChange('pecho')}
-              onFocus={() => this.refs['scroll'].scrollTo({ y: 140, animated: false })}
-              onBlur={() => { setFieldTouched('pecho'); this.refs['scroll'].scrollTo({ y: 0, animated: false }) }}
-              secureTextEntry={true}
-            />
-            {touched.pecho && errors.pecho &&
-              <Text style={{ fontSize: 10, color: 'red' }}>{errors.pecho}</Text>
-            }
-
-            <View style={{ alignItems: 'center' }}>
-              <TouchableOpacity style={styles.Container(isValid)} disabled={!isValid} onPress={handleSubmit}>
-                <Text style={styles.ButtonText}>Guardar Medidas</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
-      </Formik>
-    )
-  }
   return (
-    <ScrollView ref={'scroll'} scrollEnabled={false}>
-      <React.Fragment>
-        <Layout>
-          {this.renderForm()}
-          <DropdownAlert ref={(ref) => { this.dropdown = ref; }} />
-        </Layout>
-      </React.Fragment>
-    </ScrollView>
+    <View style={{
+      flexDirection: 'row',
+      marginVertical: 8,
+      paddingBottom: 5
+    }} keyboardShouldPersistTaps='handled'>
+      <Text
+        style={{
+          flex: 1,
+          color: 'grey'
+        }}>{nombre}</Text>
+      <TextInput
+        placeholder={`    0  `}
+        keyboardType='numeric'
+        maxLength={3}
+        onChangeText={(medida) => handleChange(tipo, medida)}
+        onBlur={Keyboard.dismiss}
+        style={{
+          textAlign: 'right',
+          color: 'grey',
+          borderBottomWidth: bbw,
+          borderColor: '#ddd'
+        }}>{}</TextInput>
+    </View>
   )
 }
 
 function FilaMedida(props) {
   const { tipo, medida } = props;
   let { bbw } = props;
-  bbw = typeof bbw === 'undefined' ? 2 : 0;
+  bbw = typeof bbw === 'undefined'
+    ? 2
+    : 0;
 
   return (
-    <View style={{
-      flexDirection: 'row', marginVertical: 8, borderBottomWidth: bbw, paddingBottom: 5, borderColor: '#ddd',
-    }}
-    >
-      <Text style={{ flex: 1, color: 'grey' }}>{tipo}</Text>
-      <Text style={{ textAlign: 'right', color: 'grey' }}>{medida}</Text>
+    <View
+      style={{
+        flexDirection: 'row',
+        marginVertical: 8,
+        borderBottomWidth: bbw,
+        paddingBottom: 5,
+        borderColor: '#ddd'
+      }}>
+      <Text
+        style={{
+          flex: 1,
+          color: 'grey'
+        }}>{tipo}</Text>
+      <Text
+        style={{
+          textAlign: 'right',
+          color: 'grey'
+        }}>{medida}</Text>
     </View>
   );
 }
@@ -205,32 +92,70 @@ export default class MedidasHome extends Component {
       backgroundColor: '#66CBFF',
       elevation: 0,
       shadowOpacity: 0,
-      borderBottomWidth: 0,
+      borderBottomWidth: 0
     },
-    headerTintColor: 'white',
+    headerTintColor: 'white'
   }
 
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
+
     this.state = {
-      medidas: null,
-      sexo: null,
-      done: false,
+      medidasManuales: {
+        left_arm: '0',
+        right_arm: '0',
+        left_leg: '0',
+        right_leg: '0',
+        waist: '0',
+        hips: '0',
+        bust: '0',
+        chest: '0',
+      },
       modalVisible: false,
-    };
+      done: false,
+    }
+
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(tipo, medida) {
+    let { medidasManuales } = this.state
+    //console.log(tipo, medida)
+    //console.log(medidasManuales)
+    medidasManuales[tipo] = medida
+    this.setState({ medidasManuales })
   }
 
   openModal() {
     this.setState({ modalVisible: true });
   }
 
-  closeModal(props) {
-    const { navigation } = this.props;
-
-    navigation.push('Medidas')
+  closeModal() {
+    console.log("Home::closeModal")
     this.setState({ modalVisible: false });
   }
 
+  async guardarMedidas() {
+    const { medidasManuales } = this.state
+    console.log(medidasManuales)
+
+    const u = new Email();
+    await u.guardarMedidasManuales(medidasManuales)
+
+    this.closeModal()
+
+    // Reiniciamos el Stack
+    const { navigation } = this.props
+
+    resetAction = StackActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({ routeName: "Home" })],
+    });
+
+    navigation.dispatch(resetAction);
+
+    ToastAndroid.show('Medidas actualizadas', ToastAndroid.SHORT);
+  }
 
   componentDidMount() {
     this.getMedidas(); // Obtenemos las medidas en el Home
@@ -256,13 +181,59 @@ export default class MedidasHome extends Component {
       bEsFemenino = await u.bEsFemenino()
     }
 
-    this.setState({
-      datosPersona,
-      bTieneMedidas,
-      medidas,
-      bEsFemenino,
-      done: true
-    });
+    this.setState({ datosPersona, bTieneMedidas, medidas, bEsFemenino, done: true });
+  }
+
+  renderModal() {
+    return (
+      <Modal
+        visible={this.state.modalVisible}
+        animationType={'slide'}
+        onPress={Keyboard.dismiss}
+        onRequestClose={() => this.closeModal()}>
+        <View style={styles.containerModal}>
+
+          <View style={styles.exitModal}>
+            <TouchableOpacity
+              onPress={() => {
+                this.closeModal()
+              }}>
+              <Ionicons name="md-close" size={30} color='grey' />
+            </TouchableOpacity>
+          </View>
+
+          <Text
+            style={{
+              color: 'grey',
+              fontSize: 15,
+              alignItems: 'center'
+            }}>
+            Ingrese todas las medidas correspondientes en centímetros:</Text>
+
+          <Marco>
+            <ScrollView style={{ height: '75%', paddingHorizontal: 15 }}>
+              <FilaModal handleChange={this.handleChange} tipo="left_arm" nombre="Brazo Izquierdo" />
+              <FilaModal handleChange={this.handleChange} tipo="right_arm" nombre="Brazo Derecho" />
+
+              <FilaModal handleChange={this.handleChange} tipo="left_leg" nombre="Pierna Izquierda" />
+              <FilaModal handleChange={this.handleChange} tipo="right_leg" nombre="Pierna Derecha" />
+
+              <FilaModal handleChange={this.handleChange} tipo="waist" nombre="Cintura" />
+              <FilaModal handleChange={this.handleChange} tipo="hips" nombre="Cadera" />
+              <FilaModal handleChange={this.handleChange} tipo="bust" nombre="Busto" />
+              <FilaModal handleChange={this.handleChange} tipo="chest" nombre="Pecho" />
+            </ScrollView>
+          </Marco>
+
+          <View style={styles.marcoBoton}>
+            <Button onPress={() => { this.guardarMedidas() }}
+              title="Guardar medidas"
+              text="Guardar medidas"></Button>
+          </View>
+
+        </View>
+      </Modal>
+    )
   }
 
   render() {
@@ -277,8 +248,14 @@ export default class MedidasHome extends Component {
       if (bTieneMedidas) {
         encabezado = (
           <View>
-            <Text style={{ color: '#8E8E8E' }}>Ultima actualización:</Text>
-            <Text style={{ color: '#8E8E8E' }}>{datosPersona.fecha_ultimas_medidas}</Text>
+            <Text
+              style={{
+                color: '#8E8E8E'
+              }}>Ultima actualización:</Text>
+            <Text
+              style={{
+                color: '#8E8E8E'
+              }}>{datosPersona.fecha_ultimas_medidas}</Text>
           </View>
         )
 
@@ -292,7 +269,6 @@ export default class MedidasHome extends Component {
 
         return (
           <Contenedor>
-            {encabezado}
             <Marco>
               <FilaMedida tipo="Brazo Izquierdo" medida={medidas.left_arm} />
               <FilaMedida tipo="Brazo Derecho" medida={medidas.right_arm} />
@@ -305,78 +281,29 @@ export default class MedidasHome extends Component {
               {filaP}
               {filaB}
             </Marco>
-            <View>
-              <Button text="Actualizar medidas" onPress={() => navigation.navigate('Altura')} />
-              <Button
-                onPress={() => { this.openModal() }}
-                title="Open modal"
-                text="Editar medidas manualmente"
-              />
-            </View>
-            <View style={styles.container}>
-              <Modal
-                visible={this.state.modalVisible}
-                animationType={'slide'}
-                onRequestClose={() => { this.closeModal() }}
-              >
-                <TouchableOpacity
-                  onPress={() => { this.closeModal() }}>
-                  <Ionicons name="md-close" size={20} color='grey' />
-                </TouchableOpacity>
-                <View style={styles.containerModal}>
-                  <Text style={{ color: 'grey', fontSize: 20, justifyContent: 'center' }}>
-                    Ingresar todas las medidas correspondientes</Text>
-                  <CreateModal bEsFemenino={this.state.bEsFemenino} />
-                  <View style={styles.marcoModal}>
-                    <Button
-                      onPress={() => { this.closeModal() }}
-                      title="Guardar medidas"
-                      text="Guardar medidas"
-                    >
-                    </Button>
-                  </View>
-                </View>
-              </Modal>
-            </View>
+            <Button text="Actualizar medidas" onPress={() => navigation.navigate('Altura')} />
+            <Button text="Ingresar manualmente" onPress={() => this.openModal()} />
+            {this.renderModal()}
           </Contenedor>
         );
-      }
-      else {
+      } else {
         return (
-          <View style={styles.container}>
+          <Contenedor>
             {encabezado}
-            <Text style={{ color: '#8E8E8E' }}>¡Aún no has calculado tus medidas!</Text>
+            <Text
+              style={{
+                color: '#8E8E8E'
+              }}>¡Aún no has calculado tus medidas!</Text>
             <Button text="Obtén tus medidas" onPress={() => navigation.navigate('Altura')} />
-            <Text style={{ color: '#8E8E8E' }}>Si lo prefieres, puedes ingresar tus medidas manualmente</Text>
-            <Button text="Ingresar manualmente" onPress={() => navigation.navigate('Altura')} />
+            <Text
+              style={{
+                color: '#8E8E8E'
+              }}>Si lo prefieres, puedes ingresar tus medidas manualmente</Text>
             <Button text="Ingresar manualmente" onPress={() => this.openModal()} />
-            <View style={styles.container}>
-              <Modal
-                visible={this.state.modalVisible}
-                animationType={'slide'}
-                onRequestClose={() => this.closeModal()}
-              >
-                <TouchableOpacity
-                  onPress={() => { this.closeModal() }}>
-                  <Ionicons name="md-close" size={20} color='grey' />
-                </TouchableOpacity>
-                <View style={styles.containerModal}>
-                  <Text style={{ color: 'grey', fontSize: 20, justifyContent: 'center' }}>
-                    Ingresar todas las medidas correspondientes</Text>
-                  <View style={styles.marcoModal}>
-                    <Button
-                      onPress={() => {
-                        this.closeModal()
-                      }}
-                      title="Guardar medidas"
-                      text="Guardar medidas"
-                    >
-                    </Button>
-                  </View>
-                </View>
-              </Modal>
-            </View>
-          </View>
+
+            {this.renderModal()}
+
+          </Contenedor>
         )
       }
     }
@@ -384,7 +311,9 @@ export default class MedidasHome extends Component {
     // Else
     return (
       <View style={styles.FormContainer}>
-        <Text style={{ color: '#8E8E8E' }}>Obteniendo medidas...</Text>
+        <Text style={{
+          color: '#8E8E8E'
+        }}>Obteniendo medidas...</Text>
         <ActivityIndicator size="large" color="#66CBFF" />
       </View>
     );
@@ -393,7 +322,9 @@ export default class MedidasHome extends Component {
 
 const styles = StyleSheet.create({
   Container: (isValid) => ({
-    backgroundColor: isValid ? '#66CBFF' : "#8E8E8E",
+    backgroundColor: isValid
+      ? '#66CBFF'
+      : "#8E8E8E",
     padding: 15,
     borderRadius: 5,
     marginVertical: 20,
@@ -410,25 +341,20 @@ const styles = StyleSheet.create({
   FormContainer: {
     flex: 3,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   container: {
-    marginTop: "10%",
+    marginTop: "15%",
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   containerModal: {
-    paddingTop: "30%",
-    alignItems: 'center',
+    paddingTop: "15%",
+    paddingHorizontal: "10%",
     justifyContent: 'center',
   },
   exitModal: {
-    paddingTop: "500%",
-    alignItems: 'center',
-    borderRadius: 10,
-    paddingRight: "17%",
-    paddingLeft: "20%",
-    justifyContent: 'center',
+    paddingBottom: 15
   },
   marco: {
     padding: 20,
@@ -439,15 +365,14 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 2
     },
     shadowOpacity: 0.23,
     shadowRadius: 1,
-    elevation: 2,
+    elevation: 2
   },
   marcoModal: {
-    marginTop: '10%',
-    padding: 20,
+    padding: 15,
     width: '70%',
     borderWidth: 0,
     borderRadius: 10,
@@ -455,16 +380,19 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 2
     },
     shadowOpacity: 0.23,
     shadowRadius: 1,
     elevation: 1,
   },
+  marcoBoton: {
+    alignItems: 'center'
+  },
   titulo: {
     fontSize: 16,
     fontWeight: 'bold',
     marginTop: 5,
-    marginBottom: 15,
-  },
+    marginBottom: 15
+  }
 });
