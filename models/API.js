@@ -262,12 +262,30 @@ export class Email {
       marcas = [];
       tallas = [];
       Object.entries(tallasBruto).forEach(([key, value])=>{
-        marcas.push(key)
-        tallas.push(value)
+        if (!!value[0] && !!value[1]) {
+          marcas.push(key)
+          tallas.push(value)
+        }
       })
     }
 
     return [marcas, tallas];
+  }
+
+  filtroMarcas = async () => {
+    console.log("API::filtroMarcas")
+
+    let marcas = null;
+
+    const tallasBruto = await this.tallasEnBruto()
+    if (tallasBruto != null) {
+      marcas = [];
+      Object.entries(tallasBruto).forEach(([key, value])=>{
+        marcas.push([key, !!value[0] && !!value[1]])
+      })
+    }
+
+    return marcas;
   }
 
   /*

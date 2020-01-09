@@ -66,7 +66,7 @@ export default class Login extends React.Component {
     <View style={styles.FormContainer}>
       <Formik
         isInitialValid={true}
-        initialValues={{ email: 'ale@usm.cl', password: '12345678' }}
+        initialValues={{ email: 'ale2@usm.cl', password: '12345678' }}
         onSubmit={(values) => this.handleLogin(values.email, values.password)}
         validationSchema={yup.object().shape({
           email: yup

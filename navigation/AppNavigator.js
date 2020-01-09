@@ -42,7 +42,7 @@ const AppMainTabs = createBottomTabNavigator(
         ),
       },
     },
-    Marcas: {
+    Tallas: {
       screen: RopaStack,
       navigationOptions: {
         tabBarIcon: ({ tintColor }) => (
@@ -58,17 +58,6 @@ const AppMainTabs = createBottomTabNavigator(
         ),
       },
     },
-	/*
-    Ajustes: { // AjustesStack
-      screen: CerrarSesion,
-      navigationOptions: {
-        title: 'Ajustes',
-        tabBarIcon: ({ tintColor }) => (
-          <FontAwesome name="cog" size={17} color={tintColor} />
-        ),
-      },
-    },
-	*/
     CerrarSesion: {
       screen: CerrarSesion,
       navigationOptions: {
