@@ -344,7 +344,6 @@ export default class MedidasHome extends Component {
             <Text style={{ color: '#8E8E8E' }}>¡Aún no has calculado tus medidas!</Text>
             <Button text="Obtén tus medidas" onPress={() => navigation.navigate('Altura')} />
             <Text style={{ color: '#8E8E8E' }}>Si lo prefieres, puedes ingresar tus medidas manualmente</Text>
-            <Button text="Ingresar manualmente" onPress={() => navigation.navigate('Altura')} />
             <Button text="Ingresar manualmente" onPress={() => this.openModal()} />
             <View style={styles.container}>
             <Modal
