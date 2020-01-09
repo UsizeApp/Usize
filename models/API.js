@@ -145,6 +145,11 @@ export class Email {
       hips: 93.77,
       chest: 92.49,
       bust: 91.98,
+    }, 
+    tallas: {
+      "adidas": ['A', 'D' ],
+      "hm":     ['H', 'M' ],
+      "nike":   ['N', 'K']
     }
   }
   PK_DATOS_PERSONA = 'datosPersona'
@@ -228,6 +233,44 @@ export class Email {
   }
 
   /*
+  Tallas
+  */
+
+  tallasEnBruto = async () => {
+    console.log("API::tallasEnBruto")
+
+    let tallas = null;
+
+    const datosPersona = await this.storageGetDatosPersona()
+
+    if (datosPersona != null) {
+      tallas = datosPersona.tallas
+    }
+
+    return tallas
+  }
+
+  tallasPorMarca = async () => {
+    console.log("API::tallasPorMarca")
+
+    let marcas = null;
+    let tallas = null;
+
+    const tallasBruto = await this.tallasEnBruto()
+
+    if (tallasBruto != null) {
+      marcas = [];
+      tallas = [];
+      Object.entries(tallasBruto).forEach(([key, value])=>{
+        marcas.push(key)
+        tallas.push(value)
+      })
+    }
+
+    return [marcas, tallas];
+  }
+
+  /*
   Otros
   */
 
@@ -279,7 +322,7 @@ export class Email {
 
     let resp = null
 
-    if (this.fakeEnabled || 1) {
+    if (this.fakeEnabled) {
       resp = {
         mensaje: "fakeSuccess",
         datosPersona: this.fakeDatosPersona,

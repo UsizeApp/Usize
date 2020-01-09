@@ -14,7 +14,7 @@ function getAPI() {
 		case 'anibal':
 			return 'http://192.168.0.14:5000';
 		case 'diego':
-			return 'http://192.168.0.11:5000';
+			return 'http://192.168.0.6:5000';
 		default:
 			return 'http://localhost:5000';
 	}
