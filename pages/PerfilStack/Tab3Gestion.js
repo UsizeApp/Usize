@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  StyleSheet, Picker, Text, View
+  StyleSheet, Picker, Text, View, ToastAndroid
 } from 'react-native';
 
 import Layout from '../../components/Layout';
@@ -9,6 +9,8 @@ import Button from '../../components/Utils/Button';
 import { Email } from 'models/API'
 
 import { Marco } from 'components/MisComponentes'
+
+import { NavigationActions, StackActions } from 'react-navigation';
 
 export default class Tab3Gestion extends Component {
   static navigationOptions = {
@@ -26,7 +28,8 @@ export default class Tab3Gestion extends Component {
 
     this.state = {
       done: false,
-      languageValue: "java"
+      id_persona: null,
+      personas: null,
     }
   }
 
@@ -36,7 +39,7 @@ export default class Tab3Gestion extends Component {
 
     const personas = datosEmail.personas
 
-    this.setState({ personas, done: true })
+    this.setState({ personas, id_persona: personas[0], done: true })
   }
 
   componentDidMount() {
@@ -46,6 +49,37 @@ export default class Tab3Gestion extends Component {
   nuevaPersona() {
     const { navigation } = this.props;
     navigation.navigate('P1NuevaPersona');
+  }
+
+  async cambiarPersona() {
+    const { id_persona } = this.state
+    u = new Email();
+    await u.storageSetIDPersona(id_persona)
+    await u.bajarDatosPersona()
+
+    ToastAndroid.show('Persona cambiada', ToastAndroid.SHORT);
+
+    const resetAction = StackActions.reset({
+      index: 0,
+      key: null,
+      actions: [NavigationActions.navigate({ routeName: 'TabScreen' })]
+    });
+
+    const goToTransaction = NavigationActions.navigate({
+      routeName: 'Medidas', params: {
+        id_persona: id_persona
+      }
+    });
+
+    const resetAction2 = StackActions.reset({
+      index: 0,
+      key: null,
+      actions: [NavigationActions.navigate({ routeName: 'Home' })]
+    });
+
+    this.props.navigation.dispatch(resetAction);
+    this.props.navigation.dispatch(goToTransaction);
+    this.props.navigation.dispatch(resetAction2);
   }
 
   render() {
@@ -68,13 +102,13 @@ export default class Tab3Gestion extends Component {
             <Text>Cambiar persona</Text>
             <Picker
               mode="dropdown"
-              selectedValue={this.state.language}
+              selectedValue={this.state.id_persona}
               style={{}}
-              onValueChange={(itemValue, itemIndex) =>
-                this.setState({ language: itemValue })
+              onValueChange={(id_persona, itemIndex) =>
+                this.setState({ id_persona: id_persona })
               }>
-              {this.state.personas.map(p => (
-                <Picker.Item key={p} label={p} value={p} />
+              {this.state.personas.map(id_persona => (
+                <Picker.Item key={id_persona} label={id_persona} value={id_persona} />
               ))
               }
             </Picker>

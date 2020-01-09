@@ -192,3 +192,31 @@ export async function apiNuevaPersona(token, alias, gender) {
 
 	return resp.id
 }
+
+export async function apiMedidasManuales(id_persona, medidas) {
+	let headers = {
+		'id': id_persona,
+	};
+
+	let body = new FormData();
+	body.append('left_arm', medidas.left_arm)
+	body.append('right_arm', medidas.right_arm)
+
+	body.append('left_leg', medidas.left_leg)
+	body.append('right_leg', medidas.right_leg)
+
+	body.append('waist', medidas.waist)
+	body.append('hips', medidas.hips)
+	body.append('chest', medidas.chest)
+	body.append('bust', medidas.bust)
+
+	const resp = await callAPI({
+		pagina: '/medidasManuales',
+		metodo: 'POST',
+		headers: headers,
+		body: body,
+	});
+
+	return resp.nuevosDatosPersona
+}
+
