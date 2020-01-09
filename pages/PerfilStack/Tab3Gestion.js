@@ -8,7 +8,7 @@ import Button from '../../components/Utils/Button';
 
 import { Email } from 'models/API'
 
-import { Marco } from 'components/MisComponentes'
+import { Contenedor, Marco, Titulo } from 'components/MisComponentes'
 
 import { NavigationActions, StackActions } from 'react-navigation';
 
@@ -28,8 +28,9 @@ export default class Tab3Gestion extends Component {
 
     this.state = {
       done: false,
+      renderedOnce: false,
       id_persona: null,
-      personas: null,
+      personas2: null,
     }
   }
 
@@ -37,9 +38,11 @@ export default class Tab3Gestion extends Component {
     u = new Email();
     const datosEmail = await u.storageGetDatosEmail()
 
-    const personas = datosEmail.personas
+    let personas2 = datosEmail.personas2
+    personas2 = Object.entries(personas2)
+    id_persona = personas2[0][0]
 
-    this.setState({ personas, id_persona: personas[0], done: true })
+    this.setState({ id_persona, personas2, done: true })
   }
 
   componentDidMount() {
@@ -83,40 +86,34 @@ export default class Tab3Gestion extends Component {
   }
 
   render() {
-    langs = [
-      {
-        key: "java",
-        label: "Java Lang"
-      },
-      {
-        key: "js",
-        label: "Javascript Lang"
-      },
-    ]
-
     if (this.state.done) {
-      return (
-        <View style={styles.container}>
+      let { personas2 } = this.state
 
+      return (
+        <Contenedor>
           <Marco>
-            <Text>Cambiar persona</Text>
+            <Titulo>Cambiar persona activa</Titulo>
             <Picker
               mode="dropdown"
               selectedValue={this.state.id_persona}
-              style={{}}
-              onValueChange={(id_persona, itemIndex) =>
-                this.setState({ id_persona: id_persona })
+              onValueChange={(id_persona) =>
+                this.setState({ id_persona })
               }>
-              {this.state.personas.map(id_persona => (
-                <Picker.Item key={id_persona} label={id_persona} value={id_persona} />
-              ))
+              {personas2.map(entry => {
+                const [key, value] = entry
+                return (
+                  <Picker.Item key={key} value={key} label={value} />
+                )
+              })
               }
             </Picker>
-            <Button text="Cambiar" onPress={() => this.cambiarPersona()} />
+            <Button text="Cambiar persona" onPress={() => this.cambiarPersona()} />
           </Marco>
 
-          <Button text="Nueva persona" onPress={() => this.nuevaPersona()} />
-        </View>
+          <Marco>
+            <Button text="Agregar nueva persona" onPress={() => this.nuevaPersona()} />
+          </Marco>
+        </Contenedor>
       );
     }
 

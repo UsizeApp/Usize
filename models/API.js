@@ -68,7 +68,11 @@ export class Email {
     rut: 333333333,
 
     mostrar_bienvenida: false,
-    personas: [this.fakeIDPersona, this.fakeIDPersona + 1, this.fakeIDPersona + 2]
+    personas: [
+      ['1', 'Alias1'],
+      ['2', 'Alias2'],
+      ['3', 'Alias3'],
+    ]
   };
 
   /*
@@ -170,7 +174,9 @@ export class Email {
         // Si la id_persona guardada es inválida
         // Entonces se usa y setea la primera persona del Email
         const datosEmail = await this.storageGetDatosEmail()
-        id_persona = datosEmail.personas[0]
+        const {personas} = datosEmail
+        console.log(personas)
+        id_persona = personas[0];
       }
       // Descargamos los datos segun la id_persona definida
       datosPersona = await apiDatosPersona(id_persona)
@@ -302,7 +308,6 @@ export class Email {
     return tallas
   }
 
-
   async reiniciarStorage() {
     await this.storageResetToken()
     await this.storageResetIDPersona()
@@ -311,10 +316,6 @@ export class Email {
   async setFakeUsuario() {
     await this.setMedidas(this.fakeMedidas);
     await this.setPerfil(this.fakePerfil);
-  }
-
-  fakeSleep(milliseconds) {
-    return new Promise((resolve) => setTimeout(resolve, milliseconds));
   }
 
   async subirFotos(height, frontal, lateral) {

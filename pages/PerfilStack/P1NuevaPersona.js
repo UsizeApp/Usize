@@ -15,7 +15,7 @@ import ChonseSelect from 'components/ChonseSelect'
 
 import { Email } from 'models/API'
 
-import { Marco } from 'components/MisComponentes'
+import { Contenedor, Marco } from 'components/MisComponentes'
 
 import { NavigationActions, StackActions } from 'react-navigation';
 
@@ -29,7 +29,6 @@ const genderData = [
         label: 'Femenino',
     },
 ];
-
 
 export default class P1NuevaPersona extends Component {
     static navigationOptions = {
@@ -73,7 +72,7 @@ export default class P1NuevaPersona extends Component {
                 key: null,
                 actions: [NavigationActions.navigate({ routeName: 'TabScreen' })]
             });
-            
+
             const goToTransaction = NavigationActions.navigate({
                 routeName: 'Medidas', params: {
                     id_persona: id_persona
@@ -99,59 +98,61 @@ export default class P1NuevaPersona extends Component {
         const { gender } = this.state;
 
         return (
-            <Marco>
-                <Formik
-                    isInitialValid={true}
-                    initialValues={null}
-                    onSubmit={values => this.guardarNuevaPersona(values)}
-                    validationSchema={null}>
-                    {({
-                        values,
-                        handleChange,
-                        errors,
-                        setValues,
-                        setFieldTouched,
-                        touched,
-                        isValid,
-                        handleSubmit,
-                    }) => (
-                            <View style={{ margin: 10, paddingBottom: 100 }}>
-                                <Fragment>
-                                    <Text>Alias:</Text>
-                                    <TextInput style={styles.TextInput}
-                                        placeholder="Ingresa un alias"
-                                        maxLength={80}
-                                        onBlur={Keyboard.dismiss}
-                                        onChangeText={alias => this.setState({ alias: alias })}
-                                        value={values.alias} />
-                                </Fragment>
+            <Contenedor>
+                <Marco>
+                    <Formik
+                        isInitialValid={true}
+                        initialValues={null}
+                        onSubmit={values => this.guardarNuevaPersona(values)}
+                        validationSchema={null}>
+                        {({
+                            values,
+                            handleChange,
+                            errors,
+                            setValues,
+                            setFieldTouched,
+                            touched,
+                            isValid,
+                            handleSubmit,
+                        }) => (
+                                <View style={{ margin: 10 }}>
+                                    <Fragment>
+                                        <Text>Alias:</Text>
+                                        <TextInput style={styles.TextInput}
+                                            placeholder="Ingresa un alias"
+                                            maxLength={80}
+                                            onBlur={Keyboard.dismiss}
+                                            onChangeText={alias => this.setState({ alias: alias })}
+                                            value={values.alias} />
+                                    </Fragment>
 
-                                <Fragment>
-                                    <Text>Género:</Text>
-                                    <View
-                                        style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                                        <ChonseSelect
-                                            height={35}
-                                            style={{ margin: 20 }}
-                                            data={genderData}
-                                            initValue={gender}
-                                            onPress={gender => this.setState({ gender: gender.value })}
-                                        />
+                                    <Fragment>
+                                        <Text>Género:</Text>
+                                        <View
+                                            style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                                            <ChonseSelect
+                                                height={35}
+                                                style={{ marginVertical: 10 }}
+                                                data={genderData}
+                                                initValue={gender}
+                                                onPress={gender => this.setState({ gender: gender.value })}
+                                            />
+                                        </View>
+                                    </Fragment>
+
+                                    <View style={{ alignItems: 'center' }}>
+                                        <TouchableOpacity
+                                            style={styles.Container(isValid)}
+                                            disabled={!isValid}
+                                            onPress={handleSubmit}>
+                                            <Text style={styles.ButtonText}>Guardar persona</Text>
+                                        </TouchableOpacity>
                                     </View>
-                                </Fragment>
-
-                                <View style={{ alignItems: 'center' }}>
-                                    <TouchableOpacity
-                                        style={styles.Container(isValid)}
-                                        disabled={!isValid}
-                                        onPress={handleSubmit}>
-                                        <Text style={styles.ButtonText}>Guardar</Text>
-                                    </TouchableOpacity>
                                 </View>
-                            </View>
-                        )}
-                </Formik>
-            </Marco>
+                            )}
+                    </Formik>
+                </Marco>
+            </Contenedor>
         );
     }
 }
@@ -173,7 +174,8 @@ const styles = StyleSheet.create({
         marginHorizontal: 50,
     },
     TextInput: {
-        marginVertical: 10,
+        margin: 5,
+        paddingHorizontal: 10,
         borderColor: 'gray',
         borderWidth: 1,
         borderRadius: 4,

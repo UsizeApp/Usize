@@ -8,13 +8,15 @@ import DialogInput from 'react-native-dialog-input';
 
 import { Email } from '../../models/API';
 
+import { Contenedor, Marco } from 'components/MisComponentes'
+
 function Separador() {
   return <View style={styles.separador} />;
 }
 
 export default class Tab1Email extends Component {
   static navigationOptions = {
-    title: 'E-mail',
+    title: 'Cuenta',
     headerStyle: {
       elevation: 0,
       shadowOpacity: 0,
@@ -126,15 +128,13 @@ export default class Tab1Email extends Component {
       const { tituloDialogo, mensajeDialogo, valorDialogo, pkDialogo } = this.state.datosDialogo
 
       return (
-        <View>
-          <View style={styles.container}>
-            <View style={styles.marco}>
-              <Text style={styles.titulo}>Datos del Email:</Text>
-              {this.ElementoPerfil('E-mail', datos.email, 'email')}<Separador />
-              {this.ElementoPerfil('Nombre', datos.nombre, 'nombre')}<Separador />
-              {this.ElementoPerfil('RUT', this.formatearRUT(datos.rut.toString()), 'rut')}<Separador />
-            </View>
-          </View>
+        <Contenedor>
+          <Marco>
+            <Text style={styles.titulo}>Datos del Email:</Text>
+            {this.ElementoPerfil('E-mail', datos.email, 'email')}<Separador />
+            {this.ElementoPerfil('Nombre', datos.nombre, 'nombre')}<Separador />
+            {this.ElementoPerfil('RUT', this.formatearRUT(datos.rut.toString()), 'rut')}<Separador />
+          </Marco>
           <DialogInput
             isDialogVisible={isDialogVisible}
             title={tituloDialogo}
@@ -142,7 +142,7 @@ export default class Tab1Email extends Component {
             submitInput={(input) => { this.guardarValor(pkDialogo, input) }}
             closeDialog={() => { this.showDialog(false) }}>
           </DialogInput>
-        </View>
+        </Contenedor>
       );
     }
 

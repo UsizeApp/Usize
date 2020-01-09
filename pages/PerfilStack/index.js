@@ -10,25 +10,25 @@ import P1NuevaPersona from './P1NuevaPersona';
 
 const TabScreen = createMaterialTopTabNavigator(
   {
-    Tab1Email: { screen: Tab1Email },
     Tab2Persona: { screen: Tab2Persona },
     Tab3Gestion: { screen: Tab3Gestion },
+    Tab1Email: { screen: Tab1Email },
   },
   {
     tabBarPosition: 'top',
     swipeEnabled: true,
     animationEnabled: true,
     tabBarOptions: {
-      activeTintColor: '#66CBFF',
+      activeTintColor: '#F8F8F8',
       inactiveTintColor: '#F8F8F8',
       style: {
-        backgroundColor: '#633689',
+        backgroundColor: '#66CBFF',
       },
       labelStyle: {
         textAlign: 'center',
       },
       indicatorStyle: {
-        borderBottomColor: '#87B56A',
+        borderBottomColor: '#3D7A99',
         borderBottomWidth: 2,
       },
     },
