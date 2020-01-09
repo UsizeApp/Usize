@@ -10,7 +10,7 @@ import { NavigationActions, StackActions } from 'react-navigation';
 
 export default class Resultados extends React.Component {
   static navigationOptions = {
-    title: 'Resultados',
+    title: 'Medidas',
     headerStyle: {
       backgroundColor: '#66CBFF',
       elevation: 0,

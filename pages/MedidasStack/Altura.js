@@ -88,7 +88,6 @@ export default class Altura extends React.Component {
                 <Text style={{ fontSize: 12, color: 'red' }}>Error: {errors.height}</Text>
               }
               <TouchableOpacity disabled={!isValid} style={styles.Container(!isValid)} onPress={() => this.handlePress("Foto", values.height)}>
-                <Ionicons name="ios-aperture" color="white" size={25} />
                 <Text style={styles.ButtonText}>Tomar fotos</Text>
               </TouchableOpacity>
 
@@ -159,6 +158,6 @@ const styles = StyleSheet.create({
   ButtonText: {
     fontSize: 17,
     color: 'white',
-    marginLeft: 8,
+    margin: 8,
   }
 })
