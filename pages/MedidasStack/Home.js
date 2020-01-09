@@ -314,11 +314,11 @@ export default class MedidasHome extends Component {
               animationType={'slide'}
               onRequestClose={() => this.closeModal()}
           >
+            <View style={styles.containerModal}>
             <TouchableOpacity 
                 onPress={() => {this.closeModal()}}>
               <Ionicons name="md-close" size={20} color='grey' />
             </TouchableOpacity>
-            <View style={styles.containerModal}>
                 <Text style={{color:'grey', fontSize: 20, justifyContent: 'center'}}>
                   Ingresar todas las medidas correspondientes</Text>
             <CreateModal bEsFemenino={this.state.bEsFemenino} />
@@ -351,14 +351,15 @@ export default class MedidasHome extends Component {
               animationType={'slide'}
               onRequestClose={() => this.closeModal()}
           >
+            <View style={styles.containerModal}>
             <TouchableOpacity 
                 onPress={() => {this.closeModal()}}>
-              <Ionicons name="md-close" size={20} color='grey' />
+              <Ionicons name="md-close" size={30} color='grey' />
             </TouchableOpacity>
-            <View style={styles.containerModal}>
                 <Text style={{color:'grey', fontSize: 20, justifyContent: 'center'}}>
                   Ingresar todas las medidas correspondientes</Text>
               <View style={styles.marcoModal}>
+              <CreateModal bEsFemenino={this.state.bEsFemenino} />
                 <Button
                     onPress={() => {
                       this.closeModal()}}
@@ -413,7 +414,7 @@ const styles = StyleSheet.create({
   },
   containerModal: {
     paddingTop: "30%",
-    alignItems: 'center',
+    paddingLeft: "20%",
     justifyContent: 'center',
   },
   exitModal: {
