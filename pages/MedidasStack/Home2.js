@@ -174,7 +174,7 @@ export default class MedidasHome extends Component {
                                             onPress={() => {
                                             this.closeModal()
                                         }}>
-                                          <Ionicons name="md-close" size={20} color='red' />
+                                          <Ionicons name="md-close" size={20} color='grey' />
                                         
                                         </TouchableOpacity>
             <View style={styles.containerModal}>
@@ -214,6 +214,41 @@ export default class MedidasHome extends Component {
             <Button text="Obtén tus medidas" onPress={() => navigation.navigate('Altura')} />
             <Text style={{ color: '#8E8E8E' }}>Si lo prefieres, puedes ingresar tus medidas manualmente</Text>
             <Button text="Ingresar manualmente" onPress={() => this.openModal()} />
+            <View style={styles.container}>
+            <Modal
+              visible={this.state.modalVisible}
+              animationType={'slide'}
+              onRequestClose={() => this.closeModal()}
+          >
+            <TouchableOpacity 
+                                            onPress={() => {
+                                            this.closeModal()
+                                        }}>
+                                          <Ionicons name="md-close" size={20} color='grey' />
+                                        
+                                        </TouchableOpacity>
+            <View style={styles.containerModal}>
+                <Text style={{color:'grey', fontSize: 20, justifyContent: 'center'}}>Ingresar todas las medidas correspondientes</Text>
+              <View style={styles.marcoModal}>
+                <FilaModal tipo="Brazo Izquierdo" medida={null} />
+              <FilaModal tipo="Brazo Derecho" medida={null} />
+
+              <FilaModal tipo="Pierna Izquierda" medida={null} />
+              <FilaModal tipo="Pierna Derecha" medida={null} />
+
+              <FilaModal tipo="Cintura" medida={null} />
+              <FilaModal tipo="Cadera" medida={null} />
+                <Button
+                    onPress={() => {
+                      this.closeModal()}}
+                    title="Guardar medidas"
+                    text="Guardar medidas"
+                >
+                </Button>
+              </View>
+            </View>
+          </Modal>
+          </View>
           </View>
         )
       }

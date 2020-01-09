@@ -1,31 +1,181 @@
-import React, { Component } from 'react';
+import React, { Component, useRef } from 'react';
 import {
-  View, Text, StyleSheet, ActivityIndicator,Modal,Alert, TextInput, TouchableOpacity
+  View, Text, StyleSheet, ActivityIndicator,Modal,Alert, TextInput, TouchableOpacity,ScrollView
 } from 'react-native';
+import Layout from 'components/Layout';
 import Button from '../../components/Utils/Button';
+import { Formik } from 'formik';
+import * as yup from 'yup';
 import { Email } from '../../models/API';
 import { Ionicons } from '@expo/vector-icons';
+import DropdownAlert from 'react-native-dropdownalert';
 
-function FilaModal(props) {
-  const {tipo, medida} = props;
-  let { bbw } = props;
-  bbw = typeof bbw === 'undefined' ? 2 : 0;
+function CreateModal(props) {
+  const { tipo, medida } = props;
+  let validationSchema = useRef(null);
+  const {
+    bEsFemenino
+  } = props;
 
-  const editText = (text) =>{
-    console.log(text);
-    
-    this.setState.medida = text
-   }
+  renderForm = () => {
+      validationSchema = yup.object().shape({
+        brazo_izquierdo: yup
+          .number()
+          .label('Brazo izquierdo')
+          .required('Ingrese el largo de su brazo izquierdo en cm'),
+        brazo_derecho: yup
+          .number()
+          .label('Brazo derecho')
+          .required('Ingrese el largo de su brazo derecho en cm'),
+        pierna_izquierda: yup
+          .number()
+          .label('Pierna izquierda')
+          .required('Ingrese el largo de su pierna izquierda en cm'),
+        pierna_derecha: yup
+          .number()
+          .label('Pierna derecha')
+          .required('Ingrese el largo de su pierna derecha en cm'),
+        cintura: yup
+          .number()
+          .label('Cintura')
+          .required('Ingrese la medida de su cintura en cm'),
+        cadera: yup
+          .number()
+          .label('Cadera')
+          .required('Ingrese la medida de su cadera en cm'),
+      })
 
-  return (
-    <View style={{
-      flexDirection: 'row', marginVertical: 8, paddingBottom: 5,
-    }}
-    >
-      <Text style={{ flex: 1, color: 'grey' }}>{tipo}</Text>
-      <TextInput placeholder={`       `} keyboardType='numeric' maxLength={3} onEndEditing={(text) => editText(text)} style={{ textAlign: 'right', color: 'grey', borderBottomWidth: bbw,borderColor: '#ddd' }}>{}</TextInput>
-    </View>
-    )
+      if(bEsFemenino) {
+        validationSchema.busto = yup
+        .number()
+        .label('Busto')
+        .required('Ingrese la medida del busto en cm')
+
+        validationSchema.pecho =  yup
+        .number()
+        .label('Pecho')
+        .required('Ingrese la medida del pecho en cm')
+            }
+
+      return (
+        <Formik
+          isInitialValid={true}
+          initialValues={{ brazo_izquierdo: '', brazo_derecho: '', pierna_derecha: '', 
+          pierna_izquierda: '', cadera: '', cintura: '', pecho: '', busto: '' }}
+          onSubmit={values => { console.log(values) }} //AGREGAAAR FUNCION LLAMADA DE MEDIDAS NUEVAS
+          validationSchema={validationSchema}
+        >
+          {({ values, handleChange, errors, setValues, setFieldTouched, touched, isValid, handleSubmit }) => (
+            <View style={{ margin: 10, paddingBottom: 100 }}>
+              <Text>Pierna Izquierda:</Text>
+              <TextInput
+                style={styles.InputField}
+                value={values.pierna_izquierda}
+                onChangeText={handleChange('pierna_izquierda')}
+                onBlur={() => setFieldTouched('pierna_izquierda')}
+              />
+              {touched.pierna_izquierda && errors.pierna_izquierda &&
+                <Text style={{ fontSize: 15, color: 'red' }}>{errors.pierna_izquierda}</Text>
+              }
+              <Text>Pierna Derecha:</Text>
+              <TextInput
+                style={styles.InputField}
+                value={values.pierna_derecha}
+                onChangeText={handleChange('pierna_derecha')}
+                onBlur={() => setFieldTouched('pierna_derecha')}
+              />
+              {touched.pierna_derecha && errors.pierna_derecha &&
+                <Text style={{ fontSize: 10, color: 'red' }}>{errors.pierna_derecha}</Text>
+              }
+              <Text>Brazo Izquierdo:</Text>
+              <TextInput
+                style={styles.InputField}
+                value={values.brazo_izquierdo}
+                onChangeText={handleChange('brazo_izquierdo')}
+                onBlur={() => setFieldTouched('brazo_izquierdo')}
+              />
+              {touched.brazo_izquierdo && errors.brazo_izquierdo &&
+                <Text style={{ fontSize: 10, color: 'red' }}>{errors.brazo_izquierdo}</Text>
+              }
+              <Text>Brazo Derecho:</Text>
+              <TextInput
+                style={styles.InputField}
+                value={values.brazo_derecho}
+                onChangeText={handleChange('brazo_derecho')}
+                onBlur={() => setFieldTouched('brazo_derecho')}
+              />
+              {touched.brazo_derecho && errors.brazo_derecho &&
+                <Text style={{ fontSize: 10, color: 'red' }}>{errors.brazo_derecho}</Text>
+              }
+              <Text>Cintura:</Text>
+              <TextInput
+                style={styles.InputField}
+                value={values.cintura}
+                onChangeText={handleChange('cintura')}
+                onFocus={() => this.refs['scroll'].scrollTo({ y: 60, animated: false })}
+                onBlur={() => { setFieldTouched('cintura'); this.refs['scroll'].scrollTo({ y: 0, animated: false }) }}
+                secureTextEntry={true}
+              />
+              {touched.cintura && errors.cintura &&
+                <Text style={{ fontSize: 10, color: 'red' }}>{errors.cintura}</Text>
+              }
+              <Text>Cadera:</Text>
+              <TextInput
+                style={styles.InputField}
+                value={values.cadera}
+                onChangeText={handleChange('cadera')}
+                onFocus={() => this.refs['scroll'].scrollTo({ y: 140, animated: false })}
+                onBlur={() => { setFieldTouched('cadera'); this.refs['scroll'].scrollTo({ y: 0, animated: false }) }}
+                secureTextEntry={true}
+              />
+              {touched.cadera && errors.cadera &&
+                <Text style={{ fontSize: 10, color: 'red' }}>{errors.cadera}</Text>
+              }
+            <Text>Busto:</Text>
+                <TextInput
+                  style={styles.InputField}
+                  value={values.busto}
+                  onChangeText={handleChange('busto')}
+                  onFocus={() => this.refs['scroll'].scrollTo({ y: 140, animated: false })}
+                  onBlur={() => { setFieldTouched('busto'); this.refs['scroll'].scrollTo({ y: 0, animated: false }) }}
+                  secureTextEntry={true}
+                />
+                {touched.busto && errors.busto &&
+                  <Text style={{ fontSize: 10, color: 'red' }}>{errors.busto}</Text>
+                }
+            <Text>Pecho:</Text>
+                <TextInput
+                  style={styles.InputField}
+                  value={values.pecho}
+                  onChangeText={handleChange('pecho')}
+                  onFocus={() => this.refs['scroll'].scrollTo({ y: 140, animated: false })}
+                  onBlur={() => { setFieldTouched('pecho'); this.refs['scroll'].scrollTo({ y: 0, animated: false }) }}
+                  secureTextEntry={true}
+                />
+                {touched.pecho && errors.pecho &&
+                  <Text style={{ fontSize: 10, color: 'red' }}>{errors.pecho}</Text>
+              }
+              
+              <View style={{ alignItems: 'center' }}>
+                <TouchableOpacity style={styles.Container(isValid)} disabled={!isValid} onPress={handleSubmit}>
+                  <Text style={styles.ButtonText}>Guardar Medidas</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+        </Formik>
+      )
+  }
+return (
+  <ScrollView ref={'scroll'} scrollEnabled={false}>
+    <React.Fragment>
+      <Layout>
+        {this.renderForm()}
+        <DropdownAlert ref={(ref) => { this.dropdown = ref; }} />
+      </Layout>
+    </React.Fragment>
+  </ScrollView>
+)
 }
 
 function FilaMedida(props) {
@@ -63,8 +213,8 @@ export default class MedidasHome extends Component {
       sexo: null,
       done: false,
       modalVisible: false,
+    };
   }
-}
 
   openModal() {
     this.setState({modalVisible:true});
@@ -77,10 +227,12 @@ export default class MedidasHome extends Component {
     this.setState({modalVisible:false});
   }
 
+
   componentDidMount() {
     this.getMedidas(); // Obtenemos las medidas en el Home
   }
-    async getMedidas() {
+
+  async getMedidas() {
     console.log('Home::getMedidas');
 
     const u = new Email();
@@ -105,11 +257,9 @@ export default class MedidasHome extends Component {
       bTieneMedidas,
       medidas,
       bEsFemenino,
-      done: true,
+      done: true
     });
-    
   }
-
 
   render() {
     const { done } = this.state;
@@ -130,18 +280,14 @@ export default class MedidasHome extends Component {
 
         filaP = <FilaMedida tipo="Pecho" medida={medidas.chest} bbw="0" />
         filaB = null
-        filaP_Modal = <FilaModal tipo="Pecho" medida={medidas.chest} bbw="0" />
-        filaB_Modal = null
 
         if (bEsFemenino) {
           filaP = <FilaMedida tipo="Pecho" medida={medidas.chest} />
           filaB = <FilaMedida tipo="Busto" medida={medidas.bust} bbw="0" />
-          filaP_Modal = <FilaModal tipo="Pecho" medida={medidas.chest} />
-          filaB_Modal = <FilaModal tipo="Busto" medida={medidas.bust} bbw="0" />
         }
+
         return (
           <View style={styles.container}>
-            <View style={styles.container}>
             {encabezado}
             <View style={styles.marco}>
               <FilaMedida tipo="Brazo Izquierdo" medida={medidas.left_arm} />
@@ -162,7 +308,6 @@ export default class MedidasHome extends Component {
                   title="Open modal"
                   text="Editar medidas manualmente"
               />
-              
             </View>
             <View style={styles.container}>
             <Modal
@@ -171,37 +316,24 @@ export default class MedidasHome extends Component {
               onRequestClose={() => this.closeModal()}
           >
             <TouchableOpacity 
-                                            onPress={() => {
-                                            this.closeModal()
-                                        }}>
-                                          <Ionicons name="md-close" size={20} color='grey' />
-                                        
-                                        </TouchableOpacity>
+                onPress={() => {this.closeModal()}}>
+              <Ionicons name="md-close" size={20} color='grey' />
+            </TouchableOpacity>
             <View style={styles.containerModal}>
-                <Text style={{color:'grey', fontSize: 20, justifyContent: 'center'}}>Ingresar todas las medidas correspondientes</Text>
-              <View style={styles.marcoModal}>
-                <FilaModal tipo="Brazo Izquierdo" medida={medidas.left_arm} />
-              <FilaModal tipo="Brazo Derecho" medida={medidas.right_arm} />
-
-              <FilaModal tipo="Pierna Izquierda" medida={medidas.left_leg} />
-              <FilaModal tipo="Pierna Derecha" medida={medidas.right_leg} />
-
-              <FilaModal tipo="Cintura" medida={medidas.waist} />
-              <FilaModal tipo="Cadera" medida={medidas.hips} />
-              {filaP_Modal}
-              {filaB_Modal}
-                <Button
-                    onPress={() => {
-                      this.closeModal()}}
-                    title="Guardar medidas"
-                    text="Guardar medidas"
-                >
-                </Button>
+                <Text style={{color:'grey', fontSize: 20, justifyContent: 'center'}}>
+                  Ingresar todas las medidas correspondientes</Text>
+            <CreateModal bEsFemenino={this.state.bEsFemenino} />
+            <View style={styles.marcoModal}>
+            <Button
+                onPress={() => {
+                  this.closeModal()}}
+                title="Guardar medidas"
+                text="Guardar medidas"
+            >
+            </Button>
               </View>
             </View>
           </Modal>
-          </View>
-
           </View>
           </View>
         );
@@ -213,7 +345,33 @@ export default class MedidasHome extends Component {
             <Text style={{ color: '#8E8E8E' }}>¡Aún no has calculado tus medidas!</Text>
             <Button text="Obtén tus medidas" onPress={() => navigation.navigate('Altura')} />
             <Text style={{ color: '#8E8E8E' }}>Si lo prefieres, puedes ingresar tus medidas manualmente</Text>
+            <Button text="Ingresar manualmente" onPress={() => navigation.navigate('Altura')} />
             <Button text="Ingresar manualmente" onPress={() => this.openModal()} />
+            <View style={styles.container}>
+            <Modal
+              visible={this.state.modalVisible}
+              animationType={'slide'}
+              onRequestClose={() => this.closeModal()}
+          >
+            <TouchableOpacity 
+                onPress={() => {this.closeModal()}}>
+              <Ionicons name="md-close" size={20} color='grey' />
+            </TouchableOpacity>
+            <View style={styles.containerModal}>
+                <Text style={{color:'grey', fontSize: 20, justifyContent: 'center'}}>
+                  Ingresar todas las medidas correspondientes</Text>
+              <View style={styles.marcoModal}>
+                <Button
+                    onPress={() => {
+                      this.closeModal()}}
+                    title="Guardar medidas"
+                    text="Guardar medidas"
+                >
+                </Button>
+              </View>
+            </View>
+          </Modal>
+          </View>
           </View>
         )
       }
@@ -230,6 +388,21 @@ export default class MedidasHome extends Component {
 }
 
 const styles = StyleSheet.create({
+  Container: (isValid) => ({
+    backgroundColor: isValid ? '#66CBFF' : "#8E8E8E",
+    padding: 15,
+    borderRadius: 5,
+    marginVertical: 20,
+    justifyContent: 'center',
+    flexDirection: 'row'
+  }),
+  ButtonText: {
+    fontSize: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: 'white',
+    marginLeft: 8
+  },
   FormContainer: {
     flex: 3,
     alignItems: 'center',
