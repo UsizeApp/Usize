@@ -174,7 +174,7 @@ export default class MedidasHome extends Component {
                                             onPress={() => {
                                             this.closeModal()
                                         }}>
-                                          <Ionicons name="md-close" size={20} color='red' />
+                                          <Ionicons name="md-close" size={20} color='grey' />
                                         
                                         </TouchableOpacity>
             <View style={styles.containerModal}>
