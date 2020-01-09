@@ -1,4 +1,4 @@
-import React, { Component, useRef } from 'react';
+import React, { Component } from 'react';
 import {
   View, Text, StyleSheet, ActivityIndicator,Modal,Alert, TextInput, TouchableOpacity,ScrollView
 } from 'react-native';
@@ -12,13 +12,12 @@ import DropdownAlert from 'react-native-dropdownalert';
 
 function CreateModal(props) {
   const { tipo, medida } = props;
-  let validationSchema = useRef(null);
   const {
     bEsFemenino
   } = props;
 
   renderForm = () => {
-      validationSchema = yup.object().shape({
+      let validationSchema = yup.object().shape({
         brazo_izquierdo: yup
           .number()
           .label('Brazo izquierdo')
