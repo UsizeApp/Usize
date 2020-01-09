@@ -5,7 +5,7 @@ Llamadas a la API en Flask
 
 import { storageGet, storageSet, storageReset } from './storage';
 
-import { apiLogin, apiDatosEmail, apiDatosPersona, apiUpload, apiRegister, apiValidarToken, apiNuevaPersona } from './apiCalls';
+import { apiLogin, apiDatosEmail, apiDatosPersona, apiUpload, apiRegister, apiValidarToken, apiNuevaPersona, apiMedidasManuales } from './apiCalls';
 
 export class Email {
   /************************************
@@ -145,11 +145,11 @@ export class Email {
       hips: 93.77,
       chest: 92.49,
       bust: 91.98,
-    }, 
+    },
     tallas: {
-      "adidas": ['A', 'D' ],
-      "hm":     ['H', 'M' ],
-      "nike":   ['N', 'K']
+      "adidas": ['A', 'D'],
+      "hm": ['H', 'M'],
+      "nike": ['N', 'K']
     }
   }
   PK_DATOS_PERSONA = 'datosPersona'
@@ -261,7 +261,7 @@ export class Email {
     if (tallasBruto != null) {
       marcas = [];
       tallas = [];
-      Object.entries(tallasBruto).forEach(([key, value])=>{
+      Object.entries(tallasBruto).forEach(([key, value]) => {
         marcas.push(key)
         tallas.push(value)
       })
@@ -378,10 +378,29 @@ export class Email {
   }
 
   async guardarNuevaPersona(alias, gender) {
+    if (1)
+      return '1'
+
     const token = await this.storageGetToken()
 
-    resp = await apiNuevaPersona(token, alias, gender)
+    id_persona = await apiNuevaPersona(token, alias, gender)
 
-    return resp
+    if (id_persona != null) {
+      await this.storageSetIDPersona(id_persona)
+    }
+
+    return id_persona
+  }
+
+  async actualizarMedidas(medidas) {
+    console.log("API::actualizarMedidas")
+
+    let id_persona = await this.storageGetIDPersona()
+
+    const nuevosDatosPersona = await apiMedidasManuales(id_persona, medidas)
+
+    await this.storageSetDatosPersona(nuevosDatosPersona)
+
+    return nuevosDatosPersona
   }
 }
