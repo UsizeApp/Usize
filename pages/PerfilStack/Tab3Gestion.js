@@ -14,7 +14,7 @@ import { NavigationActions, StackActions } from 'react-navigation';
 
 export default class Tab3Gestion extends Component {
   static navigationOptions = {
-    title: 'Gestión',
+    title: 'Gestión personas',
     headerStyle: {
       elevation: 0,
       shadowOpacity: 0,
@@ -93,20 +93,25 @@ export default class Tab3Gestion extends Component {
         <Contenedor>
           <Marco>
             <Titulo>Cambiar persona activa</Titulo>
-            <Picker
-              mode="dropdown"
-              selectedValue={this.state.id_persona}
-              onValueChange={(id_persona) =>
-                this.setState({ id_persona })
-              }>
-              {personas2.map(entry => {
-                const [key, value] = entry
-                return (
-                  <Picker.Item key={key} value={key} label={value} />
-                )
-              })
-              }
-            </Picker>
+            <View style={{
+              borderBottomWidth: 1,
+              borderColor: '#ddd',
+            }}>
+              <Picker
+                mode="dropdown"
+                selectedValue={this.state.id_persona}
+                onValueChange={(id_persona) =>
+                  this.setState({ id_persona })
+                }>
+                {personas2.map(entry => {
+                  const [key, value] = entry
+                  return (
+                    <Picker.Item key={key} value={key} label={value} />
+                  )
+                })
+                }
+              </Picker>
+            </View>
             <Button text="Cambiar persona" onPress={() => this.cambiarPersona()} />
           </Marco>
 

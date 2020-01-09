@@ -16,7 +16,7 @@ function Separador() {
 
 export default class Tab1Email extends Component {
   static navigationOptions = {
-    title: 'Cuenta',
+    title: 'Cuenta usuario',
     headerStyle: {
       elevation: 0,
       shadowOpacity: 0,
@@ -130,7 +130,7 @@ export default class Tab1Email extends Component {
       return (
         <Contenedor>
           <Marco>
-            <Text style={styles.titulo}>Datos del Email:</Text>
+            <Text style={styles.titulo}>Datos del Email</Text>
             {this.ElementoPerfil('E-mail', datos.email, 'email')}<Separador />
             {this.ElementoPerfil('Nombre', datos.nombre, 'nombre')}<Separador />
             {this.ElementoPerfil('RUT', this.formatearRUT(datos.rut.toString()), 'rut')}<Separador />

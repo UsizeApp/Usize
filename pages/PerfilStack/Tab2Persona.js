@@ -77,7 +77,7 @@ export default class Tab2Persona extends Component {
       return (
         <Contenedor>
           <Marco>
-            <Text style={styles.titulo}>Datos de la Persona activa:</Text>
+            <Text style={styles.titulo}>Datos de la Persona activa</Text>
             {this.ElementoPerfil('Alias', datos.alias)}<Separador />
             {this.ElementoPerfil('Género', datos.gender)}<Separador />
             {this.ElementoPerfil('Fecha última medición', datos.fecha_ultimas_medidas)}

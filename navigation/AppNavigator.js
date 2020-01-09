@@ -58,17 +58,17 @@ const AppMainTabs = createBottomTabNavigator(
         ),
       },
     },
-	/*
-    Ajustes: { // AjustesStack
-      screen: CerrarSesion,
-      navigationOptions: {
-        title: 'Ajustes',
-        tabBarIcon: ({ tintColor }) => (
-          <FontAwesome name="cog" size={17} color={tintColor} />
-        ),
+    /*
+      Ajustes: { // AjustesStack
+        screen: CerrarSesion,
+        navigationOptions: {
+          title: 'Ajustes',
+          tabBarIcon: ({ tintColor }) => (
+            <FontAwesome name="cog" size={17} color={tintColor} />
+          ),
+        },
       },
-    },
-	*/
+    */
     CerrarSesion: {
       screen: CerrarSesion,
       navigationOptions: {
@@ -79,6 +79,11 @@ const AppMainTabs = createBottomTabNavigator(
       },
     },
   },
+  {
+    tabBarOptions: {
+      activeTintColor: '#66CBFF'
+    }
+  }
 );
 
 const OcultarTabBar = ({ navigation }) => {

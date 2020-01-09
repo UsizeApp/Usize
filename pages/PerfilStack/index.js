@@ -19,13 +19,14 @@ const TabScreen = createMaterialTopTabNavigator(
     swipeEnabled: true,
     animationEnabled: true,
     tabBarOptions: {
-      activeTintColor: '#F8F8F8',
-      inactiveTintColor: '#F8F8F8',
+      activeTintColor: '#FFFFFF',
+      inactiveTintColor: '#FFFFFF',
       style: {
         backgroundColor: '#66CBFF',
       },
       labelStyle: {
         textAlign: 'center',
+        fontWeight: 'bold',
       },
       indicatorStyle: {
         borderBottomColor: '#3D7A99',
