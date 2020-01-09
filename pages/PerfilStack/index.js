@@ -1,63 +1,25 @@
-import React, { Component } from 'react';
-//import react in our code.
-import { Text, View } from 'react-native';
 
 import { createStackNavigator } from 'react-navigation-stack';
-
 import { createMaterialTopTabNavigator } from 'react-navigation-tabs';
 
-import Perfil1Home from './Home';
-import Perfil2CambiarItem from './CambiarItem';
+import Tab1Email from './Tab1Email';
+import Tab2Persona from './Tab2Persona';
+import Tab3Gestion from './Tab3Gestion';
 
-class FirstPage extends React.Component {
-  render() {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Home Screen</Text>
-      </View>
-    );
-  }
-}
-
-class SecondPage extends React.Component {
-  render() {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Setting Screen</Text>
-      </View>
-    );
-  }
-}
-
-let a = createStackNavigator(
-  {
-    Home: FirstPage,
-    CambiarItem: Perfil2CambiarItem,
-  },
-  /*
-  {
-    headerMode: 'none',
-    navigationOptions: {
-      headerVisible: false,
-    },
-  },
-  */
-);
-
-
+import P1NuevaPersona from './P1NuevaPersona';
 
 const TabScreen = createMaterialTopTabNavigator(
   {
-    Email: { screen: FirstPage },
-    PersonaActiva: { title: 'Persona activa', screen: SecondPage },
-    Personas: { screen: SecondPage },
+    Tab1Email: { screen: Tab1Email },
+    Tab2Persona: { screen: Tab2Persona },
+    Tab3Gestion: { screen: Tab3Gestion },
   },
   {
     tabBarPosition: 'top',
     swipeEnabled: true,
     animationEnabled: true,
     tabBarOptions: {
-      activeTintColor: '#FFFFFF',
+      activeTintColor: '#66CBFF',
       inactiveTintColor: '#F8F8F8',
       style: {
         backgroundColor: '#633689',
@@ -73,7 +35,6 @@ const TabScreen = createMaterialTopTabNavigator(
   }
 );
 
-//making a StackNavigator to export as default
 export default createStackNavigator({
   TabScreen: {
     screen: TabScreen,
@@ -87,7 +48,6 @@ export default createStackNavigator({
       },
       headerTintColor: 'white',
     }
-  }
+  },
+  P1NuevaPersona: P1NuevaPersona,
 });
-
-//export default App;
