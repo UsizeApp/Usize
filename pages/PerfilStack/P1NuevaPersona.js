@@ -128,18 +128,13 @@ export default class P1NuevaPersona extends Component {
 
                                     <Fragment>
                                         <Text>Género:</Text>
-                                        <View>
-                                            <CheckBox
-                                                title="Masculino"
-                                                checked={values.male}
-                                                onPress={() => setValues({ ...values, 'male': true, 'female': false })}
-                                                containerStyle={styles.CheckboxContainer}
-                                            />
-                                            <CheckBox
-                                                title="Femenino"
-                                                checked={values.female}
-                                                onPress={() => setValues({ ...values, 'male': false, 'female': true })}
-                                                containerStyle={styles.CheckboxContainer}
+                                        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                                            <ChonseSelect
+                                                height={35}
+                                                style={{ margin: 20 }}
+                                                data={genderData}
+                                                initValue={gender}
+                                                onPress={gender => this.setState({ gender: gender.value })}
                                             />
                                         </View>
                                     </Fragment>
