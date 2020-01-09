@@ -406,6 +406,7 @@ export class Email {
 
     if (id_persona != null) {
       await this.storageSetIDPersona(id_persona)
+      await this.bajarDatosEmail()
       await this.bajarDatosPersona()
     }
 
