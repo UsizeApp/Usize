@@ -17,6 +17,8 @@ import { Email } from 'models/API'
 
 import { Marco } from 'components/MisComponentes'
 
+import { NavigationActions, StackActions } from 'react-navigation';
+
 const genderData = [
     {
         value: 'M',
@@ -61,15 +63,36 @@ export default class P1NuevaPersona extends Component {
         console.log(alias, gender)
 
         u = new Email();
-        const id = await u.guardarNuevaPersona(alias, gender)
+        const id_persona = await u.guardarNuevaPersona(alias, gender)
 
-        if (id != null) {
-            const { navigation } = this.props;
-            navigation.navigate('App');
+        if (id_persona != null) {
+            ToastAndroid.show('Persona creada', ToastAndroid.SHORT);
+
+            const resetAction = StackActions.reset({
+                index: 0,
+                key: null,
+                actions: [NavigationActions.navigate({ routeName: 'TabScreen' })]
+            });
+            
+            const goToTransaction = NavigationActions.navigate({
+                routeName: 'Medidas', params: {
+                    id_persona: id_persona
+                }
+            });
+
+            const resetAction2 = StackActions.reset({
+                index: 0,
+                key: null,
+                actions: [NavigationActions.navigate({ routeName: 'Home' })]
+            });
+
+            this.props.navigation.dispatch(resetAction);
+            this.props.navigation.dispatch(goToTransaction);
+            this.props.navigation.dispatch(resetAction2);
+
         } else {
             ToastAndroid.show('Error', ToastAndroid.SHORT);
         }
-
     };
 
     render() {
