@@ -10,7 +10,6 @@ import MedidasStack from '../pages/MedidasStack';
 import RopaStack from '../pages/RopaStack';
 import PerfilStack from '../pages/PerfilStack';
 import Info from '../pages/Info'
-import Ropa from '../pages/Ropa';
 
 class CerrarSesion extends React.Component {
   constructor() {
@@ -43,19 +42,9 @@ const AppMainTabs = createBottomTabNavigator(
         ),
       },
     },
-    Ropa: { // RopaTabsStack
-      screen: Ropa,
-      navigationOptions: {
-        title: 'Tallas',
-        tabBarIcon: ({ tintColor }) => (
-          <Ionicons name="md-shirt" size={17} color={tintColor} />
-        ),
-      },
-    },
-    RopaStack: { // RopaTabsStack
+    Marcas: {
       screen: RopaStack,
       navigationOptions: {
-        title: 'Marcas',
         tabBarIcon: ({ tintColor }) => (
           <Ionicons name="ios-shirt" size={17} color={tintColor} />
         ),
@@ -104,7 +93,6 @@ const OcultarTabBar = ({ navigation }) => {
 };
 
 MedidasStack.navigationOptions = OcultarTabBar;
-//RopaStack.navigationOptions = OcultarTabBar;
 PerfilStack.navigationOptions = OcultarTabBar;
 
 const RootSwitch = createSwitchNavigator(

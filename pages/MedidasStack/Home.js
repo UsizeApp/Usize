@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import {
-  View, Text, StyleSheet, ActivityIndicator,
-} from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import Button from '../../components/Utils/Button';
 import { Email } from '../../models/API';
 
