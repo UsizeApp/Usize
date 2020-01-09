@@ -29,7 +29,7 @@ async function callAPI(args) {
 	const headers = args.headers || null;
 	const body = args.body || null;
 
-	const logging = args.logging || 1;
+	const logging = args.logging || 0;
 
 	if (logging) {
 		console.log('headers', headers);

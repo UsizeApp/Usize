@@ -98,7 +98,7 @@ export class Email {
     return datosEmail;
   }
 
-  storageGetDatosEmail = async () => {
+  async storageGetDatosEmail() {
     const datos = await storageGet(this.PK_DATOS_EMAIL)
     return JSON.parse(datos);
   }

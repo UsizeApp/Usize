@@ -15,6 +15,8 @@ import ChonseSelect from 'components/ChonseSelect'
 
 import { Email } from 'models/API'
 
+import { Marco } from 'components/MisComponentes'
+
 const genderData = [
     {
         value: 'M',
@@ -63,7 +65,7 @@ export default class P1NuevaPersona extends Component {
 
         if (id != null) {
             const { navigation } = this.props;
-            navigation.navigate('TabScreen');
+            navigation.navigate('App');
         } else {
             ToastAndroid.show('Error', ToastAndroid.SHORT);
         }
@@ -74,7 +76,7 @@ export default class P1NuevaPersona extends Component {
         const { gender } = this.state;
 
         return (
-            <View>
+            <Marco>
                 <Formik
                     isInitialValid={true}
                     initialValues={null}
@@ -126,7 +128,7 @@ export default class P1NuevaPersona extends Component {
                             </View>
                         )}
                 </Formik>
-            </View>
+            </Marco>
         );
     }
 }
