@@ -378,7 +378,7 @@ export class Email {
   }
 
   async guardarNuevaPersona(alias, gender) {
-    if (1)
+    if (0)
       return '1'
 
     const token = await this.storageGetToken()
@@ -387,6 +387,7 @@ export class Email {
 
     if (id_persona != null) {
       await this.storageSetIDPersona(id_persona)
+      await this.bajarDatosPersona()
     }
 
     return id_persona
