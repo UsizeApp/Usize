@@ -4,7 +4,7 @@ Llamadas a la API
 *****************/
 
 function getAPI() {
-	const type = 'ale_LAN';
+	const type = 'ale_INTERNET';
 
 	switch (type) {
 		case 'ale_LAN':

@@ -11,7 +11,7 @@ export class Email {
   /************************************
   Si se quiere utilizar datos falsos, ignorando la API
   ************************************/
-  fakeEnabled = 0;
+  fakeEnabled = 1;
 
   /*
   Token / id_email
