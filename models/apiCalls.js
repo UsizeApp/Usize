@@ -20,7 +20,6 @@ function getAPI() {
 	}
 }
 
-
 // Funcion base para llamar a la API usando GET o POST
 async function callAPI(args) {
 	const pagina = args.pagina || '/';
@@ -30,7 +29,7 @@ async function callAPI(args) {
 	const headers = args.headers || null;
 	const body = args.body || null;
 
-	const logging = args.logging || 0;
+	const logging = args.logging || 1;
 
 	if (logging) {
 		console.log('headers', headers);
@@ -173,4 +172,23 @@ export async function apiValidarToken(token) {
 	});
 
 	return resp.respuesta
+}
+
+export async function apiNuevaPersona(token, alias, gender) {
+	let headers = {
+		'token': token,
+	};
+
+	let body = new FormData();
+	body.append('alias', alias);
+	body.append('gender', gender);
+
+	const resp = await callAPI({
+		pagina: '/nuevaPersona',
+		metodo: 'POST',
+		headers: headers,
+		body: body,
+	});
+
+	return resp.id
 }
