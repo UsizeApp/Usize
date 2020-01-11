@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
-import {
-  View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, ToastAndroid
-} from 'react-native';
-import Layout from '../../components/Layout';
+
+import { View, Text, StyleSheet, TouchableOpacity, ToastAndroid } from 'react-native';
 
 import DialogInput from 'react-native-dialog-input';
 
 import { Email } from '../../models/API';
 
-import { Contenedor, Marco } from 'components/MisComponentes'
+import { Contenedor, Marco, Cargando } from 'components/MisComponentes'
 
 function Separador() {
   return <View style={styles.separador} />;
@@ -118,48 +116,39 @@ export default class Tab1Email extends Component {
   )
 
   renderPerfil = () => {
-    console.log('renderPerfil')
+    console.log('Email::renderPerfil')
 
-    const { done } = this.state;
-
-    if (done) {
-      const { datos, isDialogVisible } = this.state;
-
-      const { tituloDialogo, mensajeDialogo, valorDialogo, pkDialogo } = this.state.datosDialogo
-
-      return (
-        <Contenedor>
-          <Marco>
-            <Text style={styles.titulo}>Datos del Email</Text>
-            {this.ElementoPerfil('E-mail', datos.email, 'email')}<Separador />
-            {this.ElementoPerfil('Nombre', datos.nombre, 'nombre')}<Separador />
-            {this.ElementoPerfil('RUT', this.formatearRUT(datos.rut.toString()), 'rut')}<Separador />
-          </Marco>
-          <DialogInput
-            isDialogVisible={isDialogVisible}
-            title={tituloDialogo}
-            message={mensajeDialogo}
-            submitInput={(input) => { this.guardarValor(pkDialogo, input) }}
-            closeDialog={() => { this.showDialog(false) }}>
-          </DialogInput>
-        </Contenedor>
-      );
-    }
+    const { datos, isDialogVisible } = this.state;
+    const { tituloDialogo, mensajeDialogo, valorDialogo, pkDialogo } = this.state.datosDialogo
 
     return (
-      <View style={styles.FormContainer}>
-        <Text style={{ color: '#8E8E8E' }}>Obteniendo datos...</Text>
-        <ActivityIndicator size="large" color="#66CBFF" />
-      </View>
+      <Contenedor>
+        <Marco>
+          <Text style={styles.titulo}>Datos del Email</Text>
+          {this.ElementoPerfil('E-mail', datos.email, 'email')}<Separador />
+          {this.ElementoPerfil('Nombre', datos.nombre, 'nombre')}<Separador />
+          {this.ElementoPerfil('RUT', this.formatearRUT(datos.rut.toString()), 'rut')}<Separador />
+        </Marco>
+        <DialogInput
+          isDialogVisible={isDialogVisible}
+          title={tituloDialogo}
+          message={mensajeDialogo}
+          submitInput={(input) => { this.guardarValor(pkDialogo, input) }}
+          closeDialog={() => { this.showDialog(false) }}>
+        </DialogInput>
+      </Contenedor>
     );
   }
 
   render() {
-    return (
-      <Layout>
-        {this.renderPerfil()}
-      </Layout>
-    );
+    if (this.state.done) {
+      return this.renderPerfil()
+    }
+    else {
+      return (
+        <Cargando texto="Obteniendo datos..." />
+      )
+    }
   }
 }
 

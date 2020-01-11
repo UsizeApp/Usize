@@ -1,16 +1,19 @@
 import React from 'react'
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native'
+import { View, Text, StyleSheet } from 'react-native'
+
 import Button from '../../components/Utils/Button'
-import Spinner from 'react-native-loading-spinner-overlay'
-import { Email } from '../../models/API'
-import estilos from '../../styles/estilos';
 import FilaMedida from '../../components/FilaMedida';
+
+import { Email } from '../../models/API'
 
 import { NavigationActions, StackActions } from 'react-navigation';
 
+import { Contenedor, Marco, Cargando } from 'components/MisComponentes'
+
 export default class Resultados extends React.Component {
   static navigationOptions = {
-    title: 'Medidas',
+    title: 'Resultados',
+    headerLeft: null,
     headerStyle: {
       backgroundColor: '#66CBFF',
       elevation: 0,
@@ -22,24 +25,40 @@ export default class Resultados extends React.Component {
 
   constructor() {
     super();
+
     this.state = {
-      error: false,
-      done: false,
-      reason: '',
+      reason: 'Error por defecto',
       medidas: null,
-      sexo: null
+      error: false,
+
+      done: false,
     }
   }
 
-  handlePress = (to) => {
+  volverAlInicio = () => {
     const { navigation } = this.props
 
     resetAction = StackActions.reset({
       index: 0,
-      actions: [NavigationActions.navigate({ routeName: to })],
+      actions: [NavigationActions.navigate({ routeName: 'Home' })],
     });
 
     navigation.dispatch(resetAction);
+  }
+
+  reintentarMedidas = () => {
+    const { navigation } = this.props
+
+    resetAction = StackActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({ routeName: 'Home' })],
+    });
+
+    navigation.dispatch(resetAction);
+
+    nextAction = NavigationActions.navigate({ routeName: 'Altura' })
+
+    navigation.dispatch(nextAction);
   }
 
   async componentDidMount() {
@@ -48,35 +67,38 @@ export default class Resultados extends React.Component {
 
   getResultados = async () => {
     console.log("Resultados::getResultados")
-    const { height, frontal, lateral } = this.props.navigation.state.params;
 
-    u = new Email();
+    u = new Email()
 
-    const resp = await u.subirFotos(height, frontal, lateral);
+    let mensaje = null
+    let datosPersona = null
 
-    if (resp == null) {
-      console.log('Error de API')
-      return
+    if (u.fakeEnabled) {
+      datosPersona = await u.storageGetDatosPersona()
+    }
+    else {
+      const { height, frontal, lateral } = this.props.navigation.state.params;
+      const resp = await u.subirFotos(height, frontal, lateral);
+      mensaje = resp.mensaje
+      datosPersona = resp.datosPersona
     }
 
-    const { mensaje, datosPersona } = resp;
-
-    let medidas = null;
-    let bEsFemenino = false;
+    let medidas = null
+    let bEsFemenino = false
 
     let error = true;
     if (datosPersona != null) {
       // Hay datos validos, se guardan en storage      
-      await u.storageSetDatosPersona(datosPersona);
+      await u.storageSetDatosPersona(datosPersona)
 
       medidas = await u.medidasParaTabla()
-      bEsFemenino = await u.bEsFemenino();
-      error = false;
+      bEsFemenino = await u.bEsFemenino()
+      error = false
     }
 
     this.setState({
       error,
-      reason: mensaje,
+      mensaje,
       medidas,
       bEsFemenino,
       done: true
@@ -84,6 +106,8 @@ export default class Resultados extends React.Component {
   }
 
   renderResultados = () => {
+    console.log("Resultados::renderResultados")
+
     const { medidas, bEsFemenino } = this.state;
 
     filaP = <FilaMedida tipo="Pecho" medida={medidas.chest} bbw="0" />
@@ -95,65 +119,51 @@ export default class Resultados extends React.Component {
     }
 
     return (
-      <View style={styles.marco}>
-        <FilaMedida tipo="Brazo Izquierdo" medida={medidas.left_arm} />
-        <FilaMedida tipo="Brazo Derecho" medida={medidas.right_arm} />
+      <Contenedor>
+        <Marco>
+          <FilaMedida tipo="Brazo Izquierdo" medida={medidas.left_arm} />
+          <FilaMedida tipo="Brazo Derecho" medida={medidas.right_arm} />
 
-        <FilaMedida tipo="Pierna Izquierda" medida={medidas.left_leg} />
-        <FilaMedida tipo="Pierna Derecha" medida={medidas.right_leg} />
+          <FilaMedida tipo="Pierna Izquierda" medida={medidas.left_leg} />
+          <FilaMedida tipo="Pierna Derecha" medida={medidas.right_leg} />
 
-        <FilaMedida tipo="Cintura" medida={medidas.waist} />
-        <FilaMedida tipo="Cadera" medida={medidas.hips} />
-        {filaP}
-        {filaB}
-      </View>
+          <FilaMedida tipo="Cintura" medida={medidas.waist} />
+          <FilaMedida tipo="Cadera" medida={medidas.hips} />
+          {filaP}
+          {filaB}
+        </Marco>
+        <Button text="Volver al Inicio" onPress={this.volverAlInicio} />
+      </Contenedor>
     );
   }
 
-  renderOptions = () => {
+  renderError = () => {
+    console.log("Resultados::error")
+
     return (
-      <View style={{ alignItems: 'center' }}>
-        <Button text="Volver al Inicio" to="Home" onPress={this.handlePress} />
-      </View>
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', margin: 30 }}>
+          <Text style={{ color: '#66CBFF', fontWeight: 'bold', fontSize: 18 }}>Error al obtener las medidas</Text>
+          <Text style={{ color: '#66CBFF', fontWeight: 'bold', fontSize: 18 }}>{this.state.reason}</Text>
+          <Button text="Reintentar" onPress={this.reintentarMedidas} />
+          <Button text="Volver al Inicio" onPress={this.volverAlInicio} />
+        </View>
     )
   }
 
   render() {
     if (this.state.done) {
       if (!this.state.error) {
-        console.log("Resultados::renderResultados")
-
-        return (
-          <View>
-            <View style={{ alignItems: 'center', marginTop: 30, justifyContent: 'center' }}>
-              <Text style={{ color: '#66CBFF', fontWeight: 'bold', fontSize: 18 }}>Tus medidas son:</Text>
-              {this.renderResultados()}
-            </View>
-            {this.renderOptions()}
-          </View>
-        )
+        return this.renderResultados()
       }
       else {
-        console.log("Resultados::error")
-
-        return (
-          <View>
-            <View style={{ alignItems: 'center', marginTop: 30 }}>
-              <Text style={{ color: '#66CBFF', fontWeight: 'bold', fontSize: 18 }}>Error al obtener las medidas</Text>
-              <Text style={{ color: '#66CBFF', fontWeight: 'bold', fontSize: 18 }}>{this.state.reason}</Text>
-              <Button text="Reintentar" icon="ios-add-circle" to="Home" onPress={this.handlePress} />
-            </View>
-          </View>
-        )
+        return this.renderError()
       }
     }
-    // Else
-    return (
-      <View style={styles.FormContainer}>
-        <Text style={{ color: '#8E8E8E' }}>Calculando medidas...</Text>
-        <ActivityIndicator size="large" color="#66CBFF" />
-      </View>
-    );
+    else {
+      return (
+        <Cargando texto="Calculando medidas..." />
+      );
+    }
   }
 }
 

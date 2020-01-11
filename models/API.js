@@ -11,7 +11,7 @@ export class Email {
   /************************************
   Si se quiere utilizar datos falsos, ignorando la API
   ************************************/
-  fakeEnabled = 0;
+  fakeEnabled = 1;
 
   /*
   Token / id_email
@@ -68,11 +68,12 @@ export class Email {
     rut: 333333333,
 
     mostrar_bienvenida: false,
-    personas: [
-      ['1', 'Alias1'],
-      ['2', 'Alias2'],
-      ['3', 'Alias3'],
-    ]
+    personas: ['1', '2', '3'],
+    personas2: {
+      '1': 'Alias1',
+      '2': 'Alias2',
+      '3': 'Alias3',
+    }
   };
 
   /*
@@ -174,7 +175,7 @@ export class Email {
         // Si la id_persona guardada es inválida
         // Entonces se usa y setea la primera persona del Email
         const datosEmail = await this.storageGetDatosEmail()
-        const {personas} = datosEmail
+        const { personas } = datosEmail
         console.log(personas)
         id_persona = personas[0];
       }
@@ -267,7 +268,7 @@ export class Email {
     if (tallasBruto != null) {
       marcas = [];
       tallas = [];
-      Object.entries(tallasBruto).forEach(([key, value])=>{
+      Object.entries(tallasBruto).forEach(([key, value]) => {
         if (!!value[0] && !!value[1]) {
           marcas.push(key)
           tallas.push(value)
@@ -286,7 +287,7 @@ export class Email {
     const tallasBruto = await this.tallasEnBruto()
     if (tallasBruto != null) {
       marcas = [];
-      Object.entries(tallasBruto).forEach(([key, value])=>{
+      Object.entries(tallasBruto).forEach(([key, value]) => {
         marcas.push([key, !!value[0] && !!value[1]])
       })
     }
@@ -346,6 +347,7 @@ export class Email {
         mensaje: "fakeSuccess",
         datosPersona: this.fakeDatosPersona,
       }
+      await u.storageSetDatosPersona(datosPersona)
     } else {
       const frontalURI = frontal.uri;
       const lateralURI = lateral.uri;

@@ -7,7 +7,9 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import { Email } from '../models/API';
+import { Email } from 'models/API';
+
+import { Cargando } from 'components/MisComponentes';
 
 export default class AuthLoadingScreen extends Component {
   constructor() {
@@ -18,7 +20,6 @@ export default class AuthLoadingScreen extends Component {
       obteniendoPerfil: false
     }
 
-    // Esta pagina no renderiza nada, solo es el intermedio para validar el login
     this.validarAuthGuardado();
   }
 
@@ -61,40 +62,18 @@ export default class AuthLoadingScreen extends Component {
   render() {
     if (this.state.obteniendoPerfil) {
       return (
-        <View style={styles.FormContainer}>
-          <Text style={{ color: '#8E8E8E' }}>Obteniendo perfil...</Text>
-          <ActivityIndicator size="large" color="#66CBFF" />
-        </View>
+        <Cargando texto='Obteniendo perfil...' />
       )
     }
     else if (this.state.comprobandoToken) {
       return (
-        <View style={styles.FormContainer}>
-          <Text style={{ color: '#8E8E8E' }}>Validando credenciales guardadas...</Text>
-          <ActivityIndicator size="large" color="#66CBFF" />
-        </View>
+        <Cargando texto='Validando credenciales guardadas...' />
       );
     }
     else {
       return (
-        <View style={styles.FormContainer}>
-          <Text style={{ color: '#8E8E8E' }}>¡Bienvenido a Usize!</Text>
-          <ActivityIndicator size="large" color="#66CBFF" />
-        </View>
+        <Cargando texto='¡Bienvenido a Usize!' />
       );
     }
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  FormContainer: {
-    flex: 3,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

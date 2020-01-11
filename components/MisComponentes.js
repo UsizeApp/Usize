@@ -5,7 +5,9 @@ https://stackoverflow.com/questions/49706823/what-is-this-props-children-and-whe
 
 import React from 'react'
 
-import { StyleSheet, View, Text } from 'react-native'
+import { StyleSheet, View, Text, ActivityIndicator, } from 'react-native'
+
+import { COLOR_USIZE } from 'styles/colores'
 
 export const Contenedor = (props) => {
 	return (
@@ -29,6 +31,15 @@ export const Titulo = (props) => {
 			{props.children}
 		</Text>
 	)
+}
+
+export const Cargando = (props) => {
+	return (
+		<View style={estilos.Cargando}>
+			<Text style={estilos.TextoCargando}>{props.texto}</Text>
+			<ActivityIndicator size="large" color={COLOR_USIZE} />
+		</View>
+	);
 }
 
 const estilos = StyleSheet.create({
@@ -58,4 +69,12 @@ const estilos = StyleSheet.create({
 		marginTop: 5,
 		marginBottom: 15
 	},
+	Cargando: {
+		flex: 1,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	TextoCargando: {
+		color: '#8E8E8E'
+	}
 })

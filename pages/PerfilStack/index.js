@@ -15,6 +15,7 @@ const TabScreen = createMaterialTopTabNavigator(
     Tab1Email: { screen: Tab1Email },
   },
   {
+    lazy: true,
     tabBarPosition: 'top',
     swipeEnabled: true,
     animationEnabled: true,

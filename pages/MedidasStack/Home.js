@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  ActivityIndicator,
   Modal,
   Alert,
   TextInput,
@@ -18,7 +17,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { NavigationActions, StackActions } from 'react-navigation';
 
-import { Contenedor, Marco } from 'components/MisComponentes'
+import { Contenedor, Marco, Cargando } from 'components/MisComponentes'
 
 
 const FilaModal = (props) => {
@@ -310,12 +309,7 @@ export default class MedidasHome extends Component {
 
     // Else
     return (
-      <View style={styles.FormContainer}>
-        <Text style={{
-          color: '#8E8E8E'
-        }}>Obteniendo medidas...</Text>
-        <ActivityIndicator size="large" color="#66CBFF" />
-      </View>
+      <Cargando texto='Obteniendo medidas...'/>
     );
   }
 }

@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
-import {
-  View, Text, StyleSheet, ActivityIndicator, TouchableOpacity
-} from 'react-native';
-import Layout from '../../components/Layout';
-import Button from '../../components/Utils/Button';
+
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { Email } from '../../models/API';
 
-import { Contenedor, Marco } from 'components/MisComponentes'
+import { Contenedor, Marco, Cargando } from 'components/MisComponentes'
 
 function Separador() {
   return <View style={styles.separador} />;
@@ -26,6 +23,7 @@ export default class Tab2Persona extends Component {
 
   constructor() {
     super();
+
     this.state = {
       perfil: null,
       done: false,
@@ -68,10 +66,8 @@ export default class Tab2Persona extends Component {
     </TouchableOpacity>
   )
 
-  renderPerfil = () => {
-    const { done } = this.state;
-
-    if (done) {
+  render() {
+    if (this.state.done) {
       const { datos } = this.state;
 
       return (
@@ -85,21 +81,11 @@ export default class Tab2Persona extends Component {
         </Contenedor>
       );
     }
-
-    return (
-      <View style={styles.FormContainer}>
-        <Text style={{ color: '#8E8E8E' }}>Obteniendo datos...</Text>
-        <ActivityIndicator size="large" color="#66CBFF" />
-      </View>
-    );
-  }
-
-  render() {
-    return (
-      <Layout>
-        {this.renderPerfil()}
-      </Layout>
-    );
+    else {
+      return (
+        <Cargando texto='Obteniendo datos' />
+      );
+    }
   }
 }
 

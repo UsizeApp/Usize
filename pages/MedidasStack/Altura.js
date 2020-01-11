@@ -22,6 +22,9 @@ export default class Altura extends React.Component {
     headerTintColor: 'white',
   }
 
+  componentDidMount() {
+    this.ref.focus()
+  }
 
   handlePress = (to, height) => {
     const { navigation } = this.props
@@ -74,9 +77,9 @@ export default class Altura extends React.Component {
           {({ values, handleChange, errors, setFieldTouched, touched, isValid, handleSubmit }) => (
             <View style={{ margin: 10, alignItems: 'center', }}>
               <TextInput
+                ref={ref => this.ref = ref}
                 style={styles.InputField}
                 value={values.height}
-                autoFocus={true}
                 onChangeText={handleChange('height')}
                 onBlur={() => setFieldTouched('height')}
                 maxLength={3}

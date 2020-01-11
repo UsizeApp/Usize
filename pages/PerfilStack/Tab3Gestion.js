@@ -3,12 +3,11 @@ import {
   StyleSheet, Picker, Text, View, ToastAndroid
 } from 'react-native';
 
-import Layout from '../../components/Layout';
 import Button from '../../components/Utils/Button';
 
 import { Email } from 'models/API'
 
-import { Contenedor, Marco, Titulo } from 'components/MisComponentes'
+import { Contenedor, Marco, Titulo, Cargando } from 'components/MisComponentes'
 
 import { NavigationActions, StackActions } from 'react-navigation';
 
@@ -121,8 +120,9 @@ export default class Tab3Gestion extends Component {
         </Contenedor>
       );
     }
-
-    return <Text>Cargando personas...</Text>
+    else {
+      return <Cargando texto='Cargando personas...'/>
+    }
   }
 }
 
