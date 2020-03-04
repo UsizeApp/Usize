@@ -5,6 +5,8 @@ import * as Permissions from 'expo-permissions';
 import Scanner from 'components/Scanner';
 import styles from '../../styles/styles';
 
+import { DeviceMotion } from 'expo-sensors'
+
 export default class FotoLateral extends Component {
     static navigationOptions = {
         title: 'Paso 2/2: Foto Lateral',
@@ -27,7 +29,25 @@ export default class FotoLateral extends Component {
             hasCameraPermission: null,
             cameraType: Camera.Constants.Type.back,
             flashMode: Camera.Constants.FlashMode.off,
+
+            beta: 1.5,
         };
+    }
+
+    iniciarGyro = () => {
+        console.log('iniciarGyro')
+        DeviceMotion.isAvailableAsync()
+            .then(available => {
+                if (available) {
+                    DeviceMotion.addListener(data => {
+                        if (data && data.rotation) {
+                            const beta = data.rotation.beta
+                            this.setState({ beta: beta })
+                        }
+                    })
+                    //DeviceMotion.setUpdateInterval(500)
+                }
+            })
     }
 
     async componentDidMount() {
@@ -37,15 +57,19 @@ export default class FotoLateral extends Component {
         // const audio = await Permissions.askAsync(Permissions.AUDIO_RECORDING);
         // const hasCameraPermission = (camera.status === 'granted' && audio.status === 'granted');
         const hasCameraPermission = (camera.status === 'granted');
+
+        this.iniciarGyro()
         this.setState({ hasCameraPermission });
     }
 
-    /*
-    onContinueHandler = () => {
-      // const { navigation } = this.props
-      // navigation.push('Measure')
+    detenerGyro = () => {
+        console.log('detenerGyro')
+        DeviceMotion.removeAllListeners()
     }
-    */
+
+    componentWillUnmount() {
+        this.detenerGyro()
+    }
 
     setFlashMode = (flashMode) => {
         console.log("setFlashMode")
@@ -128,6 +152,7 @@ export default class FotoLateral extends Component {
                         onCaptureOut={this.handleCaptureOut}
                         onLongCapture={this.handleLongCapture}
                         onShortCapture={this.handleShortCapture}
+                        beta={this.state.beta}
                     />
                 </>
             );

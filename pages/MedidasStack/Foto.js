@@ -5,6 +5,8 @@ import * as Permissions from 'expo-permissions';
 import Scanner from 'components/Scanner';
 import styles from '../../styles/styles';
 
+import { DeviceMotion } from 'expo-sensors'
+
 export default class Foto extends Component {
     static navigationOptions = {
         title: 'Paso 1/2: Foto frontal',
@@ -17,7 +19,7 @@ export default class Foto extends Component {
         headerTintColor: 'white',
     }
 
-    camera = null;
+    camera = null
 
     constructor(props) {
         super(props);
@@ -27,9 +29,27 @@ export default class Foto extends Component {
             hasCameraPermission: null,
             cameraType: Camera.Constants.Type.back,
             flashMode: Camera.Constants.FlashMode.off,
+
+            beta: 1.5
         };
     }
 
+    iniciarGyro = () => {
+        console.log('iniciarGyro')
+        DeviceMotion.isAvailableAsync()
+            .then(available => {
+                if (available) {
+                    DeviceMotion.addListener(data => {
+                        if (data && data.rotation) {
+                            const beta = data.rotation.beta
+                            this.setState({ beta: beta })
+                        }
+                    })
+                    //DeviceMotion.setUpdateInterval(500)
+                }
+            })
+    }
+    
     async componentDidMount() {
         console.log("Foto::mounted")
 
@@ -37,7 +57,18 @@ export default class Foto extends Component {
         // const audio = await Permissions.askAsync(Permissions.AUDIO_RECORDING);
         // const hasCameraPermission = (camera.status === 'granted' && audio.status === 'granted');
         const hasCameraPermission = (camera.status === 'granted');
+
+        this.iniciarGyro()
         this.setState({ hasCameraPermission });
+    }
+
+    detenerGyro = () => {
+        console.log('detenerGyro')
+        DeviceMotion.removeAllListeners()
+    }
+
+    componentWillUnmount() {
+        this.detenerGyro()
     }
 
     setFlashMode = (flashMode) => {
@@ -63,7 +94,7 @@ export default class Foto extends Component {
     handleShortCapture = async () => {
         console.log('Foto::handleShortCapture')
 
-        await this.camera.takePictureAsync()
+        this.camera.takePictureAsync()
             .then((foto) => {
                 console.log(foto)
 
@@ -110,6 +141,7 @@ export default class Foto extends Component {
                         onCaptureOut={this.handleCaptureOut}
                         onLongCapture={this.handleLongCapture}
                         onShortCapture={this.handleShortCapture}
+                        beta={this.state.beta}
                     />
                 </>
             );
