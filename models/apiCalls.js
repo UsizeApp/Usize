@@ -4,13 +4,13 @@ Llamadas a la API
 *****************/
 
 function getAPI() {
-	const type = 'ale_LAN';
+	const type = 'ale_INTERNET';
 
 	switch (type) {
 		case 'ale_LAN':
 			return 'http://10.0.0.23:5000';
 		case 'ale_INTERNET':
-			return 'http://190.161.250.69:5000';
+			return 'http://190.161.250.176:5000';
 		case 'anibal':
 			return 'http://192.168.0.14:5000';
 		case 'diego':

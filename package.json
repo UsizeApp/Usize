@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^10.0.5",
+    "babel-plugin-module-resolver": "^4.0.0",
     "braces": "^3.0.2",
     "expo": "^34.0.4",
     "expo-camera": "^6.0.0",
